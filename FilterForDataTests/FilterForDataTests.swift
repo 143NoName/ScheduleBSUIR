@@ -1,14 +1,14 @@
 //
-//  ScheduleBSUIRTests.swift
-//  ScheduleBSUIRTests
+//  FilterForDataTests.swift
+//  FilterForDataTests
 //
-//  Created by user on 26.10.25.
+//  Created by user on 15.11.25.
 //
 
 import XCTest
-@testable import ScheduleBSUIR
+@testable import FilterForData
 
-final class ScheduleBSUIRTests: XCTestCase {
+final class FilterForDataTests: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.

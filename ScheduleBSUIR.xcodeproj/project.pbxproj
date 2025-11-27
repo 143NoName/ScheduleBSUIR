@@ -6,7 +6,21 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		495E0A642ECE5B8400D08640 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 495E0A632ECE5B8400D08640 /* Alamofire */; };
+		AFF20D892EB365B100383B2B /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AFF20D882EB365B100383B2B /* WidgetKit.framework */; };
+		AFF20D8B2EB365B100383B2B /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AFF20D8A2EB365B100383B2B /* SwiftUI.framework */; };
+		AFF20D9A2EB365B200383B2B /* ScheduleBSUIRWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AFF20D862EB365B100383B2B /* ScheduleBSUIRWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
+		49C3C9E52ED5BAC6009582D8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AFA212EA2EAE29F20010C9F6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 49C3C9DE2ED5BAC6009582D8;
+			remoteInfo = ScheduleCore;
+		};
 		AFA213002EAE29F30010C9F6 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = AFA212EA2EAE29F20010C9F6 /* Project object */;
@@ -21,37 +35,125 @@
 			remoteGlobalIDString = AFA212F12EAE29F20010C9F6;
 			remoteInfo = ScheduleBSUIR;
 		};
+		AFF20D982EB365B200383B2B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AFA212EA2EAE29F20010C9F6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AFF20D852EB365B100383B2B;
+			remoteInfo = ScheduleBSUIRWidgetExtension;
+		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		AFE9C1D12EC8ACF200387CEE /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AFF20DA02EB365B200383B2B /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				AFF20D9A2EB365B200383B2B /* ScheduleBSUIRWidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
-		AFA212F22EAE29F20010C9F6 /* ScheduleBSUIR.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ScheduleBSUIR.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		AFA212FF2EAE29F30010C9F6 /* ScheduleBSUIRTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ScheduleBSUIRTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		AFA213092EAE29F30010C9F6 /* ScheduleBSUIRUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ScheduleBSUIRUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		498676EA2ED8560500892C4B /* ScheduleBSUIR.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = ScheduleBSUIR.app; path = "/Library/Моя прога/SwiftUI/ScheduleBSUIR/build/Debug-iphoneos/ScheduleBSUIR.app"; sourceTree = "<absolute>"; };
+		498676EB2ED8560500892C4B /* ScheduleCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ScheduleCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		498676EC2ED8560500892C4B /* ScheduleBSUIRTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = ScheduleBSUIRTests.xctest; path = "/Library/Моя прога/SwiftUI/ScheduleBSUIR/build/Debug-iphoneos/ScheduleBSUIR.app/PlugIns/ScheduleBSUIRTests.xctest"; sourceTree = "<absolute>"; };
+		498676ED2ED8560500892C4B /* ScheduleBSUIRUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = ScheduleBSUIRUITests.xctest; path = "/Library/Моя прога/SwiftUI/ScheduleBSUIR/build/Debug-iphoneos/ScheduleBSUIRUITests-Runner.app/PlugIns/ScheduleBSUIRUITests.xctest"; sourceTree = "<absolute>"; };
+		AF5B118F2EB4DD7800EBC825 /* ScheduleBSUIRWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ScheduleBSUIRWidgetExtension.entitlements; sourceTree = "<group>"; };
+		AFF20D862EB365B100383B2B /* ScheduleBSUIRWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ScheduleBSUIRWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		AFF20D882EB365B100383B2B /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		AFF20D8A2EB365B100383B2B /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		490009122ED48D56002CDB1B /* Exceptions for "ScheduleBSUIR" folder in "ScheduleBSUIRWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Models/ModelForEachGroup.swift,
+				Services/AppStorageService.swift,
+			);
+			target = AFF20D852EB365B100383B2B /* ScheduleBSUIRWidgetExtension */;
+		};
+		AF5B11802EB4B1F700EBC825 /* Exceptions for "ScheduleBSUIRWidget" folder in "ScheduleBSUIR" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Assets.xcassets,
+				Info.plist,
+				ScheduleBSUIRWidget.swift,
+				ScheduleBSUIRWidgetBundle.swift,
+				ScheduleBSUIRWidgetControl.swift,
+				ScheduleBSUIRWidgetLiveActivity.swift,
+			);
+			target = AFA212F12EAE29F20010C9F6 /* ScheduleBSUIR */;
+		};
+		AF5B11812EB4B1F700EBC825 /* Exceptions for "ScheduleBSUIRWidget" folder in "ScheduleBSUIRWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Assets.xcassets,
+				ScheduleBSUIRWidget.swift,
+				ScheduleBSUIRWidgetBundle.swift,
+				ScheduleBSUIRWidgetControl.swift,
+				ScheduleBSUIRWidgetLiveActivity.swift,
+			);
+			target = AFF20D852EB365B100383B2B /* ScheduleBSUIRWidgetExtension */;
+		};
+		AFCF08EC2ECB6BD7000A8781 /* Exceptions for "ScheduleBSUIR" folder in "ScheduleBSUIR" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = AFA212F12EAE29F20010C9F6 /* ScheduleBSUIR */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		AFA212F42EAE29F20010C9F6 /* ScheduleBSUIR */ = {
+		AF5B11592EB4B1E900EBC825 /* ScheduleBSUIR */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				AFCF08EC2ECB6BD7000A8781 /* Exceptions for "ScheduleBSUIR" folder in "ScheduleBSUIR" target */,
+				490009122ED48D56002CDB1B /* Exceptions for "ScheduleBSUIR" folder in "ScheduleBSUIRWidgetExtension" target */,
+			);
 			path = ScheduleBSUIR;
 			sourceTree = "<group>";
 		};
-		AFA213022EAE29F30010C9F6 /* ScheduleBSUIRTests */ = {
+		AF5B117A2EB4B1F700EBC825 /* ScheduleBSUIRWidget */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = ScheduleBSUIRTests;
-			sourceTree = "<group>";
-		};
-		AFA2130C2EAE29F30010C9F6 /* ScheduleBSUIRUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = ScheduleBSUIRUITests;
+			exceptions = (
+				AF5B11802EB4B1F700EBC825 /* Exceptions for "ScheduleBSUIRWidget" folder in "ScheduleBSUIR" target */,
+				AF5B11812EB4B1F700EBC825 /* Exceptions for "ScheduleBSUIRWidget" folder in "ScheduleBSUIRWidgetExtension" target */,
+			);
+			path = ScheduleBSUIRWidget;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		49C3C9DC2ED5BAC6009582D8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		AFA212EF2EAE29F20010C9F6 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				495E0A642ECE5B8400D08640 /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -69,32 +171,72 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		AFF20D832EB365B100383B2B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AFF20D8B2EB365B100383B2B /* SwiftUI.framework in Frameworks */,
+				AFF20D892EB365B100383B2B /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		AFA212E92EAE29F20010C9F6 = {
 			isa = PBXGroup;
 			children = (
-				AFA212F42EAE29F20010C9F6 /* ScheduleBSUIR */,
-				AFA213022EAE29F30010C9F6 /* ScheduleBSUIRTests */,
-				AFA2130C2EAE29F30010C9F6 /* ScheduleBSUIRUITests */,
-				AFA212F32EAE29F20010C9F6 /* Products */,
+				AF5B118F2EB4DD7800EBC825 /* ScheduleBSUIRWidgetExtension.entitlements */,
+				AF5B117A2EB4B1F700EBC825 /* ScheduleBSUIRWidget */,
+				AFF20D872EB365B100383B2B /* Frameworks */,
+				AF5B11592EB4B1E900EBC825 /* ScheduleBSUIR */,
+				AFF20D862EB365B100383B2B /* ScheduleBSUIRWidgetExtension.appex */,
+				498676EB2ED8560500892C4B /* ScheduleCore.framework */,
 			);
 			sourceTree = "<group>";
 		};
-		AFA212F32EAE29F20010C9F6 /* Products */ = {
+		AFF20D872EB365B100383B2B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				AFA212F22EAE29F20010C9F6 /* ScheduleBSUIR.app */,
-				AFA212FF2EAE29F30010C9F6 /* ScheduleBSUIRTests.xctest */,
-				AFA213092EAE29F30010C9F6 /* ScheduleBSUIRUITests.xctest */,
+				AFF20D882EB365B100383B2B /* WidgetKit.framework */,
+				AFF20D8A2EB365B100383B2B /* SwiftUI.framework */,
 			);
-			name = Products;
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
+/* Begin PBXHeadersBuildPhase section */
+		49C3C9DA2ED5BAC6009582D8 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
 /* Begin PBXNativeTarget section */
+		49C3C9DE2ED5BAC6009582D8 /* ScheduleCore */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 49C3C9EA2ED5BAC6009582D8 /* Build configuration list for PBXNativeTarget "ScheduleCore" */;
+			buildPhases = (
+				49C3C9DA2ED5BAC6009582D8 /* Headers */,
+				49C3C9DB2ED5BAC6009582D8 /* Sources */,
+				49C3C9DC2ED5BAC6009582D8 /* Frameworks */,
+				49C3C9DD2ED5BAC6009582D8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ScheduleCore;
+			packageProductDependencies = (
+			);
+			productName = ScheduleCore;
+			productReference = 498676EB2ED8560500892C4B /* ScheduleCore.framework */;
+			productType = "com.apple.product-type.framework";
+		};
 		AFA212F12EAE29F20010C9F6 /* ScheduleBSUIR */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = AFA213132EAE29F30010C9F6 /* Build configuration list for PBXNativeTarget "ScheduleBSUIR" */;
@@ -102,19 +244,25 @@
 				AFA212EE2EAE29F20010C9F6 /* Sources */,
 				AFA212EF2EAE29F20010C9F6 /* Frameworks */,
 				AFA212F02EAE29F20010C9F6 /* Resources */,
+				AFF20DA02EB365B200383B2B /* Embed Foundation Extensions */,
+				AFE9C1D12EC8ACF200387CEE /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				AFF20D992EB365B200383B2B /* PBXTargetDependency */,
+				49C3C9E62ED5BAC6009582D8 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				AFA212F42EAE29F20010C9F6 /* ScheduleBSUIR */,
+				AF5B11592EB4B1E900EBC825 /* ScheduleBSUIR */,
+				AF5B117A2EB4B1F700EBC825 /* ScheduleBSUIRWidget */,
 			);
 			name = ScheduleBSUIR;
 			packageProductDependencies = (
+				495E0A632ECE5B8400D08640 /* Alamofire */,
 			);
 			productName = ScheduleBSUIR;
-			productReference = AFA212F22EAE29F20010C9F6 /* ScheduleBSUIR.app */;
+			productReference = 498676EA2ED8560500892C4B /* ScheduleBSUIR.app */;
 			productType = "com.apple.product-type.application";
 		};
 		AFA212FE2EAE29F30010C9F6 /* ScheduleBSUIRTests */ = {
@@ -130,14 +278,11 @@
 			dependencies = (
 				AFA213012EAE29F30010C9F6 /* PBXTargetDependency */,
 			);
-			fileSystemSynchronizedGroups = (
-				AFA213022EAE29F30010C9F6 /* ScheduleBSUIRTests */,
-			);
 			name = ScheduleBSUIRTests;
 			packageProductDependencies = (
 			);
 			productName = ScheduleBSUIRTests;
-			productReference = AFA212FF2EAE29F30010C9F6 /* ScheduleBSUIRTests.xctest */;
+			productReference = 498676EC2ED8560500892C4B /* ScheduleBSUIRTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		AFA213082EAE29F30010C9F6 /* ScheduleBSUIRUITests */ = {
@@ -153,15 +298,31 @@
 			dependencies = (
 				AFA2130B2EAE29F30010C9F6 /* PBXTargetDependency */,
 			);
-			fileSystemSynchronizedGroups = (
-				AFA2130C2EAE29F30010C9F6 /* ScheduleBSUIRUITests */,
-			);
 			name = ScheduleBSUIRUITests;
 			packageProductDependencies = (
 			);
 			productName = ScheduleBSUIRUITests;
-			productReference = AFA213092EAE29F30010C9F6 /* ScheduleBSUIRUITests.xctest */;
+			productReference = 498676ED2ED8560500892C4B /* ScheduleBSUIRUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		AFF20D852EB365B100383B2B /* ScheduleBSUIRWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AFF20D9D2EB365B200383B2B /* Build configuration list for PBXNativeTarget "ScheduleBSUIRWidgetExtension" */;
+			buildPhases = (
+				AFF20D822EB365B100383B2B /* Sources */,
+				AFF20D832EB365B100383B2B /* Frameworks */,
+				AFF20D842EB365B100383B2B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ScheduleBSUIRWidgetExtension;
+			packageProductDependencies = (
+			);
+			productName = ScheduleBSUIRWidgetExtension;
+			productReference = AFF20D862EB365B100383B2B /* ScheduleBSUIRWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -170,9 +331,12 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 2600;
-				LastUpgradeCheck = 2600;
+				LastSwiftUpdateCheck = 2610;
+				LastUpgradeCheck = 2610;
 				TargetAttributes = {
+					49C3C9DE2ED5BAC6009582D8 = {
+						CreatedOnToolsVersion = 26.1.1;
+					};
 					AFA212F12EAE29F20010C9F6 = {
 						CreatedOnToolsVersion = 26.0.1;
 					};
@@ -183,6 +347,9 @@
 					AFA213082EAE29F30010C9F6 = {
 						CreatedOnToolsVersion = 26.0.1;
 						TestTargetID = AFA212F12EAE29F20010C9F6;
+					};
+					AFF20D852EB365B100383B2B = {
+						CreatedOnToolsVersion = 26.0.1;
 					};
 				};
 			};
@@ -195,19 +362,31 @@
 			);
 			mainGroup = AFA212E92EAE29F20010C9F6;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				495E0A622ECE5B8400D08640 /* XCRemoteSwiftPackageReference "Alamofire" */,
+			);
 			preferredProjectObjectVersion = 77;
-			productRefGroup = AFA212F32EAE29F20010C9F6 /* Products */;
+			productRefGroup = AFA212E92EAE29F20010C9F6;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				AFA212F12EAE29F20010C9F6 /* ScheduleBSUIR */,
 				AFA212FE2EAE29F30010C9F6 /* ScheduleBSUIRTests */,
 				AFA213082EAE29F30010C9F6 /* ScheduleBSUIRUITests */,
+				AFF20D852EB365B100383B2B /* ScheduleBSUIRWidgetExtension */,
+				49C3C9DE2ED5BAC6009582D8 /* ScheduleCore */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		49C3C9DD2ED5BAC6009582D8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		AFA212F02EAE29F20010C9F6 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -229,9 +408,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		AFF20D842EB365B100383B2B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		49C3C9DB2ED5BAC6009582D8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		AFA212EE2EAE29F20010C9F6 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -253,9 +446,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		AFF20D822EB365B100383B2B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		49C3C9E62ED5BAC6009582D8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 49C3C9DE2ED5BAC6009582D8 /* ScheduleCore */;
+			targetProxy = 49C3C9E52ED5BAC6009582D8 /* PBXContainerItemProxy */;
+		};
 		AFA213012EAE29F30010C9F6 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = AFA212F12EAE29F20010C9F6 /* ScheduleBSUIR */;
@@ -266,9 +471,92 @@
 			target = AFA212F12EAE29F20010C9F6 /* ScheduleBSUIR */;
 			targetProxy = AFA2130A2EAE29F30010C9F6 /* PBXContainerItemProxy */;
 		};
+		AFF20D992EB365B200383B2B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AFF20D852EB365B100383B2B /* ScheduleBSUIRWidgetExtension */;
+			targetProxy = AFF20D982EB365B200383B2B /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		49C3C9EB2ED5BAC6009582D8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = YP54583LG6;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_MODULE_VERIFIER = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
+				PRODUCT_BUNDLE_IDENTIFIER = Solo.ScheduleCore;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_INSTALL_MODULE = YES;
+				SWIFT_INSTALL_OBJC_HEADER = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		49C3C9EC2ED5BAC6009582D8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = YP54583LG6;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_MODULE_VERIFIER = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
+				PRODUCT_BUNDLE_IDENTIFIER = Solo.ScheduleCore;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_INSTALL_MODULE = YES;
+				SWIFT_INSTALL_OBJC_HEADER = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
 		AFA213112EAE29F30010C9F6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -328,6 +616,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -385,6 +674,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -395,11 +685,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = ScheduleBSUIR/ScheduleBSUIR.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = YP54583LG6;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ScheduleBSUIR/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -427,11 +719,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = ScheduleBSUIR/ScheduleBSUIR.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = YP54583LG6;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ScheduleBSUIR/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -538,9 +832,80 @@
 			};
 			name = Release;
 		};
+		AFF20D9E2EB365B200383B2B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = ScheduleBSUIRWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = YP54583LG6;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ScheduleBSUIRWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ScheduleBSUIRWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = Solo.ScheduleBSUIR.ScheduleBSUIRWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		AFF20D9F2EB365B200383B2B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = ScheduleBSUIRWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = YP54583LG6;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ScheduleBSUIRWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ScheduleBSUIRWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = Solo.ScheduleBSUIR.ScheduleBSUIRWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		49C3C9EA2ED5BAC6009582D8 /* Build configuration list for PBXNativeTarget "ScheduleCore" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				49C3C9EB2ED5BAC6009582D8 /* Debug */,
+				49C3C9EC2ED5BAC6009582D8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		AFA212ED2EAE29F20010C9F6 /* Build configuration list for PBXProject "ScheduleBSUIR" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -577,7 +942,35 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		AFF20D9D2EB365B200383B2B /* Build configuration list for PBXNativeTarget "ScheduleBSUIRWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AFF20D9E2EB365B200383B2B /* Debug */,
+				AFF20D9F2EB365B200383B2B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		495E0A622ECE5B8400D08640 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.10.2;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		495E0A632ECE5B8400D08640 /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 495E0A622ECE5B8400D08640 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = AFA212EA2EAE29F20010C9F6 /* Project object */;
 }
