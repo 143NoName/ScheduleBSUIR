@@ -69,7 +69,7 @@ struct Provider: TimelineProvider {
 //            print(data)
             return data
         } catch {
-            print("Ошибка приполучения расписания: \(error)")
+            print("Ошибка при получения расписания: \(error)")
         }
         
         return nil
@@ -332,7 +332,7 @@ struct ViewForMedium: View {
             
             Spacer()
             
-            if !lesson.isEmpty {
+            if lesson.isEmpty {
                 Text("Нет занятий")
                     .frame(maxWidth: .infinity)
                 Spacer()
