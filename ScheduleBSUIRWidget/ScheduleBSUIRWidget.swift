@@ -19,60 +19,59 @@ struct Provider: TimelineProvider {
         let entry = LessonsInWidget(date: Date(), lessons: [], favoriteGroup: "261402")
         completion(entry)
     }
-    
-    
-    let appStorageService = AppStorageService()
-    
+
     
     func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) { // основная функция, создает расписание обновлений
         
         let date = Date()
         let calendar = Calendar.current
-        let lessons = getDataFromUserDefaults()
+        var lessons: Schedules? = nil
+        do {
+            guard let data = try getDataFromUserDefaults() else { return }
+            lessons = data
+        } catch {
+            print("Говно")
+        }
+        
         
         guard let nextDay = calendar.date(byAdding: .day, value: 1, to: date) else { return }
         let startOfNextDay = calendar.startOfDay(for: nextDay)
         
         let timeLine = [
-            LessonsInWidget(date: date, lessons: findTodayLessons(lessons: lessons), favoriteGroup: getFavoriteGroupFromUserDefaults()),
-            LessonsInWidget(date: startOfNextDay, lessons: findTodayLessons(lessons: lessons), favoriteGroup: getFavoriteGroupFromUserDefaults())
+            LessonsInWidget(date: date, lessons: findTodayLessons(lessons: lessons), favoriteGroup: favoriteGroup.isEmpty ? "Неизвество" : favoriteGroup),
+            LessonsInWidget(date: startOfNextDay, lessons: findTodayLessons(lessons: lessons), favoriteGroup: favoriteGroup.isEmpty ? "Неизвество" : favoriteGroup)
         ]
         
         completion(Timeline(entries: timeLine, policy: .after(Date())))
     }
     
+    @AppStorage("groupSchedule", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var groupSchedule: Data?
+    @AppStorage("favoriteGroup", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var favoriteGroup: String = ""
+    
+    let decoder = JSONDecoder()
+    
     // получение номера группы
-    private func getFavoriteGroupFromUserDefaults() -> String {
-        let userDefaults = UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")!
-        guard let favoriteGroup = userDefaults.string(forKey: "favoriteGroup") else {
-            print("Ошибка при чтении данных из userDefaults")
-            return ""
-        }
-        return favoriteGroup
-    }
+//    private func getFavoriteGroupFromUserDefaults() -> String {
+////        let userDefaults = UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")!
+////        guard let favoriteGroup = userDefaults.string(forKey: "favoriteGroup") else {
+////            print("Ошибка при чтении данных из userDefaults")
+////            return "Неизвестно"
+////        }
+////        return favoriteGroup
+//        return groupName
+//    }
 
     // получение всего расписания
-    private func getDataFromUserDefaults() -> /*[Lesson]*/ Schedules? {
-//        let userDefaults = UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")!
-//        guard let rawData = userDefaults.data(forKey: "widget") else {
-//            print("Ошибка при чтении данных из userDefaults")
-//            return []
-//        }
-//        do {
-//            let data = try JSONDecoder().decode([Lesson].self, from: rawData)
-//            return(data)
-//        } catch {
-//            print("Проблема с декодированием")
-//        }
-//        return []
-        
+    private func getDataFromUserDefaults() throws -> Schedules? {
         do {
-            let data = try appStorageService.getDataFromAppStorage()
-            print("Данные получаемые от AppStorage: \(String(describing: data))")
+            guard let rawData = groupSchedule else { return nil }
+            let data = try decoder.decode(Schedules.self, from: rawData)
+//            print(data)
             return data
         } catch {
-            print(error)
+            print("Ошибка приполучения расписания: \(error)")
         }
+        
         return nil
     }
     
@@ -366,9 +365,9 @@ struct ViewForMedium: View {
                 }
             }
         }
-        .onAppear {
-            print(lesson)
-        }
+//        .onAppear {
+//            print(lesson)
+//        }
     }
 }
 

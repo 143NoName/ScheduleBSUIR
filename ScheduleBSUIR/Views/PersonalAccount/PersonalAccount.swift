@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import WidgetKit
 
 struct PersonalAccount: View {
     
@@ -57,9 +58,10 @@ struct PersonalAccount: View {
                     }
                     .onChange(of: favoriteGroup) {
                         Task {
-                            await viewModel.getScheduleGroup(group: favoriteGroup)
+                            WidgetCenter.shared.reloadAllTimelines()
+//                            await viewModel.getScheduleGroup(group: favoriteGroup)
                         }
-                    }
+                    } // вот тут при изменении номера группы надо изменять номер группы и ее расписание (номер группы изменяется реактивно, а для изменения группы надо вызывать функцию получения и сохранения расписания)
                 }
                 .scrollContentBackground(.hidden)
                 .navigationBarTitle("Личный кабинет")
