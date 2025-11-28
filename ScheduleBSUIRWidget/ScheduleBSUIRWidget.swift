@@ -112,8 +112,8 @@ struct ScheduleBSUIRWidgetEntryView: View {
 //        }
         
         switch widgetFamily {
-//        case .systemSmall:
-//            ViewForSmall(date: date, favoriteGroup: entry.favoriteGroup, lesson: entry.lessons)
+        case .systemSmall:
+            ViewForSmall(date: date, favoriteGroup: entry.favoriteGroup, lesson: entry.lessons)
         case .systemMedium:
             ViewForMedium(date: date, favoriteGroup: entry.favoriteGroup, lesson: entry.lessons)
         case .systemLarge:
@@ -235,19 +235,20 @@ extension Collection {
 
 struct ViewForSmall: View {
     
+    let date: String
+    let favoriteGroup: String
     let lesson: [Lesson]
     
-    let favoriteGroup: String
-    let isHaveData: Bool
-    let date: String
-    let color: Color
-    let startTime: String
-    let endTime: String
-    let typeOfLesson: String
-    let lessomName: String
-    let auditories: [String]
-    let nextLesson: String
-    let numberOfLessons: Int
+    func color(lesson: Lesson) -> Color {
+        if lesson.lessonTypeAbbrev == "ЛК" {
+            return .green
+        } else if lesson.lessonTypeAbbrev == "ПЗ" {
+            return .yellow
+        } else if lesson.lessonTypeAbbrev == "ЛР" {
+            return .red
+        }
+        return .gray
+    }
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -260,7 +261,7 @@ struct ViewForSmall: View {
             
             Spacer()
             
-            if !isHaveData {
+            if lesson.isEmpty {
                 VStack {
                     Text("Нет занятий")
                 }
@@ -269,13 +270,13 @@ struct ViewForSmall: View {
             else  {
                 HStack {
                     RoundedRectangle(cornerRadius: 6)
-                        .fill(color)
+                        .fill(color(lesson: lesson.first!))
                         .frame(width: 10, height: 55)
                     VStack(alignment: .leading) {
-                        Text("\(startTime) - \(endTime)")
+                        Text("\(lesson.first!.startLessonTime) - \(lesson.first!.endLessonTime)")
                             .opacity(0.9)
-                        Text("\(typeOfLesson) по \(lessomName)")
-                        Text(auditories.first ?? "Нет")
+                        Text("\(lesson.first!.lessonTypeAbbrev) по \(lesson.first!.subject)")
+                        Text(lesson.first!.auditories.first ?? "Нет")
                             .opacity(0.7)
                     }
                 }
@@ -288,9 +289,9 @@ struct ViewForSmall: View {
                         Circle()
                             .fill(Color.gray)
                             .frame(width: 12, height: 12)
-                        Text("\(nextLesson)")
+                        Text("\(lesson[1].subject)")
                             .opacity(0.5)
-                        Text(numberOfLessons > 0 ? "и еще \(numberOfLessons)" : "")
+                        Text("и еще 3")
                             .opacity(0.5)
                     }
                     .font(.system(size: 14, weight: .medium))
@@ -302,10 +303,6 @@ struct ViewForSmall: View {
 
 struct ViewForMedium: View {
     
-//    let isHaveData: Bool
-//    let date: String
-//    let lesson: [Lesson]
-//    let favoriteGroup: String
     let date: String
     let favoriteGroup: String
     let lesson: [Lesson]
@@ -365,18 +362,11 @@ struct ViewForMedium: View {
                 }
             }
         }
-//        .onAppear {
-//            print(lesson)
-//        }
     }
 }
 
 struct ViewForLarge: View {
     
-//    let isHaveData: Bool
-//    let date: String
-//    let lesson: [Lesson]
-//    let favoriteGroup: String
     let date: String
     let favoriteGroup: String
     let lesson: [Lesson]
@@ -403,11 +393,11 @@ struct ViewForLarge: View {
             
             Spacer()
             
-//            if !isHaveData {
-//                Text("Нет занятий")
-//                    .frame(maxWidth: .infinity)
-//                    .font(.system(size: 20))
-//            } else {
+            if lesson.isEmpty {
+                Text("Нет занятий")
+                    .frame(maxWidth: .infinity)
+                    .font(.system(size: 20))
+            } else {
                 VStack(alignment: .leading, spacing: 5) {
                     ForEach(lesson.enumerated(), id: \.offset) { index, id in
                         if index < 6 {
@@ -437,7 +427,7 @@ struct ViewForLarge: View {
                 .padding()
                 .background(Color.gray.opacity(0.25))
                 .clipShape(RoundedRectangle(cornerRadius: 12))
-//            }
+            }
             
             Spacer()
             
