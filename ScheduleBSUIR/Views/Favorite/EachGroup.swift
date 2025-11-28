@@ -67,7 +67,7 @@ struct EachGroup: View {
                                                 ForEach(day.lessons.enumerated(), id: \.offset) { index, lesson in
                                                     EachLesson(lesson: lesson)
                                                 }
-//                                                .backgroundStyle(.NewColor)
+//                                                .backgroundStyle(.NewColor) // хочу сделать одинаковый цвет для листа и для окна выбора дня, недели и подгруппы
                                             }
                                         }
                                     }

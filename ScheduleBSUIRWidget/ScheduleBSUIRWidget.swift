@@ -30,7 +30,7 @@ struct Provider: TimelineProvider {
             guard let data = try getDataFromUserDefaults() else { return }
             lessons = data
         } catch {
-            print("Говно")
+            print("Ошибка при получении расписания в виджет")
         }
         
         
@@ -49,17 +49,6 @@ struct Provider: TimelineProvider {
     @AppStorage("favoriteGroup", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var favoriteGroup: String = ""
     
     let decoder = JSONDecoder()
-    
-    // получение номера группы
-//    private func getFavoriteGroupFromUserDefaults() -> String {
-////        let userDefaults = UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")!
-////        guard let favoriteGroup = userDefaults.string(forKey: "favoriteGroup") else {
-////            print("Ошибка при чтении данных из userDefaults")
-////            return "Неизвестно"
-////        }
-////        return favoriteGroup
-//        return groupName
-//    }
 
     // получение всего расписания
     private func getDataFromUserDefaults() throws -> Schedules? {
@@ -100,24 +89,14 @@ struct ScheduleBSUIRWidgetEntryView: View {
     @Environment(\.widgetFamily) var widgetFamily
 
     var body: some View {
-//        switch widgetFamily {
-//        case .systemSmall:
-//            ViewForSmall(lesson: findCurrentLesson, favoriteGroup: entry.favoriteGroup ,isHaveData: isHaveData, date: date, color: color, startTime: startTime, endTime: endTime, typeOfLesson: typeOfLesson, lessomName: lessonName, auditories: auditories, nextLesson: nextLesson, numberOfLessons: numberOfLessons)
-//        case .systemMedium:
-//            ViewForMedium(isHaveData: isHaveData, date: date, lesson: findCurrentLesson, favoriteGroup: entry.favoriteGroup)
-//        case .systemLarge:
-//            ViewForLarge(isHaveData: isHaveData, date: date, lesson: findCurrentLesson, favoriteGroup: entry.favoriteGroup)
-//        default:
-//            EmptyView()
-//        }
         
         switch widgetFamily {
         case .systemSmall:
-            ViewForSmall(date: date, favoriteGroup: entry.favoriteGroup, lesson: entry.lessons)
+            ViewForSmall(date: date, favoriteGroup: entry.favoriteGroup, lesson: findCurrentLesson)
         case .systemMedium:
-            ViewForMedium(date: date, favoriteGroup: entry.favoriteGroup, lesson: entry.lessons)
+            ViewForMedium(date: date, favoriteGroup: entry.favoriteGroup, lesson: findCurrentLesson)
         case .systemLarge:
-            ViewForLarge(date: date, favoriteGroup: entry.favoriteGroup, lesson: entry.lessons)
+            ViewForLarge(date: date, favoriteGroup: entry.favoriteGroup, lesson: findCurrentLesson)
         default:
             EmptyView()
         }
@@ -147,25 +126,25 @@ extension ScheduleBSUIRWidgetEntryView {
         return formatter.shortStandaloneWeekdaySymbols[index]
     }
     
-//    var findCurrentLesson: [Lesson] { // определение текущего урока по времени
-//        
-//        let formatter = DateFormatter()
-//        formatter.dateFormat = "HH:mm"
-//        formatter.locale = Locale(identifier: "ru_RU")
-//        
-//        let currentDate = Date()
-//        
-//        let currentDateInString = formatter.string(from: currentDate)
-//        
-//        let currentLesson = entry.lessons.filter { lesson in
-//            lesson.endLessonTime > currentDateInString || lesson.endLessonTime == currentDateInString
-//        }
-//        
-//        return currentLesson
-//    }
+    var findCurrentLesson: [Lesson] { // определение текущего урока по времени
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm"
+        formatter.locale = Locale(identifier: "ru_RU")
+        
+        let currentDate = Date()
+        
+        let currentDateInString = formatter.string(from: currentDate)
+        
+        let currentLesson = entry.lessons.filter { lesson in
+            lesson.endLessonTime > currentDateInString || lesson.endLessonTime == currentDateInString
+        }
+        
+        return currentLesson
+    }
     
 //    var isHaveData: Bool { // проверка наличия данных
-//        if .isEmpty {
+//        if findCurrentLesson.isEmpty {
 //            return false
 //        } else {
 //            return true
@@ -291,8 +270,10 @@ struct ViewForSmall: View {
                             .frame(width: 12, height: 12)
                         Text("\(lesson[1].subject)")
                             .opacity(0.5)
-                        Text("и еще 3")
-                            .opacity(0.5)
+                        if lesson.count > 2 {
+                            Text("и еще \(lesson.count - 2)")
+                                .opacity(0.5)
+                        }
                     }
                     .font(.system(size: 14, weight: .medium))
                 }
@@ -355,9 +336,14 @@ struct ViewForMedium: View {
                         Circle()
                             .fill(Color.gray)
                             .frame(width: 8, height: 8)
-                        Text("C 13:00 ПЗ по ОС и еще 2")
-                            .font(.system(size: 14))
-                            .opacity(0.5)
+                        HStack {
+                            Text("C \(lesson[2].startLessonTime) \(lesson[2].lessonTypeAbbrev) по \(lesson[2].subject) ")
+                            if lesson.count > 4 {
+                                Text("и еще \(lesson.count - 4)")
+                            }
+                        }
+                        .font(.system(size: 14))
+                        .opacity(0.5)
                     }
                 }
             }

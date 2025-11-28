@@ -80,14 +80,13 @@ struct EachLesson: View {
             
             RoundedRectangle(cornerRadius: 10)
                 .fill(colorForRoundedRectangle)
-                .frame(width: 7, height: 40)
+                .frame(width: 7)
             
             VStack(alignment: .leading) {
                 Text("\(lesson.lessonTypeAbbrev) по \(lesson.subject)")
+                Text("\(lesson.auditories.first ?? "")")
                 
-                if funcs.comparisonLessonOverDate(lesson: lesson).isEmpty {
-                    Text("\(lesson.auditories.first ?? "")")
-                } else {
+                if !funcs.comparisonLessonOverDate(lesson: lesson).isEmpty {
                     Text("\(funcs.comparisonLessonOverDate(lesson: lesson))")
                         .font(.system(size: 16, weight: .bold))
                         .foregroundStyle(Color.red)
