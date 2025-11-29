@@ -39,7 +39,7 @@ class NetworkService: NetworkServiceProtocol {
     }
     
     // получение расписания группы
-    func getScheduleGroup(_ group: String) async throws -> ScheduleResponse {
+    func getScheduleGroup(_ group: String) async throws -> ScheduleResponse { // при частом выполнении, что то ломается
         let params: Parameters = ["studentGroup": "\(group)"]
         
         let data = try await AF.request("https://iis.bsuir.by/api/v1/schedule",

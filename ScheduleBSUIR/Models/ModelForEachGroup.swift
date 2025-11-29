@@ -5,6 +5,16 @@
 //  Created by user on 26.10.25.
 //
 
+
+
+
+
+// есть какая то ошибка в модели, какое то значение должно быть опциональным (с некоторыми группами не получается декодировать данные)
+
+
+
+
+
 import Foundation
 
 struct ScheduleResponse: Codable, Sendable {
@@ -14,8 +24,8 @@ struct ScheduleResponse: Codable, Sendable {
     let endExamsDate: String?
     let employeeDto: Employee?
     let schedules: Schedules
-    let currentTerm: String
-    let currentPeriod: String
+    let currentTerm: String?
+    let currentPeriod: String?
 }
 
 struct Schedules: Codable, Sendable {

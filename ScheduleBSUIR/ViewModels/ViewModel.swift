@@ -144,6 +144,8 @@ extension ViewModel {
         }
         if let saturday = arrayOfScheduleGroup.schedules.saturday, !saturday.isEmpty {
             days.append(("Суббота", saturday))
+        } else {
+            days.append(("Суббота", []))
         }
         if let sunday = arrayOfScheduleGroup.schedules.sunday, !sunday.isEmpty {
             days.append(("Воскресенье", sunday))
