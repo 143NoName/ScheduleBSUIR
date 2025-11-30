@@ -5,16 +5,6 @@
 //  Created by user on 26.10.25.
 //
 
-
-
-
-
-// есть какая то ошибка в модели, какое то значение должно быть опциональным (с некоторыми группами не получается декодировать данные)
-
-
-
-
-
 import Foundation
 
 struct ScheduleResponse: Codable, Sendable {

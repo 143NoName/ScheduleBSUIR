@@ -51,18 +51,17 @@ struct TabBarView: View {
             .task {
                 await viewModel.getCurrentWeek()           // получение текущей недели
                 await viewModel.getArrayOfGroupNum()       // получение списка групп
-
-//                viewModel.saveDataForWidgetToAppStorage(data: viewModel.arrayOfScheduleGroup.schedules)
                 
-                viewModel.saveDataForWidgetToAppStorage(data: viewModel.arrayOfScheduleGroup.schedules) // загрузка данных в AppStorage
+//                viewModel.saveDataForWidgetToAppStorage(data: viewModel.arrayOfScheduleGroup.schedules) // загрузка данных в AppStorage
                 
                 
                 
             }
             
+            // показывать начальное окно
             if !viewModel.isLoadingArrayOfGroupsNum {
                 StartView()
-            }           // показывать начальное окно
+            }
         }
         .environmentObject(viewModel)
     }

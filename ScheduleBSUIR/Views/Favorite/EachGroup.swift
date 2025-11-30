@@ -145,6 +145,9 @@ struct EachGroup: View {
                     .padding()
                 }
             }
+            .onDisappear {
+                viewModel.allInNull()
+            }
 
             .navigationTitle(groupName)
             .toolbar {
@@ -170,9 +173,9 @@ struct EachGroup: View {
 
             }
             
-            .onAppear {
-                funcs.saveInUserDefaults(viewModel.arrayOfScheduleGroup.schedules ,weekDay: weekDay, weenNumber: viewModel.currentWeek, subGroupe: subGroup, favoriteGroup: favoriteGroup) // сохранение в UserDefaults для виджета
-            }
+//            .onAppear {
+//                funcs.saveInUserDefaults(viewModel.arrayOfScheduleGroup.schedules ,weekDay: weekDay, weenNumber: viewModel.currentWeek, subGroupe: subGroup, favoriteGroup: favoriteGroup) // сохранение в UserDefaults для виджета
+//            }
             
             .task {
                 await viewModel.getScheduleGroup(group: groupName) // получение расписания группы
@@ -186,6 +189,9 @@ struct EachGroup: View {
                 if let currentDay = DaysInPicker(rawValue: calendar.component(.weekday, from: Date()) - 1)  {
                     weekDay = currentDay
                 }
+                
+                print("Расписание: \(viewModel.arrayOfScheduleGroup)")
+                print("ОшибкаЖ: \(viewModel.errorOfScheduleGroup)")
             }
         }
     }

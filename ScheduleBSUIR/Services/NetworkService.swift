@@ -10,7 +10,7 @@ import Alamofire
 
 protocol NetworkServiceProtocol {
     func getCurrentWeek() async throws -> Int
-    func getArrayOfGroupNum() async throws -> [ModelNumbersOfGroups]
+    func getArrayOfGroupNum() async throws -> [StudentGroups]
     func getScheduleGroup(_ group: String) async throws -> ScheduleResponse
 }
 
@@ -26,13 +26,13 @@ class NetworkService: NetworkServiceProtocol {
     }
     
     // получение номеров групп
-    func getArrayOfGroupNum() async throws -> [ModelNumbersOfGroups] {
+    func getArrayOfGroupNum() async throws -> [StudentGroups] {
         let data = try await AF.request("https://iis.bsuir.by/api/v1/student-groups")
             .validate()
             .serializingData()
             .value
         do {
-            return try decoder.decode([ModelNumbersOfGroups].self, from: data)
+            return try decoder.decode([StudentGroups].self, from: data)
         } catch {
             throw error
         }

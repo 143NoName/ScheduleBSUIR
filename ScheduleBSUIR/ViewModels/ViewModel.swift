@@ -41,7 +41,7 @@ class ViewModel: ObservableObject {
         }
     }
     
-    @Published var arrayOfGroupsNum: [ModelNumbersOfGroups] = []
+    @Published var arrayOfGroupsNum: [StudentGroups] = []
     @Published var isLoadingArrayOfGroupsNum: Bool = false
     @Published var errorOfGroupsNum: String = ""
     
@@ -99,8 +99,32 @@ class ViewModel: ObservableObject {
         }
     }
     
+    func allInNull() {
+        arrayOfScheduleGroup = ScheduleResponse(
+            startDate: "",
+            endDate: "",
+            startExamsDate: nil,
+            endExamsDate: nil,
+            employeeDto: nil,
+            schedules: Schedules(
+                monday: [],
+                tuesday: [],
+                wednesday: [],
+                thursday: [],
+                friday: [],
+                saturday: [],
+                sunday: []
+            ),
+            currentTerm: "",
+            currentPeriod: ""
+        )
+        isLoadingArrayOfScheduleGroup = false
+        errorOfScheduleGroup = ""
+    }
+    
     @Published var filteredLessons: [(dayName: String, lessons: [Lesson])] = []
     
+    // после выхода из группы, сохраняется ошибка, поэтому она остается навсегда
     
     
     

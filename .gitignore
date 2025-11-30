@@ -1,2 +1,4 @@
 # Игнорирование всех файлов с этим расширениемы
-**/.xcuserstate
+*/.xcuserstate
+**/xcuserdata/
+**/xcschemes/xcschememanagement.plist

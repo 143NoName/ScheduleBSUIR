@@ -15,7 +15,7 @@ struct Groups: View {
     
     @State var searchText: String = ""
     
-    var searchable: [ModelNumbersOfGroups] {
+    var searchable: [StudentGroups] {
         if searchText.isEmpty {
             return viewModel.arrayOfGroupsNum
         } else {
@@ -45,9 +45,23 @@ struct Groups: View {
                     if !viewModel.isLoadingArrayOfGroupsNum {
                         List {
                             ForEach(0..<20) { _ in
-                                RoundedRectangle(cornerRadius: 8)
-                                    .fill(Color.gray.opacity(0.5))
-                                    .frame(width:100)
+                                VStack(alignment: .leading) {
+                                    RoundedRectangle(cornerRadius: 6)
+                                        .fill(Color.gray.opacity(0.5))
+                                        .frame(width: 100, height: 17)
+                                    HStack {
+                                        RoundedRectangle(cornerRadius: 6)
+                                            .fill(Color.gray.opacity(0.5))
+                                            .frame(height: 15)
+                                        RoundedRectangle(cornerRadius: 6)
+                                            .fill(Color.gray.opacity(0.5))
+                                            .frame(height: 15)
+                                        RoundedRectangle(cornerRadius: 6)
+                                            .fill(Color.gray.opacity(0.5))
+                                            .frame(height: 15)
+                                    }
+                                    .frame(width: 200)
+                                }
                             }
                         }
                         .scrollContentBackground(.hidden)
@@ -58,9 +72,26 @@ struct Groups: View {
                             } else {
                                 ForEach(searchable.enumerated(), id: \.offset) { index, each in
                                     NavigationLink(destination: EachGroup(groupName: each.name)) {
-                                        HStack {
+                                        VStack(alignment: .leading) {
                                             Text(each.name)
-                                                .font(.system(size: 18, weight: .medium))
+                                                .font(.system(size: 16, weight: .medium))
+                                            HStack {
+                                                if let facultyAbbrev = each.facultyAbbrev {
+                                                    Text(facultyAbbrev)
+                                                } else {
+                                                    Text("Не известно")
+                                                }
+                                                Spacer()
+                                                if let specialityAbbrev = each.specialityAbbrev {
+                                                    Text(specialityAbbrev)
+                                                }
+                                                Spacer()
+                                                if let course = each.course {
+                                                    Text(" \(course) курс")
+                                                }
+                                            }
+                                            .frame(width: 200)
+                                            .font(.system(size: 14, weight: .light))
                                         }
                                     }
                                 }
