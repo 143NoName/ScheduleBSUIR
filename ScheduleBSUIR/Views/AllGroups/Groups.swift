@@ -31,7 +31,10 @@ struct Groups: View {
         }
     }
     
+//    @State var path: [String] = []
+    
     var body: some View {
+//        NavigationStack(path: $path) {
         NavigationStack {
             ZStack {
                 
@@ -71,29 +74,17 @@ struct Groups: View {
                                 IfErrorGroups()
                             } else {
                                 ForEach(searchable.enumerated(), id: \.offset) { index, each in
+                                    
+                                    
+                                    
+                                    
                                     NavigationLink(destination: EachGroup(groupName: each.name)) {
-                                        VStack(alignment: .leading) {
-                                            Text(each.name)
-                                                .font(.system(size: 18, weight: .medium))
-                                            HStack {
-                                                if let facultyAbbrev = each.facultyAbbrev {
-                                                    Text(facultyAbbrev)
-                                                } else {
-                                                    Text("Не известно")
-                                                }
-                                                Spacer()
-                                                if let specialityAbbrev = each.specialityAbbrev {
-                                                    Text(specialityAbbrev)
-                                                }
-                                                Spacer()
-                                                if let course = each.course {
-                                                    Text(" \(course) курс")
-                                                }
-                                            }
-                                            .frame(width: 200)
-                                            .font(.system(size: 14, weight: .light))
-                                        }
+                                        ViewEachGroup(group: each)
                                     }
+                                    
+                                    
+                                    
+                                    
                                 }
                             }
                         }
@@ -113,6 +104,9 @@ struct Groups: View {
                 
                 .ignoresSafeArea(edges: .bottom)
             }
+//            .navigationDestination(for: String.self) { group in
+//                EachGroup(groupName: group)
+//            }
         }
     }
 }
@@ -131,4 +125,34 @@ extension View {
 #Preview {
     Groups()
         .environmentObject(ViewModel())
+}
+
+ 
+private struct ViewEachGroup: View {
+    
+    let group: StudentGroups
+    
+    var body: some View {
+        VStack(alignment: .leading) {
+            Text(group.name)
+                .font(.system(size: 18, weight: .medium))
+            HStack {
+                if let facultyAbbrev = group.facultyAbbrev {
+                    Text(facultyAbbrev)
+                } else {
+                    Text("Не известно")
+                }
+                Spacer()
+                if let specialityAbbrev = group.specialityAbbrev {
+                    Text(specialityAbbrev)
+                }
+                Spacer()
+                if let course = group.course {
+                    Text(" \(course) курс")
+                }
+            }
+            .frame(width: 200)
+            .font(.system(size: 14, weight: .light))
+        }
+    }
 }

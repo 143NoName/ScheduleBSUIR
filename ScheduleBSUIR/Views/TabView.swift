@@ -19,35 +19,26 @@ struct TabBarView: View {
     var body: some View {
         ZStack {
             TabView(selection: $selectedTab) {
-                Groups()
-                    .tabItem {
-                        Text("Все группы")
-                        Image(systemName: "person.3")
-                    }
-                    .tag(0)
-                if favoriteGroup != "" {
-                    EachGroup(groupName: favoriteGroup)
-                        .tabItem {
-                            Text("Моя группа")
-                            Image(systemName: "star")
-                        }
-                        .tag(1)
+                Tab("Все группы", systemImage: "person.3", value: 0) {
+                    Groups()
                 }
                 
-                PersonalAccount()
-                    .tabItem {
-                        Text("Личный кабинет")
-                        Image(systemName: "person")
+                if favoriteGroup != "" {
+                    Tab("Моя группа", systemImage: "star", value: 1) {
+                        EachGroup(groupName: favoriteGroup)
                     }
-                    .tag(2)
+                }
+                
+                Tab("Личный кабинет", systemImage: "person.circle", value: 2) {
+                    PersonalAccount()
+                }
+                
             }
             .task {
                 await viewModel.getCurrentWeek()           // получение текущей недели
                 await viewModel.getArrayOfGroupNum()       // получение списка групп
                 
 //                viewModel.saveDataForWidgetToAppStorage(data: viewModel.arrayOfScheduleGroup.schedules) // загрузка данных в AppStorage
-                
-                
                 
             }
             
