@@ -305,7 +305,6 @@ struct ViewForMedium: View {
             
             Spacer()
             
-            
             if isWeekend {
                 VStack {
                     Text("Выходной")
