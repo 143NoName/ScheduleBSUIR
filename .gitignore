@@ -2,3 +2,6 @@
 */.xcuserstate
 **/xcuserdata/
 **/xcschemes/xcschememanagement.plist
+
+# Игнорирование этих файлов
+ScheduleBSUIR.xcodeproj/project.xcworkspace/xcuserdata/andrew.xcuserdatad/UserInterfaceState.xcuserstate
