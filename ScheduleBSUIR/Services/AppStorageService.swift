@@ -15,7 +15,7 @@ protocol AppStorageServiceProtocol {
 class AppStorageService: AppStorageServiceProtocol {
     
     @AppStorage("groupSchedule", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var groupSchedule: Data?
-    @AppStorage("groupName", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var groupName: String = ""
+    @AppStorage("favoriteGroup", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var favoriteGroup: String = ""
     
     let encoder = JSONEncoder()
     let decoder = JSONDecoder()
@@ -35,7 +35,6 @@ class AppStorageService: AppStorageServiceProtocol {
         do {
             guard let rawData = groupSchedule else { return nil }
             let data = try decoder.decode(Schedules.self, from: rawData)
-            print(data)
             return data
         } catch {
             throw error
@@ -44,13 +43,13 @@ class AppStorageService: AppStorageServiceProtocol {
     
     // загрузка имени любимой группы в AppStorage
     func saveFavoriteGroupInAppStorage(_ favoriteGroup: String) {
-        print("Имя группы загружено: \(favoriteGroup)")
-        groupName = favoriteGroup
+//        print("Имя группы загружено: \(favoriteGroup)")
+//        favoriteGroup = favoriteGroup
     }
     
     // получение имени любимой группы в AppStorage
     func getFavoriteGroupFromAppStorage() -> String {
-        print("Имя группы получено \(groupName)")
-        return groupName
+        print("Имя группы получено \(favoriteGroup)")
+        return favoriteGroup
     }
 }

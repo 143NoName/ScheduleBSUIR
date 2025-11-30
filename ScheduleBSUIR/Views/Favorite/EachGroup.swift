@@ -28,6 +28,11 @@ struct EachGroup: View {
     
     let groupName: String
     
+    init(groupName: String) {
+        self.groupName = groupName
+        print("Отрисовка")
+    }
+    
     @State var isShowMore: Bool = false
 
     var body: some View {
@@ -67,7 +72,7 @@ struct EachGroup: View {
                                                 ForEach(day.lessons.enumerated(), id: \.offset) { index, lesson in
                                                     EachLesson(lesson: lesson)
                                                 }
-//                                                .backgroundStyle(.NewColor)
+//                                                .backgroundStyle(.NewColor) // хочу сделать одинаковый цвет для листа и для окна выбора дня, недели и подгруппы
                                             }
                                         }
                                     }
@@ -145,6 +150,9 @@ struct EachGroup: View {
                     .padding()
                 }
             }
+            .onDisappear {
+                viewModel.allInNull()
+            }
 
             .navigationTitle(groupName)
             .toolbar {
@@ -170,9 +178,9 @@ struct EachGroup: View {
 
             }
             
-            .onAppear {
-                funcs.saveInUserDefaults(viewModel.arrayOfScheduleGroup.schedules ,weekDay: weekDay, weenNumber: viewModel.currentWeek, subGroupe: subGroup, favoriteGroup: favoriteGroup) // сохранение в UserDefaults для виджета
-            }
+//            .onAppear {
+//                funcs.saveInUserDefaults(viewModel.arrayOfScheduleGroup.schedules ,weekDay: weekDay, weenNumber: viewModel.currentWeek, subGroupe: subGroup, favoriteGroup: favoriteGroup) // сохранение в UserDefaults для виджета
+//            }
             
             .task {
                 await viewModel.getScheduleGroup(group: groupName) // получение расписания группы

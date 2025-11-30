@@ -19,70 +19,36 @@ struct Provider: TimelineProvider {
         let entry = LessonsInWidget(date: Date(), lessons: [], favoriteGroup: "261402")
         completion(entry)
     }
+
+    let funcsService: FuncsServiceForWidget
+    // для более простой тестуруемости (вместо FuncsServiceForWidget можно добавить другой класс)
+    // а еще лучше зависеть не от объекта, а от абстракции (протокола)
     
-    
-    let appStorageService = AppStorageService()
-    
+    init(funcsService: FuncsServiceForWidget = FuncsServiceForWidget()) {
+        self.funcsService = funcsService
+    }
     
     func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) { // основная функция, создает расписание обновлений
         
         let date = Date()
         let calendar = Calendar.current
-        let lessons = getDataFromUserDefaults()
+        var lessons: Schedules? = nil
+        do {
+            guard let data = try funcsService.getDataFromUserDefaults() else { return }
+            lessons = data
+        } catch {
+            print("Ошибка при получении расписания в виджет")
+        }
         
         guard let nextDay = calendar.date(byAdding: .day, value: 1, to: date) else { return }
         let startOfNextDay = calendar.startOfDay(for: nextDay)
         
         let timeLine = [
-            LessonsInWidget(date: date, lessons: findTodayLessons(lessons: lessons), favoriteGroup: getFavoriteGroupFromUserDefaults()),
-            LessonsInWidget(date: startOfNextDay, lessons: findTodayLessons(lessons: lessons), favoriteGroup: getFavoriteGroupFromUserDefaults())
+            LessonsInWidget(date: date, lessons: funcsService.findTodayLessons(lessons: lessons), favoriteGroup: funcsService.favoriteGroup == "" ? "Неизвество" : funcsService.favoriteGroup),
+            LessonsInWidget(date: startOfNextDay, lessons: funcsService.findTodayLessons(lessons: lessons), favoriteGroup: funcsService.favoriteGroup == "" ? "Неизвество" : funcsService.favoriteGroup)
         ]
         
         completion(Timeline(entries: timeLine, policy: .after(Date())))
-    }
-    
-    // получение номера группы
-    private func getFavoriteGroupFromUserDefaults() -> String {
-        let userDefaults = UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")!
-        guard let favoriteGroup = userDefaults.string(forKey: "favoriteGroup") else {
-            print("Ошибка при чтении данных из userDefaults")
-            return ""
-        }
-        return favoriteGroup
-    }
-
-    // получение всего расписания
-    private func getDataFromUserDefaults() -> /*[Lesson]*/ Schedules? {
-//        let userDefaults = UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")!
-//        guard let rawData = userDefaults.data(forKey: "widget") else {
-//            print("Ошибка при чтении данных из userDefaults")
-//            return []
-//        }
-//        do {
-//            let data = try JSONDecoder().decode([Lesson].self, from: rawData)
-//            return(data)
-//        } catch {
-//            print("Проблема с декодированием")
-//        }
-//        return []
-        
-        do {
-            let data = try appStorageService.getDataFromAppStorage()
-            print("Данные получаемые от AppStorage: \(String(describing: data))")
-            return data
-        } catch {
-            print(error)
-        }
-        return nil
-    }
-    
-    func findTodayLessons(lessons: Schedules?) -> [Lesson] {
-        guard let lessons else { return [] }
-        
-        let calendar = Calendar.current
-        let date = Date()
-        let today = calendar.component(.weekday, from: date)
-        return lessons.atDay(today) ?? []
     }
 }
 
@@ -101,24 +67,14 @@ struct ScheduleBSUIRWidgetEntryView: View {
     @Environment(\.widgetFamily) var widgetFamily
 
     var body: some View {
-//        switch widgetFamily {
-//        case .systemSmall:
-//            ViewForSmall(lesson: findCurrentLesson, favoriteGroup: entry.favoriteGroup ,isHaveData: isHaveData, date: date, color: color, startTime: startTime, endTime: endTime, typeOfLesson: typeOfLesson, lessomName: lessonName, auditories: auditories, nextLesson: nextLesson, numberOfLessons: numberOfLessons)
-//        case .systemMedium:
-//            ViewForMedium(isHaveData: isHaveData, date: date, lesson: findCurrentLesson, favoriteGroup: entry.favoriteGroup)
-//        case .systemLarge:
-//            ViewForLarge(isHaveData: isHaveData, date: date, lesson: findCurrentLesson, favoriteGroup: entry.favoriteGroup)
-//        default:
-//            EmptyView()
-//        }
         
         switch widgetFamily {
 //        case .systemSmall:
-//            ViewForSmall(date: date, favoriteGroup: entry.favoriteGroup, lesson: entry.lessons)
+//            ViewForSmall(date: date, favoriteGroup: entry.favoriteGroup, lesson: findCurrentLesson, isWeekend: isWeekend, isHaveLessons: isHaveLessons)
         case .systemMedium:
-            ViewForMedium(date: date, favoriteGroup: entry.favoriteGroup, lesson: entry.lessons)
+            ViewForMedium(date: date, favoriteGroup: entry.favoriteGroup, lesson: findCurrentLesson, isWeekend: isWeekend, isHaveLessons: isHaveLessons)
         case .systemLarge:
-            ViewForLarge(date: date, favoriteGroup: entry.favoriteGroup, lesson: entry.lessons)
+            ViewForLarge(date: date, favoriteGroup: entry.favoriteGroup, lesson: findCurrentLesson, isWeekend: isWeekend, isHaveLessons: isHaveLessons)
         default:
             EmptyView()
         }
@@ -148,30 +104,38 @@ extension ScheduleBSUIRWidgetEntryView {
         return formatter.shortStandaloneWeekdaySymbols[index]
     }
     
-//    var findCurrentLesson: [Lesson] { // определение текущего урока по времени
-//        
-//        let formatter = DateFormatter()
-//        formatter.dateFormat = "HH:mm"
-//        formatter.locale = Locale(identifier: "ru_RU")
-//        
-//        let currentDate = Date()
-//        
-//        let currentDateInString = formatter.string(from: currentDate)
-//        
-//        let currentLesson = entry.lessons.filter { lesson in
-//            lesson.endLessonTime > currentDateInString || lesson.endLessonTime == currentDateInString
-//        }
-//        
-//        return currentLesson
-//    }
+    var findCurrentLesson: [Lesson] { // определение текущего урока по времени
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm"
+        formatter.locale = Locale(identifier: "ru_RU")
+        
+        let currentDate = Date()
+        
+        let currentDateInString = formatter.string(from: currentDate)
+        
+        let currentLesson = entry.lessons.filter { lesson in
+            lesson.endLessonTime > currentDateInString || lesson.endLessonTime == currentDateInString
+        }
+        
+        return currentLesson
+    }
     
-//    var isHaveData: Bool { // проверка наличия данных
-//        if .isEmpty {
-//            return false
-//        } else {
-//            return true
-//        }
-//    }
+    var isWeekend: Bool { // проверка есть ли сегодня уроки
+        if entry.lessons.isEmpty {
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    var isHaveLessons: Bool { // проверка наличия данных
+        if findCurrentLesson.isEmpty {
+            return false
+        } else {
+            return true
+        }
+    }
     
     var date: String { // создание самой даты, например (Чт, 5)
         "\(getShortWeekdaySymbol()), \(calendar.component(.day, from: Date()))"
@@ -234,82 +198,90 @@ extension Collection {
     }
 }
 
-struct ViewForSmall: View {
-    
-    let lesson: [Lesson]
-    
-    let favoriteGroup: String
-    let isHaveData: Bool
-    let date: String
-    let color: Color
-    let startTime: String
-    let endTime: String
-    let typeOfLesson: String
-    let lessomName: String
-    let auditories: [String]
-    let nextLesson: String
-    let numberOfLessons: Int
-    
-    var body: some View {
-        VStack(alignment: .leading) {
-            HStack {
-                Text(date)
-                Spacer()
-                Text(favoriteGroup)
-            }
-            .font(.system(size: 16, weight: .medium))
-            
-            Spacer()
-            
-            if !isHaveData {
-                VStack {
-                    Text("Нет занятий")
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-            }
-            else  {
-                HStack {
-                    RoundedRectangle(cornerRadius: 6)
-                        .fill(color)
-                        .frame(width: 10, height: 55)
-                    VStack(alignment: .leading) {
-                        Text("\(startTime) - \(endTime)")
-                            .opacity(0.9)
-                        Text("\(typeOfLesson) по \(lessomName)")
-                        Text(auditories.first ?? "Нет")
-                            .opacity(0.7)
-                    }
-                }
-                .font(.system(size: 16))
-                
-                Spacer()
-                
-                if lesson.count > 1 {
-                    HStack {
-                        Circle()
-                            .fill(Color.gray)
-                            .frame(width: 12, height: 12)
-                        Text("\(nextLesson)")
-                            .opacity(0.5)
-                        Text(numberOfLessons > 0 ? "и еще \(numberOfLessons)" : "")
-                            .opacity(0.5)
-                    }
-                    .font(.system(size: 14, weight: .medium))
-                }
-            }
-        }
-    }
-}
+//struct ViewForSmall: View {
+//    
+//    let date: String
+//    let favoriteGroup: String
+//    let lesson: [Lesson]
+//    let isWeekend: Bool
+//    let isHaveLessons: Bool
+//    
+//    func color(lesson: Lesson) -> Color {
+//        if lesson.lessonTypeAbbrev == "ЛК" {
+//            return .green
+//        } else if lesson.lessonTypeAbbrev == "ПЗ" {
+//            return .yellow
+//        } else if lesson.lessonTypeAbbrev == "ЛР" {
+//            return .red
+//        }
+//        return .gray
+//    }
+//    
+//    var body: some View {
+//        VStack(alignment: .leading) {
+//            HStack {
+//                Text(date)
+//                Spacer()
+//                Text(favoriteGroup)
+//            }
+//            .font(.system(size: 16, weight: .medium))
+//            
+//            Spacer()
+//            
+//            
+//            if isWeekend {
+//                VStack {
+//                    Text("Выходной")
+//                }
+//                .frame(maxWidth: .infinity, maxHeight: .infinity)
+//            } else if !isWeekend && !isHaveLessons {
+//                VStack() {
+//                    Text("Занятия закончились")
+//                }
+//                .frame(maxWidth: .infinity, maxHeight: .infinity)
+//            } else {
+//                HStack {
+//                    RoundedRectangle(cornerRadius: 6)
+//                        .fill(color(lesson: lesson.first))
+//                        .frame(width: 10, height: 55)
+//                    VStack(alignment: .leading) {
+//                        Text("\(lesson.first!.startLessonTime) - \(lesson.first!.endLessonTime)")
+//                            .opacity(0.9)
+//                        Text("\(lesson.first!.lessonTypeAbbrev) по \(lesson.first!.subject)")
+//                        Text(lesson.first!.auditories.first ?? "Нет")
+//                            .opacity(0.7)
+//                    }
+//                }
+//                .font(.system(size: 16))
+//                
+//                Spacer()
+//                
+//                if lesson.count > 1 {
+//                    HStack {
+//                        Circle()
+//                            .fill(Color.gray)
+//                            .frame(width: 12, height: 12)
+//                        Text("\(lesson[1].subject)")
+//                            .opacity(0.5)
+//                        if lesson.count > 2 {
+//                            Text("и еще \(lesson.count - 2)")
+//                                .opacity(0.5)
+//                        }
+//                    }
+//                    .font(.system(size: 14, weight: .medium))
+//                }
+//            }
+//        }
+//    }
+//}
 
 struct ViewForMedium: View {
     
-//    let isHaveData: Bool
-//    let date: String
-//    let lesson: [Lesson]
-//    let favoriteGroup: String
     let date: String
     let favoriteGroup: String
     let lesson: [Lesson]
+    let isWeekend: Bool
+    let isHaveLessons: Bool
     
     func color(lesson: Lesson) -> Color {
         if lesson.lessonTypeAbbrev == "ЛК" {
@@ -333,10 +305,16 @@ struct ViewForMedium: View {
             
             Spacer()
             
-            if !lesson.isEmpty {
-                Text("Нет занятий")
-                    .frame(maxWidth: .infinity)
-                Spacer()
+            if isWeekend {
+                VStack {
+                    Text("Выходной")
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else if !isWeekend && !isHaveLessons {
+                VStack() {
+                    Text("Занятия закончились")
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
                 ForEach(lesson.enumerated(), id: \.offset) { index, id in
                     if index < 3 {
@@ -359,28 +337,28 @@ struct ViewForMedium: View {
                         Circle()
                             .fill(Color.gray)
                             .frame(width: 8, height: 8)
-                        Text("C 13:00 ПЗ по ОС и еще 2")
-                            .font(.system(size: 14))
-                            .opacity(0.5)
+                        HStack {
+                            Text("C \(lesson[2].startLessonTime) \(lesson[2].lessonTypeAbbrev) по \(lesson[2].subject) ")
+                            if lesson.count > 4 {
+                                Text("и еще \(lesson.count - 4)")
+                            }
+                        }
+                        .font(.system(size: 14))
+                        .opacity(0.5)
                     }
                 }
             }
-        }
-        .onAppear {
-            print(lesson)
         }
     }
 }
 
 struct ViewForLarge: View {
     
-//    let isHaveData: Bool
-//    let date: String
-//    let lesson: [Lesson]
-//    let favoriteGroup: String
     let date: String
     let favoriteGroup: String
     let lesson: [Lesson]
+    let isWeekend: Bool
+    let isHaveLessons: Bool
     
     func color(lesson: Lesson) -> Color {
         if lesson.lessonTypeAbbrev == "ЛК" {
@@ -404,11 +382,18 @@ struct ViewForLarge: View {
             
             Spacer()
             
-//            if !isHaveData {
-//                Text("Нет занятий")
-//                    .frame(maxWidth: .infinity)
-//                    .font(.system(size: 20))
-//            } else {
+            if isWeekend {
+                VStack {
+                    Text("Выходной")
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else if !isWeekend && !isHaveLessons {
+                VStack() {
+                    Text("Занятия закончились")
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+            else {
                 VStack(alignment: .leading, spacing: 5) {
                     ForEach(lesson.enumerated(), id: \.offset) { index, id in
                         if index < 6 {
@@ -438,7 +423,7 @@ struct ViewForLarge: View {
                 .padding()
                 .background(Color.gray.opacity(0.25))
                 .clipShape(RoundedRectangle(cornerRadius: 12))
-//            }
+            }
             
             Spacer()
             

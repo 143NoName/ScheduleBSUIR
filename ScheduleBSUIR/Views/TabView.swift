@@ -8,15 +8,8 @@
 import SwiftUI
 
 struct TabBarView: View {
-//    let appStorageService = AppStorageService()
-//    let networkService = NetworkService()
-//    let funcs = MoreFunctions()
     
-    @StateObject var viewModel = ViewModel(
-//        appStorageService: appStorageService,
-//        networkService: networkService,
-//        funcs: funcs
-    )
+    @StateObject var viewModel = ViewModel()
     
     @State private var selectedTab: Int = 1
     @State private var splashScreen: Bool = true
@@ -51,13 +44,17 @@ struct TabBarView: View {
             .task {
                 await viewModel.getCurrentWeek()           // получение текущей недели
                 await viewModel.getArrayOfGroupNum()       // получение списка групп
-
-                viewModel.saveDataForWidgetToAppStorage(data: viewModel.arrayOfScheduleGroup.schedules)
+                
+//                viewModel.saveDataForWidgetToAppStorage(data: viewModel.arrayOfScheduleGroup.schedules) // загрузка данных в AppStorage
+                
+                
+                
             }
             
+            // показывать начальное окно
             if !viewModel.isLoadingArrayOfGroupsNum {
                 StartView()
-            }           // показывать начальное окно
+            }
         }
         .environmentObject(viewModel)
     }

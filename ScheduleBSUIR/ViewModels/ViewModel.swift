@@ -41,7 +41,7 @@ class ViewModel: ObservableObject {
         }
     }
     
-    @Published var arrayOfGroupsNum: [ModelNumbersOfGroups] = []
+    @Published var arrayOfGroupsNum: [StudentGroups] = []
     @Published var isLoadingArrayOfGroupsNum: Bool = false
     @Published var errorOfGroupsNum: String = ""
     
@@ -99,8 +99,32 @@ class ViewModel: ObservableObject {
         }
     }
     
+    func allInNull() {
+        arrayOfScheduleGroup = ScheduleResponse(
+            startDate: "",
+            endDate: "",
+            startExamsDate: nil,
+            endExamsDate: nil,
+            employeeDto: nil,
+            schedules: Schedules(
+                monday: [],
+                tuesday: [],
+                wednesday: [],
+                thursday: [],
+                friday: [],
+                saturday: [],
+                sunday: []
+            ),
+            currentTerm: "",
+            currentPeriod: ""
+        )
+        isLoadingArrayOfScheduleGroup = false
+        errorOfScheduleGroup = ""
+    }
+    
     @Published var filteredLessons: [(dayName: String, lessons: [Lesson])] = []
     
+    // после выхода из группы, сохраняется ошибка, поэтому она остается навсегда
     
     
     
@@ -129,21 +153,33 @@ extension ViewModel {
         
         if let monday = arrayOfScheduleGroup.schedules.monday, !monday.isEmpty {
             days.append(("Понедельник", monday))
+        } else {
+            days.append(("Понедельник", []))
         }
         if let tuesday = arrayOfScheduleGroup.schedules.tuesday, !tuesday.isEmpty {
             days.append(("Вторник", tuesday))
+        } else {
+            days.append(("Вторник", []))
         }
         if let wednesday = arrayOfScheduleGroup.schedules.wednesday, !wednesday.isEmpty {
             days.append(("Среда", wednesday))
+        } else {
+            days.append(("Среда", []))
         }
         if let thursday = arrayOfScheduleGroup.schedules.thursday, !thursday.isEmpty {
             days.append(("Четверг", thursday))
+        } else {
+            days.append(("Четверг", []))
         }
         if let friday = arrayOfScheduleGroup.schedules.friday, !friday.isEmpty {
             days.append(("Пятница", friday))
+        } else {
+            days.append(("Пятница", []))
         }
         if let saturday = arrayOfScheduleGroup.schedules.saturday, !saturday.isEmpty {
             days.append(("Суббота", saturday))
+        } else {
+            days.append(("Суббота", []))
         }
         if let sunday = arrayOfScheduleGroup.schedules.sunday, !sunday.isEmpty {
             days.append(("Воскресенье", sunday))
@@ -152,7 +188,7 @@ extension ViewModel {
         }
         
         return days
-    }
+    } // наверно можно сделать как покрасивее
     
     // фильтрация уроков по подгруппе и по неделе + фильтрация "Консультация", "Экзамен"
     func filterSchedule(currentWeek: WeeksInPicker, subGroup: SubGroupInPicker) {

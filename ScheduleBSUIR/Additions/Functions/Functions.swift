@@ -130,4 +130,24 @@ struct MoreFunctions {
         }
         return ""
     }
+    
+    
+    
+     // РАБОТА С APPSTORAGE
+    
+    
+    @AppStorage("groupSchedule", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var groupSchedule: Data?
+    @AppStorage("groupName", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var groupName: String = ""
+    
+    let encoder = JSONEncoder()
+    
+    // сохранение данных в AppStorage
+    func saveDataForWidgetToAppStorage(_ data: Schedules) throws {
+        do {
+            let rawData = try encoder.encode(data)
+            groupSchedule = rawData
+        } catch {
+            throw error
+        }
+    }
 }

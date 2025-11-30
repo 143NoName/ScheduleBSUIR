@@ -8,14 +8,14 @@
 import Foundation
 
 struct ScheduleResponse: Codable, Sendable {
-    let startDate: String
-    let endDate: String
+    let startDate: String?
+    let endDate: String?
     let startExamsDate: String?
     let endExamsDate: String?
     let employeeDto: Employee?
     let schedules: Schedules
-    let currentTerm: String
-    let currentPeriod: String
+    let currentTerm: String?
+    let currentPeriod: String?
 }
 
 struct Schedules: Codable, Sendable {
