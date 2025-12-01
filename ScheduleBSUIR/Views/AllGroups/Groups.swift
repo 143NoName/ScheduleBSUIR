@@ -73,7 +73,7 @@ struct Groups: View {
                             if !viewModel.errorOfGroupsNum.isEmpty {
                                 IfErrorGroups()
                             } else {
-                                ForEach(viewModel.arrayOfGroupsNum) { each in
+                                ForEach(searchable.enumerated(), id: \.offset ) { index, each in
                                     
                                     
 //                                    NavigationLink(destination: EachGroup(groupName: each.name)) {
@@ -116,18 +116,8 @@ struct Groups: View {
             }
             .navigationDestination(for: String.self) { group in
                 EachGroup(groupName: group)
-//                Text(group)
             }
         }
-    }
-}
-
-struct Rrr: View {
-    
-    let rr: String
-    
-    var body: some View {
-        Text("rfrjq nj \(rr)")
     }
 }
 

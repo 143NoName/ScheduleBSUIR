@@ -44,7 +44,7 @@ struct EachGroup: View {
                     if !viewModel.isLoadingArrayOfScheduleGroup {
                         Section(header:
                             Text("Загрузка...")
-                            .foregroundStyle(colorScheme == .dark ? .white : .black)
+                                .foregroundStyle(colorScheme == .dark ? .white : .black)
                         ) {
                             ForEach(0..<6, id: \.self) { _ in
                                 EachLessonLoading()
@@ -56,7 +56,10 @@ struct EachGroup: View {
                         } else {
                             Section(header:
                                         Text("Расписание")
-                                .foregroundStyle(colorScheme == .dark ? .white : .black)
+                                            .foregroundStyle(colorScheme == .dark ? .white : .black),
+                                    footer:
+                                        Color.clear
+                                            .frame(height: 300)
                             ) {
                                 ForEach(viewModel.filteredLessons.enumerated(), id: \.offset) { index, day in
                                     if funcs.comparisonDay(weekDay, lessonDay: day.dayName) {
