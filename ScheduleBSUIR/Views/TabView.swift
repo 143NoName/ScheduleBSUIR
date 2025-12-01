@@ -25,7 +25,9 @@ struct TabBarView: View {
                 
                 if favoriteGroup != "" {
                     Tab("Моя группа", systemImage: "star", value: 1) {
-                        EachGroup(groupName: favoriteGroup)
+                        NavigationStack {
+                            EachGroup(groupName: favoriteGroup)
+                        }
                     }
                 }
                 

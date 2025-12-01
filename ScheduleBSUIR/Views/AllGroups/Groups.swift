@@ -73,16 +73,26 @@ struct Groups: View {
                             if !viewModel.errorOfGroupsNum.isEmpty {
                                 IfErrorGroups()
                             } else {
-                                ForEach(searchable.enumerated(), id: \.offset) { index, each in
+                                ForEach(viewModel.arrayOfGroupsNum) { each in
                                     
                                     
+//                                    NavigationLink(destination: EachGroup(groupName: each.name)) {
+//                                        ViewEachGroup(group: each)
+//                                    }
                                     
                                     
-                                    NavigationLink(destination: EachGroup(groupName: each.name)) {
+//                                    Button {
+//                                        path.append(each.name)
+//                                        print(path)
+//                                    } label: {
+//                                        ViewEachGroup(group: each)
+//                                    }
+//                                    .tint(.primary)
+                                    
+                                    
+                                    NavigationLink(value: each.name) {
                                         ViewEachGroup(group: each)
                                     }
-                                    
-                                    
                                     
                                     
                                 }
@@ -104,10 +114,20 @@ struct Groups: View {
                 
                 .ignoresSafeArea(edges: .bottom)
             }
-//            .navigationDestination(for: String.self) { group in
-//                EachGroup(groupName: group)
-//            }
+            .navigationDestination(for: String.self) { group in
+                EachGroup(groupName: group)
+//                Text(group)
+            }
         }
+    }
+}
+
+struct Rrr: View {
+    
+    let rr: String
+    
+    var body: some View {
+        Text("rfrjq nj \(rr)")
     }
 }
 

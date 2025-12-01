@@ -59,15 +59,6 @@ enum WeeksInPicker: Int, CaseIterable, Identifiable {
     case third = 3
     case fourth = 4
     var id: Self { self }
-    
-//    var filterByWeek: Int {
-//        switch self {
-//        case .first: return 1
-//        case .second: return 2
-//        case .third: return 3
-//        case .fourth: return 4
-//        }
-//    }
 }
 
 enum InEditProfile {
@@ -75,31 +66,35 @@ enum InEditProfile {
     case surname
     case patronymic
     case groupName
+    case subGroup
     
-    var pageName: String {
+    var pageName: String { // название страницы сверху
         switch self {
             case .name: return "Имя студента"
             case .surname: return "Фамилия студента"
             case .patronymic: return "Отчетсво студента"
             case .groupName: return "Номер группы"
+            case .subGroup: return "Номер подгруппы"
         }
     }
     
-    var inSection: String {
+    var inSection: String { // текст в секии списка
         switch self {
             case .name: return "Измени свое имя"
             case .surname: return "Измени свою фамилию"
             case .patronymic: return "Измени свое отчество"
             case .groupName: return "Выбери учебную группу"
+            case .subGroup: return "Выбири свою подгруппу"
         }
     }
     
-    var forAppStorage: String {
+    var forAppStorage: String { // ссылка на хранилище в AppStorage
         switch self {
             case .name: return "studentName"
             case .surname: return "studentSurname"
             case .patronymic: return "studentPatronymic"
             case .groupName: return "groupNumber"
+            case .subGroup: return "subGroupNumber"
         }
     }
 }

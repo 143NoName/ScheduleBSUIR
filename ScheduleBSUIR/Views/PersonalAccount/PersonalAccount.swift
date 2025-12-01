@@ -25,6 +25,8 @@ struct PersonalAccount: View {
         
     @AppStorage("favoriteGroup", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var favoriteGroup: String = ""
     
+    @AppStorage("studentSubGroup") var studentSubGroup: String = "0"
+    
     var body: some View {
         NavigationStack {
             ZStack {
@@ -35,20 +37,29 @@ struct PersonalAccount: View {
                 }
                 
                 List {
-                    Section() {
+                    Section {
                         Image("PlainPhoto")
                             .resizable()
-                            .frame(width: 100, height: 100)
-                            .clipShape(RoundedRectangle(cornerRadius: 50))
+                            .frame(width: 150, height: 150)
+                            .clipShape(RoundedRectangle(cornerRadius: 75))
                             
                     }
                     .frame(maxWidth: .infinity)
 
                     Section {
-                        NavigationLink(studentName.isEmpty ? "Имя студента" : "Имя: \(studentName)", destination: EditProfile(parametr: .name))
-                        NavigationLink(studentSurname.isEmpty ? "Фамилия студента" : "Фамилия: \(studentSurname)", destination: EditProfile(parametr: .surname))
-                        NavigationLink(studentPatronymic.isEmpty ? "Отвество студента" : "Ответство: \(studentPatronymic)", destination: EditProfile(parametr: .patronymic))
+                        
+                        NavigationLink(value: InEditProfile.name) {
+                            Text(studentName.isEmpty ? "Имя студента" : "Имя: \(studentName)")
+                        }
+                        NavigationLink(value: InEditProfile.surname) {
+                            Text(studentSurname.isEmpty ? "Фамилия студента" : "Фамилия: \(studentSurname)")
+                        }
+                        NavigationLink(value: InEditProfile.patronymic) {
+                            Text(studentPatronymic.isEmpty ? "Отвество студента" : "Ответство: \(studentPatronymic)")
+                        }
+                        
                     }
+                    
                     Section(footer: Text("Твоя группа, которая будет отображаться по умолчанию в приложении и в виджетах")) {
                         Picker("Номер группы", selection: $favoriteGroup) {
                             Text("Не выбрано").tag("")
@@ -57,7 +68,16 @@ struct PersonalAccount: View {
                             }
                         }
                         .pickerStyle(.navigationLink)
+                        
+                        Picker("Подгруппа", selection: $studentSubGroup) {
+                            Text("Все подгруппы").tag("0")
+                            Text("Первая подгруппы").tag("1")
+                            Text("Вторая подгруппы").tag("2")
+                        }
+                        .pickerStyle(.navigationLink)
+                        
                     }
+                    
                     .onChange(of: favoriteGroup) {
                         Task {
                             await viewModel.getScheduleGroup(group: favoriteGroup)
@@ -80,6 +100,9 @@ struct PersonalAccount: View {
                         }
                     }
                 }
+            }
+            .navigationDestination(for: InEditProfile.self) { parametr in
+                EditProfile(parametr: parametr)
             }
         }
     }

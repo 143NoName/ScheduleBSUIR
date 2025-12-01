@@ -15,6 +15,7 @@ struct EditProfile: View {
     @AppStorage("studentSurname") var studentSurname: String = ""
     @AppStorage("studentPatronymic") var studentPatronymic: String = ""
     @AppStorage("groupNumber") var groupNumber: String = ""
+    @AppStorage("studentSubGroup") var studentSubGroup: String = ""
     
     private var fronStringToBinding: Binding<String> {
         switch parametr {
@@ -26,30 +27,31 @@ struct EditProfile: View {
             return $studentPatronymic
         case .groupName:
             return $groupNumber
+        case .subGroup:
+            return $studentSubGroup
         }
     }
     
     let parametr: InEditProfile
     
     var body: some View {
-        NavigationStack {
-            ZStack {
-                if colorScheme == .light {
-                    Color.gray
-                        .opacity(0.1)
-                        .ignoresSafeArea(edges: .all)
-                }
-                
-                List{
-                    Section(parametr.inSection) {
-                        TextField(parametr.pageName != "" ? parametr.pageName : parametr.forAppStorage, text: fronStringToBinding)
-                    }
-                }
-                .scrollContentBackground(.hidden)
-                .navigationTitle(parametr.pageName)
-                .navigationBarTitleDisplayMode(.inline)
+        ZStack {
+            if colorScheme == .light {
+                Color.gray
+                    .opacity(0.1)
+                    .ignoresSafeArea(edges: .all)
             }
-        }
+            
+            List{
+                Section(parametr.inSection) {
+                    TextField(parametr.pageName != "" ? parametr.pageName : parametr.forAppStorage, text: fronStringToBinding)
+                }
+            }
+            .scrollContentBackground(.hidden)
+            .navigationTitle(parametr.pageName)
+            .navigationBarTitleDisplayMode(.inline)
+
+    }
     }
 }
 
