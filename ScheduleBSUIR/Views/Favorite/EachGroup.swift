@@ -81,17 +81,21 @@ struct EachGroup: View {
             }
             
             VStack(spacing: 0) {
-                Button("К сегодняшнему дню") {
+                Button {
                     if let updateWeekNum = WeeksInPicker(rawValue: viewModel.currentWeek) {
                         weekNumber = updateWeekNum
                     }
-                    
+                        
                     if let currentDay = DaysInPicker(rawValue: calendar.component(.weekday, from: Date()) - 1)  {
                         weekDay = currentDay
                     }
+                } label: {
+                    Text("К сегодняшнему дню")
+                        .padding(EdgeInsets(top: 4, leading: 12, bottom: 4, trailing: 12))
                 }
-                .padding(EdgeInsets(top: 8, leading: 18, bottom: 8, trailing: 18))
-                .glassEffect(.regular , in: .rect(cornerRadius: 12))
+//                .padding(EdgeInsets(top: 8, leading: 24, bottom: 8, trailing: 24))
+//                .glassEffect(.regular , in: .rect(cornerRadius: 12)) // просто стекло
+                .buttonStyle(GlassButtonStyle(.regular)) // прозрачное стекло
                 .foregroundStyle(.primary)
                 
                 VStack {
@@ -196,6 +200,9 @@ struct EachGroup: View {
 }
 
 #Preview {
-    EachGroup(groupName: "261402")
-        .environmentObject(ViewModel())
+    NavigationStack {
+        EachGroup(groupName: "261402")
+            .environmentObject(ViewModel())
+    }
+    
 }

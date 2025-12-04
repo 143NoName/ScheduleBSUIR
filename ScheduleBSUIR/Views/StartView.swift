@@ -15,6 +15,9 @@ struct StartView: View {
     
     @AppStorage("favoriteGroup") var favoriteGroup: String = ""
     
+    @Binding var opacity: Double
+    @Binding var scale: CGFloat
+    
     var body: some View {
         NavigationStack {
             ZStack {
@@ -25,18 +28,18 @@ struct StartView: View {
                     Image(colorScheme == .dark ? "LogoWhite" : "LogoBlack")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .padding(.bottom)
-                    Text("ScheduleBSUIR")
-                        .font(.system(size: 26, weight: .semibold))
                 }
                 .padding(50)
             }
+            
         }
+        .opacity(opacity)
+        .scaleEffect(scale)
     }
 }
 
 
-#Preview {
-    StartView()
-        .environmentObject(ViewModel())
-}
+//#Preview {
+//    StartView()
+//        .environmentObject(ViewModel())
+//}

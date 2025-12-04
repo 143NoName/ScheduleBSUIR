@@ -14,6 +14,10 @@ struct TabBarView: View {
     @State private var selectedTab: Int = 1
     @State private var splashScreen: Bool = true
     
+    @State private var isPresentedSplashScreen: Bool = true
+    @State var scale: CGFloat = 1
+    @State var opacity: Double = 1
+    
     @AppStorage("favoriteGroup", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var favoriteGroup: String = ""
     
     var body: some View {
@@ -45,9 +49,21 @@ struct TabBarView: View {
             }
             
             // показывать начальное окно
-            if !viewModel.isLoadingArrayOfGroupsNum {
-                StartView()
+            if isPresentedSplashScreen {
+                StartView(opacity: $opacity, scale: $scale)
+                .onAppear {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                        withAnimation(.easeOut(duration: 1)) {
+                            scale = 15
+                            opacity = 0
+                        }
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.1) {
+                            isPresentedSplashScreen = false
+                        }
+                    }
+                }
             }
+            
         }
         .environmentObject(viewModel)
     }

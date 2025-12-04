@@ -113,7 +113,8 @@ struct MoreFunctions {
         formatter.dateFormat = "dd.MM.yyyy"
         formatter.locale = Locale(identifier: "ru_RU")
         
-        let date = Date()
+        let calendar = Calendar.current
+        let date = calendar.startOfDay(for: Date()) // получение сегоднящнего дня с временем 00:00
         
         guard let lessonStartLessonDate = lesson.startLessonDate else { return "" }
         guard let lessonEndLessonDate = lesson.endLessonDate else { return "" }
@@ -121,11 +122,11 @@ struct MoreFunctions {
         let lessonStartLessonDateInDate = formatter.date(from: lessonStartLessonDate)!
         let lessonEndLessonDateInDate = formatter.date(from: lessonEndLessonDate)!
         
+        print(date, lessonEndLessonDateInDate)
         
         if date > lessonEndLessonDateInDate {
             return "По \(lessonEndLessonDate)"
-        }
-        if date < lessonStartLessonDateInDate {
+        } else if date < lessonStartLessonDateInDate {
             return "С \(lessonStartLessonDate)"
         }
         return ""
