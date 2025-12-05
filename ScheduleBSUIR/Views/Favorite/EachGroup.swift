@@ -11,7 +11,7 @@ import WidgetKit
 struct EachGroup: View {
     
     @EnvironmentObject var network: ViewModelForNetwork
-    @EnvironmentObject var filter: ViewModelForFilterService
+//    @EnvironmentObject var filter: ViewModelForFilterService
     @Environment(\.viewModelForAppStorageKey) var appStorage
     
     
@@ -62,7 +62,7 @@ struct EachGroup: View {
                                         Color.clear
                                             .frame(height: 300)
                             ) {
-                                ForEach(network.filteredLessons.enumerated(), id: \.offset) { index, day in
+                                ForEach(network.scheduleByDays.enumerated(), id: \.offset) { index, day in
                                     if funcs.comparisonDay(weekDay, lessonDay: day.dayName) {
                                         if day.lessons.isEmpty {
                                             IfDayLessonIsEmpty()
@@ -74,10 +74,6 @@ struct EachGroup: View {
                                         }
                                     }
                                 }
-                                
-//                                ForEach(filter.filteredLessons.enumerated(), id: \.offset) { index, day in
-//                                    Text("jnihbu")
-//                                }
                                 
                             }
                         }
@@ -97,7 +93,7 @@ struct EachGroup: View {
                     }
                 } label: {
                     Text("К сегодняшнему дню")
-                        .padding(EdgeInsets(top: 4, leading: 12, bottom: 4, trailing: 12))
+                        .padding(EdgeInsets(top: 2, leading: 8, bottom: 2, trailing: 8))
                 }
                 .buttonStyle(GlassButtonStyle(.regular))
                 
@@ -171,13 +167,11 @@ struct EachGroup: View {
         }
         
         .onChange(of: subGroup) {
-//            filter.filterSchedule(currentWeek: weekNumber, subGroup: subGroup, scheduleDays: network.scheduleDays)
             network.filterSchedule(currentWeek: weekNumber, subGroup: subGroup)
             // при изменении подгруппы фильтрация расписания
         }
         
         .onChange(of: weekNumber) {
-//            filter.filterSchedule(currentWeek: weekNumber, subGroup: subGroup, scheduleDays: network.scheduleDays)
             network.filterSchedule(currentWeek: weekNumber, subGroup: subGroup)
             // при изменении недели фильтрация расписания
         }
@@ -188,7 +182,8 @@ struct EachGroup: View {
         
         .task {
             await network.getScheduleGroup(group: groupName) // получение расписания группы
-                  network.filterSchedule(currentWeek: weekNumber, subGroup: subGroup) // фильтрация по неделе и по подгруппе
+//            filter.filterSchedule(currentWeek: weekNumber, subGroup: subGroup, scheduleDays: network.scheduleDays)
+//                  network.filterSchedule(currentWeek: weekNumber, subGroup: subGroup) // фильтрация по неделе и по подгруппе
             
             // надо вынести в отдельную функцию
             if let updateWeekNum = WeeksInPicker(rawValue: network.currentWeek) {

@@ -19,9 +19,13 @@ class ViewModelForFilterService: ObservableObject {
     
     @Published var filteredLessons: [(dayName: String, lessons: [Lesson])] = []
     
-    func filterSchedule(currentWeek: WeeksInPicker, subGroup: SubGroupInPicker, scheduleDays: [(dayName: String, lessons: [Lesson])]) {
-        filteredLessons = filterService.filterSchedule(currentWeek: currentWeek, subGroup: subGroup, scheduleDays: scheduleDays)
-        print("Получаем: \(scheduleDays)")
-        print("Возвращаем: \(filteredLessons)")
-    }
+//    func filterSchedule(currentWeek: WeeksInPicker, subGroup: SubGroupInPicker, scheduleDays: [(dayName: String, lessons: [Lesson])]) {
+//        filteredLessons = filterService.filterSchedule(currentWeek: currentWeek, subGroup: subGroup, scheduleDays: scheduleDays)
+//        print("Получаем: \(scheduleDays)")
+//        print("Возвращаем: \(filteredLessons)")
+//    }
+//    
+//    func rr () {
+//        print("wjvijwe")
+//    }
 }

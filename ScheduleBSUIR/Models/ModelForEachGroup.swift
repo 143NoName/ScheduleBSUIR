@@ -95,3 +95,11 @@ struct Employee: Codable, Sendable {
     let jobPositions: String?
     let chief: Bool?
 }
+
+
+// для более удобного представления расписания
+struct ScheduleDays: Codable { // не подходит потому что нужно [Ключ: Значение]
+    let dayName: String
+    let lessons: [Lesson]
+}
+// для более удобного представления расписания

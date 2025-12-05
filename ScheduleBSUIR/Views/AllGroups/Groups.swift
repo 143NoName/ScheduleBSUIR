@@ -74,27 +74,9 @@ struct Groups: View {
                                 IfErrorGroups()
                             } else {
                                 ForEach(searchable.enumerated(), id: \.offset ) { index, each in
-                                    
-                                    
-//                                    NavigationLink(destination: EachGroup(groupName: each.name)) {
-//                                        ViewEachGroup(group: each)
-//                                    }
-                                    
-                                    
-//                                    Button {
-//                                        path.append(each.name)
-//                                        print(path)
-//                                    } label: {
-//                                        ViewEachGroup(group: each)
-//                                    }
-//                                    .tint(.primary)
-                                    
-                                    
                                     NavigationLink(value: each.name) {
                                         ViewEachGroup(group: each)
                                     }
-                                    
-                                    
                                 }
                             }
                         }
