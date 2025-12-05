@@ -7,9 +7,22 @@
 
 import SwiftUI
 
+struct ViewModelForAppStorageKey: EnvironmentKey {
+    static let defaultValue: ViewModelForAppStorage? = nil  // Может быть optional
+}
+
+extension EnvironmentValues {
+    var viewModelForAppStorageKey: ViewModelForAppStorage? {
+        get { self[ViewModelForAppStorageKey.self] }
+        set { self[ViewModelForAppStorageKey.self] = newValue }
+    }
+}
+
 struct TabBarView: View {
     
-    @StateObject var viewModel = ViewModel()
+    @StateObject private var viewModelForNetwork = ViewModelForNetwork()
+    @StateObject private var viewModelForFilter = ViewModelForFilterService()
+                 private var viewModelForAppStorage = ViewModelForAppStorage()
     
     @State private var selectedTab: Int = 1
     @State private var splashScreen: Bool = true
@@ -41,10 +54,10 @@ struct TabBarView: View {
                 
             }
             .task {
-                await viewModel.getCurrentWeek()           // получение текущей недели
-                await viewModel.getArrayOfGroupNum()       // получение списка групп
+                await viewModelForNetwork.getCurrentWeek()           // получение текущей недели
+                await viewModelForNetwork.getArrayOfGroupNum()       // получение списка групп
                 
-//                viewModel.saveDataForWidgetToAppStorage(data: viewModel.arrayOfScheduleGroup.schedules) // загрузка данных в AppStorage
+//                viewModelForNetwork.saveDataForWidgetToAppStorage(data: viewModelForNetwork.arrayOfScheduleGroup.schedules) // загрузка данных в AppStorage
                 
             }
             
@@ -65,7 +78,9 @@ struct TabBarView: View {
             }
             
         }
-        .environmentObject(viewModel)
+        .environmentObject(viewModelForNetwork)
+        .environmentObject(viewModelForFilter)
+        .environment(\.viewModelForAppStorageKey, viewModelForAppStorage)
     }
 }
 

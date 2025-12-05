@@ -11,7 +11,7 @@ struct StartView: View {
     
     @Environment(\.colorScheme) var colorScheme
     
-    @EnvironmentObject var viewModel: ViewModel
+//    @EnvironmentObject var viewModelForNetwork: ViewModelForNetwork
     
     @AppStorage("favoriteGroup") var favoriteGroup: String = ""
     
@@ -37,9 +37,3 @@ struct StartView: View {
         .scaleEffect(scale)
     }
 }
-
-
-//#Preview {
-//    StartView()
-//        .environmentObject(ViewModel())
-//}

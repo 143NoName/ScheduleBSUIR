@@ -24,7 +24,7 @@ struct IfDayLessonIsEmpty: View {
 
 struct IfHaveErrorSchedule: View {
     
-    @EnvironmentObject var viewModel: ViewModel
+    @EnvironmentObject var viewModelForNetwork: ViewModelForNetwork
     
     var body: some View {
         HStack() {
@@ -33,7 +33,7 @@ struct IfHaveErrorSchedule: View {
                 .foregroundStyle(.red)
                 .frame(width: 100, height: 100)
             Spacer()
-            Text(viewModel.errorOfScheduleGroup)
+            Text(viewModelForNetwork.errorOfScheduleGroup)
                 .font(.system(size: 16, weight: .medium))
         }
         .padding(EdgeInsets(top: 12, leading: 20, bottom: 12, trailing: 20))
@@ -42,7 +42,7 @@ struct IfHaveErrorSchedule: View {
 
 struct IfErrorGroups: View {
     
-    @EnvironmentObject var viewModel: ViewModel
+    @EnvironmentObject var viewModelForNetwork: ViewModelForNetwork
     
     var body: some View {
         HStack() {
@@ -51,7 +51,7 @@ struct IfErrorGroups: View {
                 .foregroundStyle(.red)
                 .frame(width: 100, height: 100)
             Spacer()
-            Text(viewModel.errorOfGroupsNum)
+            Text(viewModelForNetwork.errorOfGroupsNum)
                 .font(.system(size: 16, weight: .medium))
         }
         .padding(EdgeInsets(top: 12, leading: 20, bottom: 12, trailing: 20))

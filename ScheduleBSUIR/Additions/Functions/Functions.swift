@@ -121,9 +121,7 @@ struct MoreFunctions {
         
         let lessonStartLessonDateInDate = formatter.date(from: lessonStartLessonDate)!
         let lessonEndLessonDateInDate = formatter.date(from: lessonEndLessonDate)!
-        
-        print(date, lessonEndLessonDateInDate)
-        
+                
         if date > lessonEndLessonDateInDate {
             return "По \(lessonEndLessonDate)"
         } else if date < lessonStartLessonDateInDate {

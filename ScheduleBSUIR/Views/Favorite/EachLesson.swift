@@ -54,7 +54,7 @@ struct EachLessonLoading: View {
 
 struct EachLesson: View {
     
-    @EnvironmentObject var viewModel: ViewModel
+//    @EnvironmentObject var viewModelForNetwork: ViewModelForNetwork
     
     let funcs = MoreFunctions()
     

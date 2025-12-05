@@ -9,7 +9,7 @@ import SwiftUI
 
 struct Groups: View {
     
-    @EnvironmentObject var viewModel: ViewModel
+    @EnvironmentObject var viewModelForNetwork: ViewModelForNetwork
     
     @Environment(\.colorScheme) var colorScheme
     
@@ -17,14 +17,14 @@ struct Groups: View {
     
     var searchable: [StudentGroups] {
         if searchText.isEmpty {
-            return viewModel.arrayOfGroupsNum
+            return viewModelForNetwork.arrayOfGroupsNum
         } else {
-            return viewModel.arrayOfGroupsNum.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
+            return viewModelForNetwork.arrayOfGroupsNum.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
         }
     }
     
     var loadedGroups: String {
-        if !viewModel.isLoadingArrayOfGroupsNum {
+        if !viewModelForNetwork.isLoadingArrayOfGroupsNum {
             return "Загрузка..."
         } else {
             return "Все группы"
@@ -45,7 +45,7 @@ struct Groups: View {
                 }
                 
                 VStack {
-                    if !viewModel.isLoadingArrayOfGroupsNum {
+                    if !viewModelForNetwork.isLoadingArrayOfGroupsNum {
                         List {
                             ForEach(0..<20) { _ in
                                 VStack(alignment: .leading) {
@@ -70,7 +70,7 @@ struct Groups: View {
                         .scrollContentBackground(.hidden)
                     } else {
                         List {
-                            if !viewModel.errorOfGroupsNum.isEmpty {
+                            if !viewModelForNetwork.errorOfGroupsNum.isEmpty {
                                 IfErrorGroups()
                             } else {
                                 ForEach(searchable.enumerated(), id: \.offset ) { index, each in
@@ -104,12 +104,12 @@ struct Groups: View {
                 
                 .navigationTitle(loadedGroups)
                 
-                .if(viewModel.isLoadingArrayOfGroupsNum) { view in
+                .if(viewModelForNetwork.isLoadingArrayOfGroupsNum) { view in
                     view.searchable(text: $searchText, prompt: "Поиск по группам")
                 }
                 
                 .refreshable {
-                    await viewModel.getArrayOfGroupNum()       // получение списка групп
+                    await viewModelForNetwork.getArrayOfGroupNum()       // получение списка групп
                 }
                 
                 .ignoresSafeArea(edges: .bottom)
@@ -134,7 +134,7 @@ extension View {
 
 #Preview {
     Groups()
-        .environmentObject(ViewModel())
+        .environmentObject(ViewModelForNetwork())
 }
 
  

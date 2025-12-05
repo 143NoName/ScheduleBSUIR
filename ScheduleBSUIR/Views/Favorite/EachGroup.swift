@@ -10,7 +10,10 @@ import WidgetKit
 
 struct EachGroup: View {
     
-    @EnvironmentObject var viewModel: ViewModel
+    @EnvironmentObject var network: ViewModelForNetwork
+    @EnvironmentObject var filter: ViewModelForFilterService
+    @Environment(\.viewModelForAppStorageKey) var appStorage
+    
     
     @Environment(\.colorScheme) var colorScheme
     
@@ -21,9 +24,7 @@ struct EachGroup: View {
     @AppStorage("weekNumber") var weekNumber: WeeksInPicker = .first
     
     @AppStorage("favoriteGroup", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var favoriteGroup: String = ""
-    
-//    let userDefaultSave = UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")!
-    
+        
     let calendar = Calendar.current // используется для нахождения сегодняшего дня (надо вынести в отдельную функцию)
     
     let groupName: String
@@ -41,7 +42,7 @@ struct EachGroup: View {
             
             VStack(alignment: .leading) {
                 List {
-                    if !viewModel.isLoadingArrayOfScheduleGroup {
+                    if !network.isLoadingArrayOfScheduleGroup {
                         Section(header:
                             Text("Загрузка...")
                                 .foregroundStyle(colorScheme == .dark ? .white : .black)
@@ -51,7 +52,7 @@ struct EachGroup: View {
                             }
                         }
                     } else {
-                        if !viewModel.errorOfScheduleGroup.isEmpty {
+                        if !network.errorOfScheduleGroup.isEmpty {
                             IfHaveErrorSchedule()
                         } else {
                             Section(header:
@@ -61,7 +62,7 @@ struct EachGroup: View {
                                         Color.clear
                                             .frame(height: 300)
                             ) {
-                                ForEach(viewModel.filteredLessons.enumerated(), id: \.offset) { index, day in
+                                ForEach(network.filteredLessons.enumerated(), id: \.offset) { index, day in
                                     if funcs.comparisonDay(weekDay, lessonDay: day.dayName) {
                                         if day.lessons.isEmpty {
                                             IfDayLessonIsEmpty()
@@ -73,6 +74,11 @@ struct EachGroup: View {
                                         }
                                     }
                                 }
+                                
+//                                ForEach(filter.filteredLessons.enumerated(), id: \.offset) { index, day in
+//                                    Text("jnihbu")
+//                                }
+                                
                             }
                         }
                     }
@@ -82,7 +88,7 @@ struct EachGroup: View {
             
             VStack(spacing: 0) {
                 Button {
-                    if let updateWeekNum = WeeksInPicker(rawValue: viewModel.currentWeek) {
+                    if let updateWeekNum = WeeksInPicker(rawValue: network.currentWeek) {
                         weekNumber = updateWeekNum
                     }
                         
@@ -93,10 +99,7 @@ struct EachGroup: View {
                     Text("К сегодняшнему дню")
                         .padding(EdgeInsets(top: 4, leading: 12, bottom: 4, trailing: 12))
                 }
-//                .padding(EdgeInsets(top: 8, leading: 24, bottom: 8, trailing: 24))
-//                .glassEffect(.regular , in: .rect(cornerRadius: 12)) // просто стекло
-                .buttonStyle(GlassButtonStyle(.regular)) // прозрачное стекло
-                .foregroundStyle(.primary)
+                .buttonStyle(GlassButtonStyle(.regular))
                 
                 VStack {
                     VStack(alignment: .leading) {
@@ -152,7 +155,7 @@ struct EachGroup: View {
             }
         }
         .onDisappear {
-            viewModel.allInNull()
+            network.allInNull() // чистка всего при деинициализации
         }
 
         .navigationTitle(groupName)
@@ -168,33 +171,34 @@ struct EachGroup: View {
         }
         
         .onChange(of: subGroup) {
-            viewModel.filterSchedule(currentWeek: weekNumber, subGroup: subGroup)
+//            filter.filterSchedule(currentWeek: weekNumber, subGroup: subGroup, scheduleDays: network.scheduleDays)
+            network.filterSchedule(currentWeek: weekNumber, subGroup: subGroup)
+            // при изменении подгруппы фильтрация расписания
         }
         
         .onChange(of: weekNumber) {
-            viewModel.filterSchedule(currentWeek: weekNumber, subGroup: subGroup)
+//            filter.filterSchedule(currentWeek: weekNumber, subGroup: subGroup, scheduleDays: network.scheduleDays)
+            network.filterSchedule(currentWeek: weekNumber, subGroup: subGroup)
+            // при изменении недели фильтрация расписания
         }
         
         .sheet(isPresented: $isShowMore) {
 
         }
         
-//            .onAppear {
-//                funcs.saveInUserDefaults(viewModel.arrayOfScheduleGroup.schedules ,weekDay: weekDay, weenNumber: viewModel.currentWeek, subGroupe: subGroup, favoriteGroup: favoriteGroup) // сохранение в UserDefaults для виджета
-//            }
-        
         .task {
-            await viewModel.getScheduleGroup(group: groupName) // получение расписания группы
-            viewModel.filterSchedule(currentWeek: weekNumber, subGroup: subGroup) // фильтрация по неделе и по подгруппе
+            await network.getScheduleGroup(group: groupName) // получение расписания группы
+                  network.filterSchedule(currentWeek: weekNumber, subGroup: subGroup) // фильтрация по неделе и по подгруппе
             
-            
-            if let updateWeekNum = WeeksInPicker(rawValue: viewModel.currentWeek) {
+            // надо вынести в отдельную функцию
+            if let updateWeekNum = WeeksInPicker(rawValue: network.currentWeek) {
                 weekNumber = updateWeekNum
             }
             
             if let currentDay = DaysInPicker(rawValue: calendar.component(.weekday, from: Date()) - 1)  {
                 weekDay = currentDay
             }
+            // надо вынести в отдельную функцию
         }
     }
 }
@@ -202,7 +206,7 @@ struct EachGroup: View {
 #Preview {
     NavigationStack {
         EachGroup(groupName: "261402")
-            .environmentObject(ViewModel())
+            .environmentObject(ViewModelForNetwork())
     }
     
 }

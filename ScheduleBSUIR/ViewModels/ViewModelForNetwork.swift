@@ -9,22 +9,23 @@ import Foundation
 import Combine
 import SwiftUI
 
-@MainActor
-class ViewModel: ObservableObject {
+class ViewModelForNetwork: ObservableObject {
     
-//    let appStorageService: AppStorageService
-//    let networkService: NetworkService
-//    let funcs: MoreFunctions
-//    
-//    init(appStorageService: AppStorageService, networkService: NetworkService, funcs: MoreFunctions) {
-//        self.appStorageService = appStorageService
-//        self.networkService = networkService
-//        self.funcs = funcs
-//    }
+    private let appStorageService: AppStorageServiceProtocol
+    private let networkService: NetworkServiceProtocol
+//    private let filterSchedule: FilterServiceProtocol
     
-    let appStorageService = AppStorageService()
-    let networkService = NetworkService()
-    let funcs = MoreFunctions()
+    init(
+        networkService: NetworkServiceProtocol = NetworkService(),
+        appStorageService: AppStorageServiceProtocol = AppStorageService(),
+//        filterSchedule: FilterServiceProtocol = FilterService()
+    ) {
+        self.networkService = networkService
+        self.appStorageService = appStorageService
+//        self.filterSchedule = filterSchedule
+    }
+    
+    private let funcs = MoreFunctions()
     
     @Published var currentWeek: Int = 0
     @Published var errorOfCurrentWeek: String = ""
@@ -125,27 +126,11 @@ class ViewModel: ObservableObject {
     @Published var filteredLessons: [(dayName: String, lessons: [Lesson])] = []
     
     // после выхода из группы, сохраняется ошибка, поэтому она остается навсегда
-    
-    
-    
-    
-    
-    
-    
-    
-// MARK: AppStorageService
-    
-    func saveDataForWidgetToAppStorage(data: Schedules) {
-        do {
-            try appStorageService.saveDataForWidgetToAppStorage(data)
-        } catch {
-            print("Проблема при загрузке данных")
-        }
-    }
+
 }
 
 
-extension ViewModel {
+extension ViewModelForNetwork {
     
     var scheduleDays: [(dayName: String, lessons: [Lesson])] {
         
