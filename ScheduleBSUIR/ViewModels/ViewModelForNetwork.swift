@@ -88,7 +88,7 @@ class ViewModelForNetwork: ObservableObject {
     func getScheduleGroup(group: String) async {
         do {
             arrayOfScheduleGroup = try await networkService.getScheduleGroup(group)
-//            convertToScheduleDays()
+            convertToScheduleDays() // сразу преобразовать в (День: [Занятия])
             withAnimation(.easeIn) {
                 isLoadingArrayOfScheduleGroup = true
             }
@@ -146,7 +146,7 @@ class ViewModelForNetwork: ObservableObject {
     }
     
     func filterSchedule(currentWeek: WeeksInPicker, subGroup: SubGroupInPicker) {
-        convertToScheduleDays()
+        convertToScheduleDays() // для того чтобы перед фильтрацией вернуть все пары, которые были отфильтрованы раньше
         let filteredArray = scheduleByDays.map { (dayName, lessons) in
             let filteredLessons = lessons.filter { lesson in
                 lesson.weekNumber.contains(currentWeek.rawValue) &&

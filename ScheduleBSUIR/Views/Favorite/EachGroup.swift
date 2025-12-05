@@ -150,6 +150,7 @@ struct EachGroup: View {
                 .padding()
             }
         }
+        
         .onDisappear {
             network.allInNull() // чистка всего при деинициализации
         }
@@ -183,7 +184,7 @@ struct EachGroup: View {
         .task {
             await network.getScheduleGroup(group: groupName) // получение расписания группы
 //            filter.filterSchedule(currentWeek: weekNumber, subGroup: subGroup, scheduleDays: network.scheduleDays)
-//                  network.filterSchedule(currentWeek: weekNumber, subGroup: subGroup) // фильтрация по неделе и по подгруппе
+                  network.filterSchedule(currentWeek: weekNumber, subGroup: subGroup) // фильтрация по неделе и по подгруппе
             
             // надо вынести в отдельную функцию
             if let updateWeekNum = WeeksInPicker(rawValue: network.currentWeek) {
