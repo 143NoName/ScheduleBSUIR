@@ -16,6 +16,7 @@ class AppStorageService: AppStorageServiceProtocol {
     
     @AppStorage("groupSchedule", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var groupSchedule: Data?
     @AppStorage("favoriteGroup", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var favoriteGroup: String = ""
+    @AppStorage("weekNumber", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var weekNumber: Int = 0
     
     let encoder = JSONEncoder()
     let decoder = JSONDecoder()
@@ -30,6 +31,16 @@ class AppStorageService: AppStorageServiceProtocol {
         }
     }
     
+    func saveWeekNumberToAppStorage(_ weekNum: Int) {
+        weekNumber = weekNum
+    }
+    
+    // загрузка номера группы и подгруппы в AppStorage автоматическое их изменении
+    
+    
+    // MARK: - Далее получение данных
+    
+    
     // получение расписания группы из AppStorage
     func getDataFromAppStorage() throws -> Schedules? {
         do {
@@ -41,11 +52,6 @@ class AppStorageService: AppStorageServiceProtocol {
         }
     }
     
-    // загрузка имени любимой группы в AppStorage
-    func saveFavoriteGroupInAppStorage(_ favoriteGroup: String) {
-//        print("Имя группы загружено: \(favoriteGroup)")
-//        favoriteGroup = favoriteGroup
-    }
     
     // получение имени любимой группы в AppStorage
     func getFavoriteGroupFromAppStorage() -> String {

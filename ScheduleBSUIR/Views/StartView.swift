@@ -10,11 +10,7 @@ import SwiftUI
 struct StartView: View {
     
     @Environment(\.colorScheme) var colorScheme
-    
-//    @EnvironmentObject var viewModelForNetwork: ViewModelForNetwork
-    
-    @AppStorage("favoriteGroup") var favoriteGroup: String = ""
-    
+
     @Binding var opacity: Double
     @Binding var scale: CGFloat
     

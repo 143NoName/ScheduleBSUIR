@@ -10,7 +10,7 @@ import WidgetKit
 
 struct PersonalAccount: View {
     
-    @EnvironmentObject var viewModelForNetwork: ViewModelForNetwork
+    @EnvironmentObject var network: ViewModelForNetwork
     
     @Environment(\.colorScheme) var colorScheme
     
@@ -24,8 +24,7 @@ struct PersonalAccount: View {
     @AppStorage("studentPatronymic") var studentPatronymic: String = ""
         
     @AppStorage("favoriteGroup", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var favoriteGroup: String = ""
-    
-    @AppStorage("studentSubGroup") var studentSubGroup: String = "0"
+    @AppStorage("subGroup", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var subGroup: Int = 0
     
     var body: some View {
         NavigationStack {
@@ -63,16 +62,16 @@ struct PersonalAccount: View {
                     Section(footer: Text("Твоя группа, которая будет отображаться по умолчанию в приложении и в виджетах")) {
                         Picker("Номер группы", selection: $favoriteGroup) {
                             Text("Не выбрано").tag("")
-                            ForEach(viewModelForNetwork.arrayOfGroupsNum, id: \.id) { group in
+                            ForEach(network.arrayOfGroupsNum, id: \.id) { group in
                                 Text(group.name).tag(group.name)
                             }
                         }
                         .pickerStyle(.navigationLink)
                         
-                        Picker("Подгруппа", selection: $studentSubGroup) {
-                            Text("Все подгруппы").tag("0")
-                            Text("Первая подгруппы").tag("1")
-                            Text("Вторая подгруппы").tag("2")
+                        Picker("Подгруппа", selection: $subGroup) {
+                            Text("Все подгруппы").tag(0)
+                            Text("Первая подгруппы").tag(1)
+                            Text("Вторая подгруппы").tag(2)
                         }
                         .pickerStyle(.navigationLink)
                         
@@ -80,8 +79,8 @@ struct PersonalAccount: View {
                     
                     .onChange(of: favoriteGroup) {
                         Task {
-                            await viewModelForNetwork.getScheduleGroup(group: favoriteGroup)
-                            try funcs.saveDataForWidgetToAppStorage(viewModelForNetwork.arrayOfScheduleGroup.schedules)
+                            await network.getScheduleGroup(group: favoriteGroup)
+                            try funcs.saveDataForWidgetToAppStorage(network.arrayOfScheduleGroup.schedules)
                             
                             WidgetCenter.shared.reloadAllTimelines()
                             

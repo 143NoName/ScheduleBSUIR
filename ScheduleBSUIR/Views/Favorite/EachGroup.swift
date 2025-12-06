@@ -12,7 +12,7 @@ struct EachGroup: View {
     
     @EnvironmentObject var network: ViewModelForNetwork
 //    @EnvironmentObject var filter: ViewModelForFilterService
-    @Environment(\.viewModelForAppStorageKey) var appStorage
+//    @Environment(\.viewModelForAppStorageKey) var appStorage
     
     
     @Environment(\.colorScheme) var colorScheme

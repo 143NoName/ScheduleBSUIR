@@ -7,22 +7,22 @@
 
 import SwiftUI
 
-struct ViewModelForAppStorageKey: EnvironmentKey {
-    static let defaultValue: ViewModelForAppStorage? = nil  // Может быть optional
+struct AppStorageServiceKey: EnvironmentKey {
+    static let defaultValue: AppStorageService? = nil  // Может быть optional
 }
 
 extension EnvironmentValues {
-    var viewModelForAppStorageKey: ViewModelForAppStorage? {
-        get { self[ViewModelForAppStorageKey.self] }
-        set { self[ViewModelForAppStorageKey.self] = newValue }
+    var appStorageKey: AppStorageService? {
+        get { self[AppStorageServiceKey.self] }
+        set { self[AppStorageServiceKey.self] = newValue }
     }
 }
 
 struct TabBarView: View {
     
-    @StateObject private var viewModelForNetwork = ViewModelForNetwork()
+    @StateObject private var network = ViewModelForNetwork()
     @StateObject private var viewModelForFilter = ViewModelForFilterService()
-                 private var viewModelForAppStorage = ViewModelForAppStorage()
+                 private var appStorage = AppStorageService()
     
     @State private var selectedTab: Int = 1
     @State private var splashScreen: Bool = true
@@ -54,8 +54,17 @@ struct TabBarView: View {
                 
             }
             .task {
-                await viewModelForNetwork.getCurrentWeek()           // получение текущей недели
-                await viewModelForNetwork.getArrayOfGroupNum()       // получение списка групп
+                let _ = await network.getCurrentWeek()           // получение текущей недели
+                let _ = await network.getArrayOfGroupNum()       // получение списка групп
+                
+                do {
+                    try appStorage.saveDataForWidgetToAppStorage(network.arrayOfScheduleGroup.schedules)
+                } catch {
+                    print("Неудачная попытка загрузить расписание в AppStorage: \(error)")
+                }
+                
+                appStorage.saveWeekNumberToAppStorage(network.currentWeek)
+                
                 
 //                viewModelForNetwork.saveDataForWidgetToAppStorage(data: viewModelForNetwork.arrayOfScheduleGroup.schedules) // загрузка данных в AppStorage
                 
@@ -78,9 +87,9 @@ struct TabBarView: View {
             }
             
         }
-        .environmentObject(viewModelForNetwork)
+        .environmentObject(network)
         .environmentObject(viewModelForFilter)
-        .environment(\.viewModelForAppStorageKey, viewModelForAppStorage)
+        .environment(\.appStorageKey, appStorage)
     }
 }
 
