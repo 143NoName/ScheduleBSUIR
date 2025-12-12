@@ -6,17 +6,17 @@
 //
 
 import WidgetKit
-//import AppIntents
+import AppIntents
 import SwiftUI
 
 struct Provider: TimelineProvider {
     
     func placeholder(in context: Context) -> LessonsInWidget { // показывает заглушку при первом добавлении виджета
-        LessonsInWidget(date: Date(), lessons: [], favoriteGroup: "261402")
+        LessonsInWidget(date: Date(), lessons: [], favoriteGroup: "261402", subGroup: 1, weekNum: 1)
     }
 
     func getSnapshot(in context: Context, completion: @escaping (LessonsInWidget) -> ()) { // показывает пример виджета при выборе
-        let entry = LessonsInWidget(date: Date(), lessons: [], favoriteGroup: "261402")
+        let entry = LessonsInWidget(date: Date(), lessons: [], favoriteGroup: "261402", subGroup: 1, weekNum: 1)
         completion(entry)
     }
 
@@ -33,9 +33,26 @@ struct Provider: TimelineProvider {
         let date = Date()
         let calendar = Calendar.current
         var lessons: Schedules? = nil
+        
+//        startBackgroundDownload() // выполнение функции фоновой загрузки данных
+//        
+//        let value = loadData() // записать полученных данных в UserDefaults
+//        
+//        let nextDay = calendar.date(byAdding: .minute, value: 1, to: Date())! // определение завтрашнего дня (след минуты)
+//        
+//        let entrys = [ // создание одного entry
+//            LessonsInWidget(date: date, lessons: [], favoriteGroup: value),
+//            LessonsInWidget(date: nextDay, lessons: [], favoriteGroup: value)
+//        ]
+//        
+//        let timeline = Timeline(entries: entrys, policy: .after(nextDay)) // записать нового TimeLine
+//        
+//        completion(timeline)
+        
         do {
             guard let data = try funcsService.getDataFromUserDefaults() else { return }
             lessons = data
+            print(data)
         } catch {
             print("Ошибка при получении расписания в виджет")
         }
@@ -44,18 +61,54 @@ struct Provider: TimelineProvider {
         let startOfNextDay = calendar.startOfDay(for: nextDay)
         
         let timeLine = [
-            LessonsInWidget(date: date, lessons: funcsService.findTodayLessons(lessons: lessons), favoriteGroup: funcsService.favoriteGroup == "" ? "Неизвество" : funcsService.favoriteGroup),
-            LessonsInWidget(date: startOfNextDay, lessons: funcsService.findTodayLessons(lessons: lessons), favoriteGroup: funcsService.favoriteGroup == "" ? "Неизвество" : funcsService.favoriteGroup)
+            LessonsInWidget(date: date, lessons: funcsService.findTodayLessons(lessons: lessons), favoriteGroup: funcsService.favoriteGroup == "" ? "Неизвество" : funcsService.favoriteGroup, subGroup: funcsService.subGroup, weekNum: 1),
+            LessonsInWidget(date: startOfNextDay, lessons: funcsService.findTodayLessons(lessons: lessons), favoriteGroup: funcsService.favoriteGroup == "" ? "Неизвество" : funcsService.favoriteGroup, subGroup: funcsService.subGroup, weekNum: 1)
         ]
         
         completion(Timeline(entries: timeLine, policy: .after(Date())))
     }
+    
+//    private func startBackgroundDownload() {
+//        let sessionID = "widget.download.\(UUID().uuidString)" // создаем уникальный ID для этой загрузки
+//    
+//        let config = URLSessionConfiguration.background(withIdentifier: sessionID) // создаем фоновую сессию
+//        config.isDiscretionary = true // Система выберет когда скачивать
+//    
+//        let session = URLSession(configuration: config) // создание самой сессии
+//        
+//        guard let url = URL(string: "https://iis.bsuir.by/api/v1/schedule/current-week") else {
+//            return
+//        }                // URL для данных
+//            
+//        // Создаем задачу загрузки
+//        let task = session.downloadTask(with: url)
+//        
+//        // Планируем на ближайшее удобное время
+//        task.earliestBeginDate = Date().addingTimeInterval(60) // Через 1 минуту
+//        
+//        // Запускаем
+//        task.resume()
+//        
+//        print("📅 Загрузка запланирована: \(sessionID)")
+//    }
+//    
+//    private func loadData() -> String {
+//        // Просто читаем флаг
+//        let defaults = UserDefaults(suiteName: "widget.schedule.bsuir")
+////          if defaults?.string(forKey: "weekNumber") == "Задача выполненна и данные пришли" {
+////               return "Данные получены!"
+////            }
+//        guard let data = defaults?.string(forKey: "weekNumber") else { return "Нет данных" }
+//        return data
+//    }
 }
 
 struct LessonsInWidget: TimelineEntry {
     let date: Date
     let lessons: [Lesson]
     let favoriteGroup: String
+    let subGroup: Int
+    let weekNum: Int
 }
 
 
@@ -74,7 +127,7 @@ struct ScheduleBSUIRWidgetEntryView: View {
         case .systemMedium:
             ViewForMedium(date: date, favoriteGroup: entry.favoriteGroup, lesson: findCurrentLesson, isWeekend: isWeekend, isHaveLessons: isHaveLessons)
         case .systemLarge:
-            ViewForLarge(date: date, favoriteGroup: entry.favoriteGroup, lesson: findCurrentLesson, isWeekend: isWeekend, isHaveLessons: isHaveLessons)
+            ViewForLarge(date: date, favoriteGroup: entry.favoriteGroup, weenNumber: weenNumber, subGroup: subGroup, lesson: findCurrentLesson, isWeekend: isWeekend, isHaveLessons: isHaveLessons)
         default:
             EmptyView()
         }
@@ -142,8 +195,15 @@ extension ScheduleBSUIRWidgetEntryView {
     } // почему то выполняется 6 раз
 
     
+    // только для большого виджета
+    var subGroup: Int {
+        return entry.subGroup
+    }
     
-    
+    var weenNumber: Int {
+        return entry.weekNum
+    }
+    // только для большого виджета
     
     
     
@@ -356,6 +416,8 @@ struct ViewForLarge: View {
     
     let date: String
     let favoriteGroup: String
+    let weenNumber: Int
+    let subGroup: Int
     let lesson: [Lesson]
     let isWeekend: Bool
     let isHaveLessons: Bool
@@ -428,9 +490,13 @@ struct ViewForLarge: View {
             Spacer()
             
             HStack {
-                Text("Неделя: 1")
+                Text("Неделя: \(weenNumber)")
                 Spacer()
-                Text("Подргуппа: 2")
+                if subGroup == 0 {
+                    Text("Все подгруппы")
+                } else {
+                    Text("Подргуппа: \(subGroup)")
+                }
             }
             .padding(EdgeInsets(top: 4, leading: 4, bottom: 0, trailing: 4))
             .font(.system(size: 14, weight: .semibold))
@@ -440,8 +506,11 @@ struct ViewForLarge: View {
 }
 
 
+
 struct ScheduleBSUIRWidget: Widget {
     let kind: String = "ScheduleBSUIRWidget"
+    
+    let defaults = UserDefaults(suiteName: "widget.schedule.bsuir")
 
     var body: some WidgetConfiguration {
         StaticConfiguration(
@@ -454,28 +523,44 @@ struct ScheduleBSUIRWidget: Widget {
             } else {
                 ScheduleBSUIRWidgetEntryView(entry: entry)
                     .padding()
-                    .background()
+                    .background(Color.white)
             }
         }
         .configurationDisplayName("Расписание БГУИР")
         .description("Краткий просмотр расписания")
+        .supportedFamilies([.systemMedium, .systemLarge])
+        // грубо говоря тут проверяем, что данные есть и если есть, то записываем в UserDefaults
+//        .onBackgroundURLSessionEvents { identifier, completion in
+//            let session = URLSession(configuration: .background(withIdentifier: identifier))
+//            
+//            session.getAllTasks { completedTasks in // проверка пришли ли данные, и если да, то показать их
+//                for task in completedTasks {
+//                    defaults?.set("Вот данные2", forKey: "weekNumber")
+////                    print(task.response.debugDescription)
+//                }
+//                
+//                WidgetCenter.shared.reloadAllTimelines() // обновление виджета
+//                                
+//                completion()
+//            }
+//        }
     }
 }
 
-#Preview(as: .systemSmall) {
-    ScheduleBSUIRWidget()
-} timeline: {
-    LessonsInWidget(date: .now, lessons: [], favoriteGroup: "261402")
-}
+//#Preview(as: .systemSmall) {
+//    ScheduleBSUIRWidget()
+//} timeline: {
+//    LessonsInWidget(date: .now, lessons: [], favoriteGroup: "261402")
+//}
 
 #Preview(as: .systemMedium) {
     ScheduleBSUIRWidget()
 } timeline: {
-    LessonsInWidget(date: .now, lessons: [], favoriteGroup: "261402")
+    LessonsInWidget(date: .now, lessons: [], favoriteGroup: "261402", subGroup: 1, weekNum: 1)
 }
 
 #Preview(as: .systemLarge) {
     ScheduleBSUIRWidget()
 } timeline: {
-    LessonsInWidget(date: .now, lessons: [], favoriteGroup: "261402")
+    LessonsInWidget(date: .now, lessons: [], favoriteGroup: "261402", subGroup: 1, weekNum: 1)
 }

@@ -35,7 +35,7 @@ class AppStorageService: AppStorageServiceProtocol {
         weekNumber = weekNum
     }
     
-    // загрузка номера группы и подгруппы в AppStorage автоматическое их изменении
+    // загрузка номера группы и подгруппы в AppStorage автоматическое при их изменении
     
     
     // MARK: - Далее получение данных

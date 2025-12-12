@@ -22,7 +22,7 @@ struct TabBarView: View {
     
     @StateObject private var network = ViewModelForNetwork()
     @StateObject private var viewModelForFilter = ViewModelForFilterService()
-                 private var appStorage = AppStorageService()
+                 private var appStorage = AppStorageService() // плохо, что view знает о сервисе, можно сдеать view
     
     @State private var selectedTab: Int = 1
     @State private var splashScreen: Bool = true
@@ -53,9 +53,10 @@ struct TabBarView: View {
                 }
                 
             }
+            
             .task {
-                let _ = await network.getCurrentWeek()           // получение текущей недели
-                let _ = await network.getArrayOfGroupNum()       // получение списка групп
+                await network.getCurrentWeek()           // получение текущей недели
+                await network.getArrayOfGroupNum()       // получение списка групп
                 
                 do {
                     try appStorage.saveDataForWidgetToAppStorage(network.arrayOfScheduleGroup.schedules)
@@ -64,10 +65,8 @@ struct TabBarView: View {
                 }
                 
                 appStorage.saveWeekNumberToAppStorage(network.currentWeek)
-                
-                
-//                viewModelForNetwork.saveDataForWidgetToAppStorage(data: viewModelForNetwork.arrayOfScheduleGroup.schedules) // загрузка данных в AppStorage
-                
+        
+//                viewModelForNetwork.saveDataForWidgetToAppStorage(data: network.arrayOfScheduleGroup.schedules) // загрузка данных в AppStorage
             }
             
             // показывать начальное окно

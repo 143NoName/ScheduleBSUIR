@@ -70,8 +70,8 @@ struct PersonalAccount: View {
                         
                         Picker("Подгруппа", selection: $subGroup) {
                             Text("Все подгруппы").tag(0)
-                            Text("Первая подгруппы").tag(1)
-                            Text("Вторая подгруппы").tag(2)
+                            Text("Первая подгруппа").tag(1)
+                            Text("Вторая подгруппа").tag(2)
                         }
                         .pickerStyle(.navigationLink)
                         
@@ -83,10 +83,12 @@ struct PersonalAccount: View {
                             try funcs.saveDataForWidgetToAppStorage(network.arrayOfScheduleGroup.schedules)
                             
                             WidgetCenter.shared.reloadAllTimelines()
-                            
-//                            await viewModelForNetwork.getScheduleGroup(group: favoriteGroup)
                         }
                     } // вот тут при изменении номера группы надо изменять номер группы и ее расписание (номер группы изменяется реактивно, а для изменения группы надо вызывать функцию получения и сохранения расписания)
+                    
+                    .onChange(of: subGroup) {
+                        WidgetCenter.shared.reloadAllTimelines()
+                    }
                 }
                 .scrollContentBackground(.hidden)
                 .navigationBarTitle("Личный кабинет")
@@ -96,6 +98,7 @@ struct PersonalAccount: View {
                             isShowSettings.toggle()
                         } label: {
                             Image(systemName: "gearshape")
+//                                .symbolEffect()
                         }
                     }
                 }
