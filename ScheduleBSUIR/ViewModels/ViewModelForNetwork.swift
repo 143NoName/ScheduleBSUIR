@@ -145,6 +145,11 @@ class ViewModelForNetwork: ObservableObject {
         }
     }
     
+    
+    
+    
+    // функция фильтрации (надо ее разделить и вынести в класс фильтрации)
+    // вопрос как выполнять подобные функции, когда они требуют данные для фильтрации чтобы их изменить (возможно inout)
     func filterSchedule(currentWeek: WeeksInPicker, subGroup: SubGroupInPicker) {
         convertToScheduleDays() // для того чтобы перед фильтрацией вернуть все пары, которые были отфильтрованы раньше
         let filteredArray = scheduleByDays.map { (dayName, lessons) in
@@ -157,5 +162,4 @@ class ViewModelForNetwork: ObservableObject {
         }
         scheduleByDays = filteredArray
     }
-    // она один раз отфильтровала и а потом не вернула отфильтрованнные уроки
 }

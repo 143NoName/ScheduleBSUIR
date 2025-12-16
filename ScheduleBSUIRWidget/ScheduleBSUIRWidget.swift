@@ -34,25 +34,9 @@ struct Provider: TimelineProvider {
         let calendar = Calendar.current
         var lessons: Schedules? = nil
         
-//        startBackgroundDownload() // выполнение функции фоновой загрузки данных
-//        
-//        let value = loadData() // записать полученных данных в UserDefaults
-//        
-//        let nextDay = calendar.date(byAdding: .minute, value: 1, to: Date())! // определение завтрашнего дня (след минуты)
-//        
-//        let entrys = [ // создание одного entry
-//            LessonsInWidget(date: date, lessons: [], favoriteGroup: value),
-//            LessonsInWidget(date: nextDay, lessons: [], favoriteGroup: value)
-//        ]
-//        
-//        let timeline = Timeline(entries: entrys, policy: .after(nextDay)) // записать нового TimeLine
-//        
-//        completion(timeline)
-        
         do {
             guard let data = try funcsService.getDataFromUserDefaults() else { return }
             lessons = data
-            print(data)
         } catch {
             print("Ошибка при получении расписания в виджет")
         }
@@ -61,8 +45,8 @@ struct Provider: TimelineProvider {
         let startOfNextDay = calendar.startOfDay(for: nextDay)
         
         let timeLine = [
-            LessonsInWidget(date: date, lessons: funcsService.findTodayLessons(lessons: lessons), favoriteGroup: funcsService.favoriteGroup == "" ? "Неизвество" : funcsService.favoriteGroup, subGroup: funcsService.subGroup, weekNum: 1),
-            LessonsInWidget(date: startOfNextDay, lessons: funcsService.findTodayLessons(lessons: lessons), favoriteGroup: funcsService.favoriteGroup == "" ? "Неизвество" : funcsService.favoriteGroup, subGroup: funcsService.subGroup, weekNum: 1)
+            LessonsInWidget(date: date, lessons: funcsService.findTodayLessons(lessons: lessons), favoriteGroup: funcsService.favoriteGroup == "" ? "Неизвество" : funcsService.favoriteGroup, subGroup: funcsService.subGroup, weekNum: funcsService.weekNumber),
+            LessonsInWidget(date: startOfNextDay, lessons: funcsService.findTodayLessons(lessons: lessons), favoriteGroup: funcsService.favoriteGroup == "" ? "Неизвество" : funcsService.favoriteGroup, subGroup: funcsService.subGroup, weekNum: funcsService.weekNumber)
         ]
         
         completion(Timeline(entries: timeLine, policy: .after(Date())))
@@ -182,7 +166,7 @@ extension ScheduleBSUIRWidgetEntryView {
         }
     }
     
-    var isHaveLessons: Bool { // проверка наличия данных
+    var isHaveLessons: Bool { // проверка есть ли уроки
         if findCurrentLesson.isEmpty {
             return false
         } else {
