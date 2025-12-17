@@ -28,15 +28,16 @@ struct Schedules: Codable, Sendable {
     let sunday: [Lesson]?
     
     private enum CodingKeys: String, CodingKey {
-            case monday = "Понедельник"
-            case tuesday = "Вторник"
-            case wednesday = "Среда"
-            case thursday = "Четверг"
-            case friday = "Пятница"
-            case saturday = "Суббота"
-            case sunday = "Воскресенье"
-        }
+        case monday = "Понедельник"
+        case tuesday = "Вторник"
+        case wednesday = "Среда"
+        case thursday = "Четверг"
+        case friday = "Пятница"
+        case saturday = "Суббота"
+        case sunday = "Воскресенье"
+    }
     
+    // получение более удобного формата расписания
     var lessonsByDay: [(day: String, lessons: [Lesson])] {
         [
             ("Понедельник", monday ?? []),
@@ -50,7 +51,12 @@ struct Schedules: Codable, Sendable {
     }
 }
 
-extension Schedules {
+struct FormatedSchedules: Codable {
+    let day: String
+    let lesson: [Lesson]
+}
+
+extension Schedules { // получение расписания на сегодня по дню недели
     func atDay(_ weekday: Int) -> [Lesson]? {
         switch weekday {
         case 2: return monday      // Понедельник

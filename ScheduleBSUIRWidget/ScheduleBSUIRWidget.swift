@@ -33,6 +33,8 @@ struct Provider: TimelineProvider {
         let date = Date()
         let calendar = Calendar.current
         var lessons: Schedules? = nil
+        // новое
+        var lessons2: [(day: String, lessons: [Lesson])] = []
         
         do {
             guard let data = try funcsService.getDataFromUserDefaults() else { return }
@@ -41,50 +43,24 @@ struct Provider: TimelineProvider {
             print("Ошибка при получении расписания в виджет")
         }
         
+        // новая
+        do {
+            guard let data = try funcsService.getDataFromUserDefaults2() else { return } // получение данных из UserDefaults ()
+            lessons2 = data
+        } catch {
+            print("Ошибка при получении расписания в виджет")
+        }
+        
         guard let nextDay = calendar.date(byAdding: .day, value: 1, to: date) else { return }
         let startOfNextDay = calendar.startOfDay(for: nextDay)
         
         let timeLine = [
-            LessonsInWidget(date: date, lessons: funcsService.findTodayLessons(lessons: lessons), favoriteGroup: funcsService.favoriteGroup == "" ? "Неизвество" : funcsService.favoriteGroup, subGroup: funcsService.subGroup, weekNum: funcsService.weekNumber),
-            LessonsInWidget(date: startOfNextDay, lessons: funcsService.findTodayLessons(lessons: lessons), favoriteGroup: funcsService.favoriteGroup == "" ? "Неизвество" : funcsService.favoriteGroup, subGroup: funcsService.subGroup, weekNum: funcsService.weekNumber)
+            LessonsInWidget(date: date, lessons: funcsService.findTodayLessons2(lessons: lessons2), favoriteGroup: funcsService.favoriteGroup == "" ? "Неизвество" : funcsService.favoriteGroup, subGroup: funcsService.subGroup, weekNum: funcsService.weekNumber),
+            LessonsInWidget(date: startOfNextDay, lessons: funcsService.findTodayLessons2(lessons: lessons2), favoriteGroup: funcsService.favoriteGroup == "" ? "Неизвество" : funcsService.favoriteGroup, subGroup: funcsService.subGroup, weekNum: funcsService.weekNumber)
         ]
         
         completion(Timeline(entries: timeLine, policy: .after(Date())))
     }
-    
-//    private func startBackgroundDownload() {
-//        let sessionID = "widget.download.\(UUID().uuidString)" // создаем уникальный ID для этой загрузки
-//    
-//        let config = URLSessionConfiguration.background(withIdentifier: sessionID) // создаем фоновую сессию
-//        config.isDiscretionary = true // Система выберет когда скачивать
-//    
-//        let session = URLSession(configuration: config) // создание самой сессии
-//        
-//        guard let url = URL(string: "https://iis.bsuir.by/api/v1/schedule/current-week") else {
-//            return
-//        }                // URL для данных
-//            
-//        // Создаем задачу загрузки
-//        let task = session.downloadTask(with: url)
-//        
-//        // Планируем на ближайшее удобное время
-//        task.earliestBeginDate = Date().addingTimeInterval(60) // Через 1 минуту
-//        
-//        // Запускаем
-//        task.resume()
-//        
-//        print("📅 Загрузка запланирована: \(sessionID)")
-//    }
-//    
-//    private func loadData() -> String {
-//        // Просто читаем флаг
-//        let defaults = UserDefaults(suiteName: "widget.schedule.bsuir")
-////          if defaults?.string(forKey: "weekNumber") == "Задача выполненна и данные пришли" {
-////               return "Данные получены!"
-////            }
-//        guard let data = defaults?.string(forKey: "weekNumber") else { return "Нет данных" }
-//        return data
-//    }
 }
 
 struct LessonsInWidget: TimelineEntry {
@@ -120,7 +96,8 @@ struct ScheduleBSUIRWidgetEntryView: View {
 
 extension ScheduleBSUIRWidgetEntryView {
     
-    func getShortWeekdaySymbol() -> String { // получение текущего дня недели и число, например Чт и 5
+    // получение текущего дня недели и число, например Чт и 5
+    func getShortWeekdaySymbol() -> String {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "ru_RU")
         formatter.calendar = Calendar.current
@@ -141,7 +118,8 @@ extension ScheduleBSUIRWidgetEntryView {
         return formatter.shortStandaloneWeekdaySymbols[index]
     }
     
-    var findCurrentLesson: [Lesson] { // определение текущего и будущих уроков
+    // определение текущего и будущих уроков
+    var findCurrentLesson: [Lesson] {
         
         let formatter = DateFormatter()
         formatter.dateFormat = "HH:mm"
@@ -158,7 +136,8 @@ extension ScheduleBSUIRWidgetEntryView {
         return currentLesson
     }
     
-    var isWeekend: Bool { // проверка есть ли сегодня уроки
+    // проверка есть ли сегодня уроки
+    var isWeekend: Bool {
         if entry.lessons.isEmpty {
             return true
         } else {
@@ -166,7 +145,8 @@ extension ScheduleBSUIRWidgetEntryView {
         }
     }
     
-    var isHaveLessons: Bool { // проверка есть ли уроки
+    // проверка есть ли уроки
+    var isHaveLessons: Bool {
         if findCurrentLesson.isEmpty {
             return false
         } else {
@@ -174,7 +154,8 @@ extension ScheduleBSUIRWidgetEntryView {
         }
     }
     
-    var date: String { // создание самой даты, например (Чт, 5)
+    // создание самой даты, например (Чт, 5)
+    var date: String {
         "\(getShortWeekdaySymbol()), \(calendar.component(.day, from: Date()))"
     } // почему то выполняется 6 раз
 
@@ -201,39 +182,6 @@ extension ScheduleBSUIRWidgetEntryView {
 //        }
 //        return .gray
 //    }
-//    
-//    var startTime: String {
-//        findCurrentLesson.first?.startLessonTime.description ?? ""
-//    }
-//    
-//    var endTime: String {
-//        findCurrentLesson.first?.endLessonTime.description ?? ""
-//    }
-//    
-//    var typeOfLesson: String {
-//        findCurrentLesson.first?.lessonTypeAbbrev.description ?? ""
-//    }
-//    
-//    var lessonName: String {
-//        findCurrentLesson.first?.subject.description ?? ""
-//    }
-//    
-//    var auditories: [String] {
-//        findCurrentLesson.first?.auditories ?? [""]
-//    }
-//    
-//    var nextLesson: String {
-//        if findCurrentLesson.count > 1 {
-//            return findCurrentLesson[1].subject
-//        } else {
-//            return ""
-//        }
-//        
-//    }
-//    
-//    var numberOfLessons: Int {
-//        return findCurrentLesson.dropFirst(2).count
-//    }
 }
 
 extension Collection {
@@ -241,9 +189,6 @@ extension Collection {
         return indices.contains(index) ? self[index] : nil
     }
 }
-
-
-
 
 struct ScheduleBSUIRWidget: Widget {
     let kind: String = "ScheduleBSUIRWidget"
@@ -267,20 +212,5 @@ struct ScheduleBSUIRWidget: Widget {
         .configurationDisplayName("Расписание БГУИР")
         .description("Краткий просмотр расписания")
         .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
-        // грубо говоря тут проверяем, что данные есть и если есть, то записываем в UserDefaults
-//        .onBackgroundURLSessionEvents { identifier, completion in
-//            let session = URLSession(configuration: .background(withIdentifier: identifier))
-//            
-//            session.getAllTasks { completedTasks in // проверка пришли ли данные, и если да, то показать их
-//                for task in completedTasks {
-//                    defaults?.set("Вот данные2", forKey: "weekNumber")
-////                    print(task.response.debugDescription)
-//                }
-//                
-//                WidgetCenter.shared.reloadAllTimelines() // обновление виджета
-//                                
-//                completion()
-//            }
-//        }
     }
 }

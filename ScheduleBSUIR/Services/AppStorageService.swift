@@ -26,20 +26,33 @@ class AppStorageService: AppStorageServiceProtocol {
     
     let encoder = JSONEncoder()
     
-    func filrerDataForWidget(_ data: Schedules) {
-        
+    func filrerDataForWidget(_ data: [(day: String, lessons: [Lesson])], weekNumber: Int, subgroup: Int) -> [(day: String, lessons: [Lesson])] {
+        let filteredData = data.map { (day, lessons) in
+            let filteredLessons = lessons.filter { lesson in
+                lesson.weekNumber.contains(weekNumber) &&
+                (subgroup == 0 ? lesson.numSubgroup == 0 || lesson.numSubgroup == 1 || lesson.numSubgroup == 2 : lesson.numSubgroup == subgroup || lesson.numSubgroup == 0) &&
+                !["Консультация", "Экзамен"].contains(lesson.lessonTypeAbbrev)
+            }
+            return (day, filteredLessons)
+        }
+        return filteredData
     }
     
     // загрузка расписание группы а AppStorage
     func saveDataForWidgetToAppStorage(_ data: Schedules) throws {
         do {
+            let newFormat = data.lessonsByDay
+            let filteredData = filrerDataForWidget(newFormat, weekNumber: 1, subgroup: 0)
+            // тут можно реализовать фильтрацию
             
-            let rawData = try encoder.encode(data)
+            let rawData = try encoder.encode(data) // filteredData
+            #warning("Тут закончил, при декодировании нужно использовать Codable модель, но у меня используется [(day: String, lessons: [Lesson])]")
             groupSchedule = rawData
         } catch {
             throw error
         }
     }
+    
     
     // загрузка номера недели
     func saveWeekNumberToAppStorage(_ weekNum: Int) {

@@ -17,8 +17,29 @@ class ViewModelForFilterService: ObservableObject {
         self.filterService = filterService
     }
     
-    func filterScheduleForWidget(schedule: Schedules) {
+    func filterScheduleForWidget(schedule: Schedules) { // так как schedule это просто набор свойств, можно просто пройтись по всем свойствам и каждое отфильтровать
         // для фильтрации для виджета
+        if let monday = schedule.monday {
+
+        }
+        if let tuesday = schedule.tuesday {
+            
+        }
+        if let wednesday = schedule.wednesday {
+            
+        }
+        if let thursday = schedule.thursday {
+            
+        }
+        if let friday = schedule.friday {
+            
+        }
+        if let saturday = schedule.saturday {
+            
+        }
+        if let sunday = schedule.sunday {
+            
+        }
     }
     
     
