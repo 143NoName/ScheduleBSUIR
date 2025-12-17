@@ -56,7 +56,6 @@ struct TabBarView: View {
             
             .task {
                 await network.getCurrentWeek()           // получение текущей недели
-                await network.getArrayOfGroupNum()       // получение списка групп
                 
                 do {
                     try appStorage.saveDataForWidgetToAppStorage(network.arrayOfScheduleGroup.schedules)

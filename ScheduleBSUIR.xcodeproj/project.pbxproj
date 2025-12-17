@@ -72,6 +72,7 @@
 		498676EB2ED8560500892C4B /* ScheduleCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ScheduleCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		49B687BE2EF09D020012B3BB /* ScheduleBSUIRTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = ScheduleBSUIRTests.xctest; path = "/Library/Моя прога/SwiftUI/ScheduleBSUIR/build/Debug-iphoneos/ScheduleBSUIR.app/PlugIns/ScheduleBSUIRTests.xctest"; sourceTree = "<absolute>"; };
 		49B687BF2EF09D020012B3BB /* ScheduleBSUIRUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = ScheduleBSUIRUITests.xctest; path = "/Library/Моя прога/SwiftUI/ScheduleBSUIR/build/Debug-iphoneos/ScheduleBSUIRUITests-Runner.app/PlugIns/ScheduleBSUIRUITests.xctest"; sourceTree = "<absolute>"; };
+		49B688132EF29F550012B3BB /* ScheduleBSUIRWidgetExtensionDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ScheduleBSUIRWidgetExtensionDebug.entitlements; sourceTree = "<group>"; };
 		49F20D672EE0C9A1005F184A /* ScheduleBSUIR.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ScheduleBSUIR.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AF5B118F2EB4DD7800EBC825 /* ScheduleBSUIRWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ScheduleBSUIRWidgetExtension.entitlements; sourceTree = "<group>"; };
 		AFF20D862EB365B100383B2B /* ScheduleBSUIRWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ScheduleBSUIRWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -97,6 +98,7 @@
 				ScheduleBSUIRWidgetBundle.swift,
 				ScheduleBSUIRWidgetControl.swift,
 				ScheduleBSUIRWidgetLiveActivity.swift,
+				WidgetViews.swift,
 			);
 			target = AFA212F12EAE29F20010C9F6 /* ScheduleBSUIR */;
 		};
@@ -109,6 +111,7 @@
 				ScheduleBSUIRWidgetBundle.swift,
 				ScheduleBSUIRWidgetControl.swift,
 				ScheduleBSUIRWidgetLiveActivity.swift,
+				WidgetViews.swift,
 			);
 			target = AFF20D852EB365B100383B2B /* ScheduleBSUIRWidgetExtension */;
 		};
@@ -187,6 +190,7 @@
 		AFA212E92EAE29F20010C9F6 = {
 			isa = PBXGroup;
 			children = (
+				49B688132EF29F550012B3BB /* ScheduleBSUIRWidgetExtensionDebug.entitlements */,
 				AF5B118F2EB4DD7800EBC825 /* ScheduleBSUIRWidgetExtension.entitlements */,
 				AF5B117A2EB4B1F700EBC825 /* ScheduleBSUIRWidget */,
 				AFF20D872EB365B100383B2B /* Frameworks */,
@@ -688,7 +692,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
-				CODE_SIGN_ENTITLEMENTS = ScheduleBSUIR/ScheduleBSUIR.entitlements;
+				CODE_SIGN_ENTITLEMENTS = ScheduleBSUIR/ScheduleBSUIRDebug.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = YP54583LG6;
@@ -847,7 +851,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
-				CODE_SIGN_ENTITLEMENTS = ScheduleBSUIRWidgetExtension.entitlements;
+				CODE_SIGN_ENTITLEMENTS = ScheduleBSUIRWidgetExtensionDebug.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = YP54583LG6;

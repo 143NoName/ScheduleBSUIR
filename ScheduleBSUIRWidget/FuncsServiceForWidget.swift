@@ -17,6 +17,25 @@ class FuncsServiceForWidget {
     @AppStorage("subGroup", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var subGroup: Int = 0
     
     
+//    func convertToScheduleDays(_ schedules: Schedules) -> [(dayName: String, lessons: [Lesson])] { // конвертация в (День: [Занятия])
+//        let days = [
+//            ("Понедельник", schedules.monday),
+//            ("Вторник", schedules.tuesday),
+//            ("Среда", schedules.wednesday),
+//            ("Четверг", schedules.thursday),
+//            ("Пятница", schedules.friday),
+//            ("Суббота", schedules.saturday),
+//            ("Воскресенье", schedules.sunday)
+//        ]
+//        
+//        return days.compactMap { dayName, optionalLessons in
+//            guard let lessons = optionalLessons, !lessons.isEmpty else {
+//                return (dayName, [])
+//            }
+//            return (dayName, lessons)
+//        }
+//    }
+    
     // получение всего расписания
     func getDataFromUserDefaults() throws -> Schedules? {
         do {
@@ -25,9 +44,8 @@ class FuncsServiceForWidget {
             return data
         } catch {
             print("Ошибка при получения расписания: \(error)")
+            return nil
         }
-        
-        return nil
     }
     
     // определение текущего урока

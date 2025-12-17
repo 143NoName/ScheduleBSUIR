@@ -9,7 +9,7 @@ import SwiftUI
 
 struct Groups: View {
     
-    @EnvironmentObject var viewModelForNetwork: ViewModelForNetwork
+    @EnvironmentObject var network: ViewModelForNetwork
     
     @Environment(\.colorScheme) var colorScheme
     
@@ -17,24 +17,21 @@ struct Groups: View {
     
     var searchable: [StudentGroups] {
         if searchText.isEmpty {
-            return viewModelForNetwork.arrayOfGroupsNum
+            return network.arrayOfGroupsNum
         } else {
-            return viewModelForNetwork.arrayOfGroupsNum.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
+            return network.arrayOfGroupsNum.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
         }
     }
     
-    var loadedGroups: String {
-        if !viewModelForNetwork.isLoadingArrayOfGroupsNum {
+    var loadedGroup: String {
+        if !network.isLoadingArrayOfGroupsNum {
             return "Загрузка..."
         } else {
             return "Все группы"
         }
     }
-    
-//    @State var path: [String] = []
-    
+        
     var body: some View {
-//        NavigationStack(path: $path) {
         NavigationStack {
             ZStack {
                 
@@ -45,7 +42,7 @@ struct Groups: View {
                 }
                 
                 VStack {
-                    if !viewModelForNetwork.isLoadingArrayOfGroupsNum {
+                    if !network.isLoadingArrayOfGroupsNum {
                         List {
                             ForEach(0..<20) { _ in
                                 VStack(alignment: .leading) {
@@ -68,9 +65,10 @@ struct Groups: View {
                             }
                         }
                         .scrollContentBackground(.hidden)
+                        
                     } else {
                         List {
-                            if !viewModelForNetwork.errorOfGroupsNum.isEmpty {
+                            if !network.errorOfGroupsNum.isEmpty {
                                 IfErrorGroups()
                             } else {
                                 ForEach(searchable.enumerated(), id: \.offset ) { index, each in
@@ -84,17 +82,20 @@ struct Groups: View {
                     }
                 }
                 
-                .navigationTitle(loadedGroups)
+                .navigationTitle(loadedGroup)
                 
-                .if(viewModelForNetwork.isLoadingArrayOfGroupsNum) { view in
-                    view.searchable(text: $searchText, prompt: "Поиск по группам")
-                }
+                .if(network.isLoadingArrayOfGroupsNum) { view in
+                    view.searchable(text: $searchText, placement: .navigationBarDrawer, prompt: "Поиск по группам")
+                } // было бы хорошо сделать UITextField в UIKit или просто как то кастомизировать через UIViewRepresentable
                 
                 .refreshable {
-                    await viewModelForNetwork.getArrayOfGroupNum()       // получение списка групп
+                    await network.getArrayOfGroupNum()       // получение списка групп
                 }
                 
                 .ignoresSafeArea(edges: .bottom)
+            }
+            .task {
+                await network.getArrayOfGroupNum()       // получение списка групп
             }
             .navigationDestination(for: String.self) { group in
                 EachGroup(groupName: group)
@@ -140,7 +141,7 @@ private struct ViewEachGroup: View {
                 }
                 Spacer()
                 if let course = group.course {
-                    Text(" \(course) курс")
+                    Text("\(course) курс")
                 }
             }
             .frame(width: 200)

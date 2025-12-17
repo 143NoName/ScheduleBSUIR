@@ -36,6 +36,18 @@ struct Schedules: Codable, Sendable {
             case saturday = "Суббота"
             case sunday = "Воскресенье"
         }
+    
+    var lessonsByDay: [(day: String, lessons: [Lesson])] {
+        [
+            ("Понедельник", monday ?? []),
+            ("Вторик", tuesday ?? []),
+            ("Среда", wednesday ?? []),
+            ("Четверг", thursday ?? []),
+            ("Пятница", friday ?? []),
+            ("Суббота", saturday ?? []),
+            ("Воскресенье", sunday ?? [])
+        ]
+    }
 }
 
 extension Schedules {
