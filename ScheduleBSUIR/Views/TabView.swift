@@ -22,7 +22,7 @@ struct TabBarView: View {
     
     @StateObject private var network = ViewModelForNetwork()
     @StateObject private var viewModelForFilter = ViewModelForFilterService()
-                 private var appStorage = AppStorageService() // плохо, что view знает о сервисе, можно сдеать view
+                 private var appStorage = AppStorageService() // плохо, что view знает о сервисе, можно сдеать viewModel
     
     @State private var selectedTab: Int = 1
     @State private var splashScreen: Bool = true
@@ -64,9 +64,7 @@ struct TabBarView: View {
                     print("Неудачная попытка загрузить расписание в AppStorage: \(error)")
                 }
                 
-                appStorage.saveWeekNumberToAppStorage(network.currentWeek)
-        
-//                viewModelForNetwork.saveDataForWidgetToAppStorage(data: network.arrayOfScheduleGroup.schedules) // загрузка данных в AppStorage
+                appStorage.saveWeekNumberToAppStorage(network.currentWeek)        
             }
             
             // показывать начальное окно

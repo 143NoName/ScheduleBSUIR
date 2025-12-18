@@ -45,10 +45,10 @@ struct ViewForSmall: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else if !isWeekend && !isHaveLessons {
-                VStack() {
+                VStack(alignment: .center) {
                     Text("Занятия закончились")
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
             } else {
                 HStack {
                     RoundedRectangle(cornerRadius: 6)

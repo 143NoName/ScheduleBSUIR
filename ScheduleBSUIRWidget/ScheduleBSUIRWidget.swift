@@ -6,23 +6,22 @@
 //
 
 import WidgetKit
-import AppIntents
 import SwiftUI
+
+import os.log
 
 struct Provider: TimelineProvider {
     
     func placeholder(in context: Context) -> LessonsInWidget { // показывает заглушку при первом добавлении виджета
-        LessonsInWidget(date: Date(), lessons: [], favoriteGroup: "261402", subGroup: 1, weekNum: 1)
+        LessonsInWidget(date: Date(), lessons: [], favoriteGroup: "261402", subGroup: 1, weekNum: 1) // показывается в canvass
     }
 
     func getSnapshot(in context: Context, completion: @escaping (LessonsInWidget) -> ()) { // показывает пример виджета при выборе
-        let entry = LessonsInWidget(date: Date(), lessons: [], favoriteGroup: "261402", subGroup: 1, weekNum: 1)
+        let entry = LessonsInWidget(date: Date(), lessons: [], favoriteGroup: "261402", subGroup: 2, weekNum: 1)
         completion(entry)
     }
 
     let funcsService: FuncsServiceForWidget
-    // для более простой тестуруемости (вместо FuncsServiceForWidget можно добавить другой класс)
-    // а еще лучше зависеть не от объекта, а от абстракции (протокола)
     
     init(funcsService: FuncsServiceForWidget = FuncsServiceForWidget()) {
         self.funcsService = funcsService
@@ -30,23 +29,15 @@ struct Provider: TimelineProvider {
     
     func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) { // основная функция, создает расписание обновлений
         
+        let logger = Logger(subsystem: "com.bsuir.schedule.widget", category: "ScheduleWidget") // для логирования
+        
         let date = Date()
         let calendar = Calendar.current
-        var lessons: Schedules? = nil
-        // новое
-        var lessons2: [(day: String, lessons: [Lesson])] = []
+        var lessons: [FormatedSchedules] = [] // массив для расписания в виджете
         
         do {
-            guard let data = try funcsService.getDataFromUserDefaults() else { return }
+            guard let data = try funcsService.getDataFromUserDefaults() else { return } // получение данных из UserDefaults
             lessons = data
-        } catch {
-            print("Ошибка при получении расписания в виджет")
-        }
-        
-        // новая
-        do {
-            guard let data = try funcsService.getDataFromUserDefaults2() else { return } // получение данных из UserDefaults ()
-            lessons2 = data
         } catch {
             print("Ошибка при получении расписания в виджет")
         }
@@ -55,8 +46,8 @@ struct Provider: TimelineProvider {
         let startOfNextDay = calendar.startOfDay(for: nextDay)
         
         let timeLine = [
-            LessonsInWidget(date: date, lessons: funcsService.findTodayLessons2(lessons: lessons2), favoriteGroup: funcsService.favoriteGroup == "" ? "Неизвество" : funcsService.favoriteGroup, subGroup: funcsService.subGroup, weekNum: funcsService.weekNumber),
-            LessonsInWidget(date: startOfNextDay, lessons: funcsService.findTodayLessons2(lessons: lessons2), favoriteGroup: funcsService.favoriteGroup == "" ? "Неизвество" : funcsService.favoriteGroup, subGroup: funcsService.subGroup, weekNum: funcsService.weekNumber)
+            LessonsInWidget(date: date, lessons: funcsService.findTodayLessons(lessons: lessons), favoriteGroup: funcsService.favoriteGroup == "" ? "Неизвество" : funcsService.favoriteGroup, subGroup: funcsService.subGroup, weekNum: funcsService.weekNumber),
+            LessonsInWidget(date: startOfNextDay, lessons: funcsService.findTodayLessons(lessons: lessons), favoriteGroup: funcsService.favoriteGroup == "" ? "Неизвество" : funcsService.favoriteGroup, subGroup: funcsService.subGroup, weekNum: funcsService.weekNumber)
         ]
         
         completion(Timeline(entries: timeLine, policy: .after(Date())))
@@ -71,13 +62,13 @@ struct LessonsInWidget: TimelineEntry {
     let weekNum: Int
 }
 
-
 struct ScheduleBSUIRWidgetEntryView: View {
     var entry: Provider.Entry
         
     let calendar = Calendar.current
     
     @Environment(\.widgetFamily) var widgetFamily
+//    @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
         
@@ -191,6 +182,7 @@ extension Collection {
 }
 
 struct ScheduleBSUIRWidget: Widget {
+    
     let kind: String = "ScheduleBSUIRWidget"
     
     let defaults = UserDefaults(suiteName: "widget.schedule.bsuir")

@@ -27,6 +27,7 @@ struct Schedules: Codable, Sendable {
     let saturday: [Lesson]?
     let sunday: [Lesson]?
     
+    // Для получения данных из сети с русскими названиями, но потом перевод в анг как в модели
     private enum CodingKeys: String, CodingKey {
         case monday = "Понедельник"
         case tuesday = "Вторник"
@@ -49,14 +50,22 @@ struct Schedules: Codable, Sendable {
             ("Воскресенье", sunday ?? [])
         ]
     }
+    
+    // преобразование из Schedules в FormatedSchedules
+    func getFormatedSchedules() -> [FormatedSchedules] {
+        lessonsByDay.map { day, lessons in
+            FormatedSchedules(day: day, lesson: lessons)
+        }
+    }
 }
 
+// модель для виджета (загрузка в него данных и их фильтрация)
 struct FormatedSchedules: Codable {
     let day: String
     let lesson: [Lesson]
 }
 
-extension Schedules { // получение расписания на сегодня по дню недели
+extension Schedules { // получение расписания на сегодня по дню недели (в итоге не нужно будет)
     func atDay(_ weekday: Int) -> [Lesson]? {
         switch weekday {
         case 2: return monday      // Понедельник
@@ -113,11 +122,3 @@ struct Employee: Codable, Sendable {
     let jobPositions: String?
     let chief: Bool?
 }
-
-
-// для более удобного представления расписания
-struct ScheduleDays: Codable { // не подходит потому что нужно [Ключ: Значение]
-    let dayName: String
-    let lessons: [Lesson]
-}
-// для более удобного представления расписания

@@ -89,6 +89,7 @@ struct Groups: View {
                 } // было бы хорошо сделать UITextField в UIKit или просто как то кастомизировать через UIViewRepresentable
                 
                 .refreshable {
+                    network.groupArrayInNull()
                     await network.getArrayOfGroupNum()       // получение списка групп
                 }
                 

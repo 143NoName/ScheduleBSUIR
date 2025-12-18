@@ -26,27 +26,29 @@ class AppStorageService: AppStorageServiceProtocol {
     
     let encoder = JSONEncoder()
     
-    func filrerDataForWidget(_ data: [(day: String, lessons: [Lesson])], weekNumber: Int, subgroup: Int) -> [(day: String, lessons: [Lesson])] {
-        let filteredData = data.map { (day, lessons) in
-            let filteredLessons = lessons.filter { lesson in
+    func filrerDataForWidget(_ data: [FormatedSchedules], weekNumber: Int, subgroup: Int) -> [FormatedSchedules] {
+        let formatedData = data.map { schedule in
+            let filteredLessons = schedule.lesson.filter { lesson in
                 lesson.weekNumber.contains(weekNumber) &&
                 (subgroup == 0 ? lesson.numSubgroup == 0 || lesson.numSubgroup == 1 || lesson.numSubgroup == 2 : lesson.numSubgroup == subgroup || lesson.numSubgroup == 0) &&
                 !["Консультация", "Экзамен"].contains(lesson.lessonTypeAbbrev)
             }
-            return (day, filteredLessons)
+            return FormatedSchedules(day: schedule.day, lesson: filteredLessons)
         }
-        return filteredData
+        
+        return formatedData
     }
     
-    // загрузка расписание группы а AppStorage
+    
+    // загрузка расписания группы а AppStorage
     func saveDataForWidgetToAppStorage(_ data: Schedules) throws {
         do {
-            let newFormat = data.lessonsByDay
-            let filteredData = filrerDataForWidget(newFormat, weekNumber: 1, subgroup: 0)
-            // тут можно реализовать фильтрацию
+            let newFormat = data.getFormatedSchedules()
+            let filteredData = filrerDataForWidget(newFormat, weekNumber: weekNumber, subgroup: subGroup)
+            // тут все работает исправно
             
-            let rawData = try encoder.encode(data) // filteredData
-            #warning("Тут закончил, при декодировании нужно использовать Codable модель, но у меня используется [(day: String, lessons: [Lesson])]")
+            let rawData = try encoder.encode(filteredData) // filteredData
+
             groupSchedule = rawData
         } catch {
             throw error

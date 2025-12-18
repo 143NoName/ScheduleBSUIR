@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import Alamofire
 import SwiftUI
 
 class ViewModelForNetwork: ObservableObject {
@@ -48,7 +49,7 @@ class ViewModelForNetwork: ObservableObject {
     
     // получение списка групп от API
     func getArrayOfGroupNum() async {
-        arrayOfGroupsNum = []
+//        groupArrayInNull()
         do {
             arrayOfGroupsNum = try await networkService.getArrayOfGroupNum()
             withAnimation(.easeIn) {
@@ -61,6 +62,12 @@ class ViewModelForNetwork: ObservableObject {
             }
             print(error.localizedDescription)
         }
+    }
+    
+    func groupArrayInNull() {
+        arrayOfGroupsNum = []
+        isLoadingArrayOfGroupsNum = false
+        errorOfGroupsNum = ""
     }
     
     @Published var arrayOfScheduleGroup: ScheduleResponse = ScheduleResponse(
@@ -145,9 +152,6 @@ class ViewModelForNetwork: ObservableObject {
         }
     }
     
-    
-    
-    
     // используется в .onChange при изменении подгруппы и недели
     func filterSchedule(currentWeek: WeeksInPicker, subGroup: SubGroupInPicker) {
         convertToScheduleDays() // для того чтобы перед фильтрацией вернуть все пары, которые были отфильтрованы раньше
@@ -161,4 +165,37 @@ class ViewModelForNetwork: ObservableObject {
         }
         scheduleByDays = filteredArray
     }
+    
+    
+//    private func mapAFError(_ aferror: AFError?, urlerror: URLError?) -> String {
+////        if let aferror {
+////            switch aferror {
+////            
+////            }
+////        }
+//        
+//        if let urlerror {
+//            switch urlerror {
+//            case .notConnectedToInternet:
+//                return "Нет подключения к интернету"
+//            case .badServerResponse:
+//                return "Неверный ответ сервера"
+//            case .cancelled:
+//                return "Задача отменена"
+//            case .badURL:
+//                return "Неверно указана ссылка"
+//            }
+//        }
+//    }
 }
+
+
+//extension URLError {
+//    var userDescriptions: String {
+//        switch self {
+//        case .notConnectedToInternet:
+//            return "Нет подключения к интернету"
+//        }
+//    }
+//}
+
