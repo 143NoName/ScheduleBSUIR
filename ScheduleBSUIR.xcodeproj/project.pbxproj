@@ -84,6 +84,7 @@
 		490009122ED48D56002CDB1B /* Exceptions for "ScheduleBSUIR" folder in "ScheduleBSUIRWidgetExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Models/ModelForEachEmployee.swift,
 				Models/ModelForEachGroup.swift,
 			);
 			target = AFF20D852EB365B100383B2B /* ScheduleBSUIRWidgetExtension */;

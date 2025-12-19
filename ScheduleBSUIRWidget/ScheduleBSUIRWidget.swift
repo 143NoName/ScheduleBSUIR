@@ -29,7 +29,7 @@ struct Provider: TimelineProvider {
     
     func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) { // основная функция, создает расписание обновлений
         
-        let logger = Logger(subsystem: "com.bsuir.schedule.widget", category: "ScheduleWidget") // для логирования
+//        let logger = Logger(subsystem: "com.bsuir.schedule.widget", category: "ScheduleWidget") // для логирования
         
         let date = Date()
         let calendar = Calendar.current

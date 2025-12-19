@@ -10,12 +10,20 @@ import Alamofire
 
 protocol NetworkServiceProtocol {
     func getCurrentWeek() async throws -> Int
+    
     func getArrayOfGroupNum() async throws -> [StudentGroups]
     func getScheduleGroup(_ group: String) async throws -> ScheduleResponse
+    
+    func getArrayOfEmployees() async throws -> [EmployeeModel]
+    func getEachEmployeeSchedule(_ id: String) async throws -> EmployeeResponse
 }
 
 class NetworkService: NetworkServiceProtocol {
     let decoder = JSONDecoder()
+    
+    // НЕДЕЛЯ
+    
+    
     
     // получение номера недели
     func getCurrentWeek() async throws -> Int {
@@ -24,6 +32,12 @@ class NetworkService: NetworkServiceProtocol {
             .serializingDecodable(Int.self)
             .value
     }
+    
+    
+    
+    // УЧЕНИКИ
+    
+    
     
     // получение номеров групп
     func getArrayOfGroupNum() async throws -> [StudentGroups] {
@@ -54,17 +68,35 @@ class NetworkService: NetworkServiceProtocol {
             throw error
         }
     }
+    
+    
+    
+    // ПРЕПОДАВАТЕЛИ
+    
+    
+    
+    func getArrayOfEmployees() async throws -> [EmployeeModel] {
+        let data = try await AF.request("https://iis.bsuir.by/api/v1/employees/all")
+            .validate()
+            .serializingData()
+            .value
+        do {
+            let response = try decoder.decode(EmployeeResponse.self, from: data)
+            return response.employees
+        } catch {
+            throw error
+        }
+    }
+    
+    func getEachEmployeeSchedule(_ id: String) async throws -> EmployeeResponse {
+        let data = try await AF.request("https://iis.bsuir.by/api/v1/employees/schedule/\(id)")
+            .validate()
+            .serializingData()
+            .value
+        do {
+            return try decoder.decode(EmployeeResponse.self, from: data)
+        } catch {
+            throw error
+        }
+    }
 }
-
-//extension AFError {
-//    var decriptionError: String {
-//        switch self {
-//        case .invalidURL(url: let url):
-//            return "Невозжможно получить текущую неделю потому что неверный путь URL: \(url)"
-//        }
-//        case .responseSerializationFailed(reason: reason):
-//          switch reason {
-//          case .
-//        }
-//    }
-//}

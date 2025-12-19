@@ -14,16 +14,10 @@ class ViewModelForNetwork: ObservableObject {
     
     private let appStorageService: AppStorageServiceProtocol
     private let networkService: NetworkServiceProtocol
-//    private let filterSchedule: FilterServiceProtocol
     
-    init(
-        networkService: NetworkServiceProtocol = NetworkService(),
-        appStorageService: AppStorageServiceProtocol = AppStorageService(),
-//        filterSchedule: FilterServiceProtocol = FilterService()
-    ) {
-        self.networkService = networkService
+    init(appStorageService: AppStorageServiceProtocol = AppStorageService(), networkService: NetworkServiceProtocol = NetworkService()) {
         self.appStorageService = appStorageService
-//        self.filterSchedule = filterSchedule
+        self.networkService = networkService
     }
     
     private let funcs = MoreFunctions()
@@ -165,6 +159,53 @@ class ViewModelForNetwork: ObservableObject {
         }
         scheduleByDays = filteredArray
     }
+    
+    
+    
+    // для преподавателей
+    
+    
+    
+    @Published var scheduleForEmployees: [EmployeeModel] = []
+    @Published var isLoadingscheduleForEmployees: Bool = false
+    @Published var errorOfEmployeesArray: String = ""
+    
+    func getArrayOfEmployees() async throws {
+        do {
+            scheduleForEmployees = try await networkService.getArrayOfEmployees()
+            withAnimation(.easeIn) {
+                isLoadingscheduleForEmployees = true
+            }
+        } catch {
+            withAnimation(.easeIn) {
+                errorOfEmployeesArray = error.localizedDescription
+                isLoadingscheduleForEmployees = true
+            }
+            print("Проблема с получением списка преподавателей: \(error)")
+        }
+    }
+    
+    
+    @Published var scheduleForEachEmployee: EmployeeResponse = EmployeeResponse(employees: [], page: 0, size: 0, total: 0)
+    @Published var isLoadingscheduleForEachEmployee: Bool = false
+    @Published var errorOfEachEmployee: String = ""
+    
+    func getEachEmployeeSchedule() async throws {
+        do {
+            scheduleForEachEmployee = try await networkService.getEachEmployeeSchedule("Строка")
+            withAnimation(.easeIn) {
+                isLoadingscheduleForEachEmployee = true
+            }
+        } catch {
+            withAnimation(.easeIn) {
+                errorOfEachEmployee = error.localizedDescription
+                isLoadingscheduleForEachEmployee = true
+            }
+            print("Проблема с получением расписания преподавателя: \(error)")
+        }
+    }
+    
+    
     
     
 //    private func mapAFError(_ aferror: AFError?, urlerror: URLError?) -> String {

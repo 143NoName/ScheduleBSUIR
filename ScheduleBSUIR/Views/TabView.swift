@@ -48,7 +48,11 @@ struct TabBarView: View {
                     }
                 }
                 
-                Tab("Личный кабинет", systemImage: "person.circle", value: 2) {
+                Tab("Преподаватели", systemImage: "calendar.and.person", value: 2) {
+                    Text("Преподаватели")
+                }
+                
+                Tab("Личный кабинет", systemImage: "person.circle", value: 3) {
                     PersonalAccount()
                 }
                 
