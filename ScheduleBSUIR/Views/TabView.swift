@@ -22,7 +22,7 @@ struct TabBarView: View {
     
     @StateObject private var network = ViewModelForNetwork()
     @StateObject private var viewModelForFilter = ViewModelForFilterService()
-                 private var appStorage = AppStorageService()
+                 private var appStorage = AppStorageService() // плохо, что view знает о сервисе, можно сдеать viewModel
     
     @State private var selectedTab: Int = 1
     @State private var splashScreen: Bool = true
@@ -48,14 +48,19 @@ struct TabBarView: View {
                     }
                 }
                 
-                Tab("Личный кабинет", systemImage: "person.circle", value: 2) {
+                Tab("Преподаватели", systemImage: "calendar.and.person", value: 2) {
+                    Text("Преподаватели")
+                }
+                
+                Tab("Личный кабинет", systemImage: "person.circle", value: 3) {
                     PersonalAccount()
                 }
                 
             }
+            
             .task {
-                let _ = await network.getCurrentWeek()           // получение текущей недели
-                let _ = await network.getArrayOfGroupNum()       // получение списка групп
+                await network.getCurrentWeek()           // получение текущей недели
+                await network.getArrayOfGroupNum()       // получение списка групп
                 
                 do {
                     try appStorage.saveDataForWidgetToAppStorage(network.arrayOfScheduleGroup.schedules)
@@ -63,11 +68,7 @@ struct TabBarView: View {
                     print("Неудачная попытка загрузить расписание в AppStorage: \(error)")
                 }
                 
-                appStorage.saveWeekNumberToAppStorage(network.currentWeek)
-                
-                
-//                viewModelForNetwork.saveDataForWidgetToAppStorage(data: viewModelForNetwork.arrayOfScheduleGroup.schedules) // загрузка данных в AppStorage
-                
+                appStorage.saveWeekNumberToAppStorage(network.currentWeek)        
             }
             
             // показывать начальное окно

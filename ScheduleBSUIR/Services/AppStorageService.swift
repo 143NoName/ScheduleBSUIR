@@ -9,53 +9,58 @@ import SwiftUI
 
 protocol AppStorageServiceProtocol {
     func saveDataForWidgetToAppStorage(_ data: Schedules) throws
-    func getDataFromAppStorage() throws -> Schedules?
+//    func getDataFromAppStorage() throws -> Schedules?
 }
 
 class AppStorageService: AppStorageServiceProtocol {
     
+    // для загрузки
     @AppStorage("groupSchedule", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var groupSchedule: Data?
     @AppStorage("favoriteGroup", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var favoriteGroup: String = ""
+    // для загрузки
+    
+    // для загрузки и фильтрации
     @AppStorage("weekNumber", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var weekNumber: Int = 0
+    @AppStorage("subGroup", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var subGroup: Int = 0
+    // для загрузки и фильтрации
     
     let encoder = JSONEncoder()
-    let decoder = JSONDecoder()
     
-    // загрузка расписание группы а AppStorage
+    func filrerDataForWidget(_ data: [FormatedSchedules], weekNumber: Int, subgroup: Int) -> [FormatedSchedules] {
+        let formatedData = data.map { schedule in
+            let filteredLessons = schedule.lesson.filter { lesson in
+                lesson.weekNumber.contains(weekNumber) &&
+                (subgroup == 0 ? lesson.numSubgroup == 0 || lesson.numSubgroup == 1 || lesson.numSubgroup == 2 : lesson.numSubgroup == subgroup || lesson.numSubgroup == 0) &&
+                !["Консультация", "Экзамен"].contains(lesson.lessonTypeAbbrev)
+            }
+            return FormatedSchedules(day: schedule.day, lesson: filteredLessons)
+        }
+        
+        return formatedData
+    }
+    
+    
+    // загрузка расписания группы а AppStorage
     func saveDataForWidgetToAppStorage(_ data: Schedules) throws {
         do {
-            let rawData = try encoder.encode(data)
+            let newFormat = data.getFormatedSchedules()
+            let filteredData = filrerDataForWidget(newFormat, weekNumber: weekNumber, subgroup: subGroup)
+            // тут все работает исправно
+            
+            let rawData = try encoder.encode(filteredData) // filteredData
+
             groupSchedule = rawData
         } catch {
             throw error
         }
     }
     
+    
+    // загрузка номера недели
     func saveWeekNumberToAppStorage(_ weekNum: Int) {
         weekNumber = weekNum
     }
     
-    // загрузка номера группы и подгруппы в AppStorage автоматическое их изменении
+    // загрузка favoriteGroup и subGroup в AppStorage автоматическое при их изменении
     
-    
-    // MARK: - Далее получение данных
-    
-    
-    // получение расписания группы из AppStorage
-    func getDataFromAppStorage() throws -> Schedules? {
-        do {
-            guard let rawData = groupSchedule else { return nil }
-            let data = try decoder.decode(Schedules.self, from: rawData)
-            return data
-        } catch {
-            throw error
-        }
-    }
-    
-    
-    // получение имени любимой группы в AppStorage
-    func getFavoriteGroupFromAppStorage() -> String {
-        print("Имя группы получено \(favoriteGroup)")
-        return favoriteGroup
-    }
 }

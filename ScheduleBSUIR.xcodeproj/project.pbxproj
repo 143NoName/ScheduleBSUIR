@@ -84,6 +84,7 @@
 		490009122ED48D56002CDB1B /* Exceptions for "ScheduleBSUIR" folder in "ScheduleBSUIRWidgetExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Models/ModelForEachEmployee.swift,
 				Models/ModelForEachGroup.swift,
 			);
 			target = AFF20D852EB365B100383B2B /* ScheduleBSUIRWidgetExtension */;
@@ -98,6 +99,7 @@
 				ScheduleBSUIRWidgetBundle.swift,
 				ScheduleBSUIRWidgetControl.swift,
 				ScheduleBSUIRWidgetLiveActivity.swift,
+				WidgetViews.swift,
 			);
 			target = AFA212F12EAE29F20010C9F6 /* ScheduleBSUIR */;
 		};
@@ -110,6 +112,7 @@
 				ScheduleBSUIRWidgetBundle.swift,
 				ScheduleBSUIRWidgetControl.swift,
 				ScheduleBSUIRWidgetLiveActivity.swift,
+				WidgetViews.swift,
 			);
 			target = AFF20D852EB365B100383B2B /* ScheduleBSUIRWidgetExtension */;
 		};

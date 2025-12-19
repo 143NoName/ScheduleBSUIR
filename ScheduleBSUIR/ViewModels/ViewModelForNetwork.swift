@@ -7,22 +7,17 @@
 
 import Foundation
 import Combine
+import Alamofire
 import SwiftUI
 
 class ViewModelForNetwork: ObservableObject {
     
     private let appStorageService: AppStorageServiceProtocol
     private let networkService: NetworkServiceProtocol
-//    private let filterSchedule: FilterServiceProtocol
     
-    init(
-        networkService: NetworkServiceProtocol = NetworkService(),
-        appStorageService: AppStorageServiceProtocol = AppStorageService(),
-//        filterSchedule: FilterServiceProtocol = FilterService()
-    ) {
-        self.networkService = networkService
+    init(appStorageService: AppStorageServiceProtocol = AppStorageService(), networkService: NetworkServiceProtocol = NetworkService()) {
         self.appStorageService = appStorageService
-//        self.filterSchedule = filterSchedule
+        self.networkService = networkService
     }
     
     private let funcs = MoreFunctions()
@@ -48,7 +43,7 @@ class ViewModelForNetwork: ObservableObject {
     
     // получение списка групп от API
     func getArrayOfGroupNum() async {
-        arrayOfGroupsNum = []
+//        groupArrayInNull()
         do {
             arrayOfGroupsNum = try await networkService.getArrayOfGroupNum()
             withAnimation(.easeIn) {
@@ -61,6 +56,12 @@ class ViewModelForNetwork: ObservableObject {
             }
             print(error.localizedDescription)
         }
+    }
+    
+    func groupArrayInNull() {
+        arrayOfGroupsNum = []
+        isLoadingArrayOfGroupsNum = false
+        errorOfGroupsNum = ""
     }
     
     @Published var arrayOfScheduleGroup: ScheduleResponse = ScheduleResponse(
@@ -145,6 +146,7 @@ class ViewModelForNetwork: ObservableObject {
         }
     }
     
+    // используется в .onChange при изменении подгруппы и недели
     func filterSchedule(currentWeek: WeeksInPicker, subGroup: SubGroupInPicker) {
         convertToScheduleDays() // для того чтобы перед фильтрацией вернуть все пары, которые были отфильтрованы раньше
         let filteredArray = scheduleByDays.map { (dayName, lessons) in
@@ -157,46 +159,84 @@ class ViewModelForNetwork: ObservableObject {
         }
         scheduleByDays = filteredArray
     }
-    // она один раз отфильтровала и а потом не вернула отфильтрованнные уроки
+    
+    
+    
+    // для преподавателей
+    
+    
+    
+    @Published var scheduleForEmployees: [EmployeeModel] = []
+    @Published var isLoadingscheduleForEmployees: Bool = false
+    @Published var errorOfEmployeesArray: String = ""
+    
+    func getArrayOfEmployees() async throws {
+        do {
+            scheduleForEmployees = try await networkService.getArrayOfEmployees()
+            withAnimation(.easeIn) {
+                isLoadingscheduleForEmployees = true
+            }
+        } catch {
+            withAnimation(.easeIn) {
+                errorOfEmployeesArray = error.localizedDescription
+                isLoadingscheduleForEmployees = true
+            }
+            print("Проблема с получением списка преподавателей: \(error)")
+        }
+    }
+    
+    
+    @Published var scheduleForEachEmployee: EmployeeResponse = EmployeeResponse(employees: [], page: 0, size: 0, total: 0)
+    @Published var isLoadingscheduleForEachEmployee: Bool = false
+    @Published var errorOfEachEmployee: String = ""
+    
+    func getEachEmployeeSchedule() async throws {
+        do {
+            scheduleForEachEmployee = try await networkService.getEachEmployeeSchedule("Строка")
+            withAnimation(.easeIn) {
+                isLoadingscheduleForEachEmployee = true
+            }
+        } catch {
+            withAnimation(.easeIn) {
+                errorOfEachEmployee = error.localizedDescription
+                isLoadingscheduleForEachEmployee = true
+            }
+            print("Проблема с получением расписания преподавателя: \(error)")
+        }
+    }
+    
+    
+    
+    
+//    private func mapAFError(_ aferror: AFError?, urlerror: URLError?) -> String {
+////        if let aferror {
+////            switch aferror {
+////            
+////            }
+////        }
+//        
+//        if let urlerror {
+//            switch urlerror {
+//            case .notConnectedToInternet:
+//                return "Нет подключения к интернету"
+//            case .badServerResponse:
+//                return "Неверный ответ сервера"
+//            case .cancelled:
+//                return "Задача отменена"
+//            case .badURL:
+//                return "Неверно указана ссылка"
+//            }
+//        }
+//    }
 }
 
 
-
-
-
-//extension ViewModelForNetwork {
-//    
-//    var scheduleDays: [(dayName: String, lessons: [Lesson])] {
-//        let days = [
-//            ("Понедельник", arrayOfScheduleGroup.schedules.monday),
-//            ("Вторник", arrayOfScheduleGroup.schedules.tuesday),
-//            ("Среда", arrayOfScheduleGroup.schedules.wednesday),
-//            ("Четверг", arrayOfScheduleGroup.schedules.thursday),
-//            ("Пятница", arrayOfScheduleGroup.schedules.friday),
-//            ("Суббота", arrayOfScheduleGroup.schedules.saturday),
-//            ("Воскресенье", arrayOfScheduleGroup.schedules.sunday)
-//        ]
-//        
-//        return days.compactMap { dayName, optionalLessons in
-//            guard let lessons = optionalLessons, !lessons.isEmpty else {
-//                return (dayName, [])
-//            }
-//            return (dayName, lessons)
+//extension URLError {
+//    var userDescriptions: String {
+//        switch self {
+//        case .notConnectedToInternet:
+//            return "Нет подключения к интернету"
 //        }
 //    }
-//    
-//    // фильтрация уроков по подгруппе и по неделе + фильтрация "Консультация", "Экзамен"
-//    
-//    func filterSchedule2(currentWeek: WeeksInPicker, subGroup: SubGroupInPicker) {
-//        let filteredArray = scheduleDays.map { (groupName, lessons) in
-//            let filteredLessons = lessons.filter { each in
-//                each.weekNumber.contains(currentWeek.rawValue) &&
-//                (subGroup.subGroupInNumber == 0 ? each.numSubgroup == 0 || each.numSubgroup == 1 || each.numSubgroup == 2 : each.numSubgroup == subGroup.subGroupInNumber || each.numSubgroup == 0) &&
-//                !["Консультация", "Экзамен"].contains(each.lessonTypeAbbrev)
-//            }
-//            return (groupName, filteredLessons)
-//        }
-//        filteredLessons = filteredArray
-//    }
-//    
 //}
+

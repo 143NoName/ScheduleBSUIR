@@ -17,7 +17,8 @@ class ViewModelForFilterService: ObservableObject {
         self.filterService = filterService
     }
     
-    @Published var filteredLessons: [(dayName: String, lessons: [Lesson])] = []
+    
+//    @Published var filteredLessons: [(dayName: String, lessons: [Lesson])] = []
     
 //    func filterSchedule(currentWeek: WeeksInPicker, subGroup: SubGroupInPicker, scheduleDays: [(dayName: String, lessons: [Lesson])]) {
 //        filteredLessons = filterService.filterSchedule(currentWeek: currentWeek, subGroup: subGroup, scheduleDays: scheduleDays)

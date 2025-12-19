@@ -1,7 +1,19 @@
-# Игнорирование всех файлов с этим расширениемы
-*/.xcuserstate
-**/xcuserdata/
-**/xcschemes/xcschememanagement.plist
+# Игнорирование
 
-# Игнорирование этих файлов
-ScheduleBSUIR.xcodeproj/project.xcworkspace/xcuserdata/andrew.xcuserdatad/UserInterfaceState.xcuserstate
+# Xcode
+*.xcuserstate
+*.xcuserdata
+*.xcworkspace/
+
+DerivedData/
+*.xccheckout
+*.xcscmblueprint
+*.xcscheme
+**/xcschemes/
+**/xcschememanagement.plist
+
+# Build
+build/
+*.ipa
+*.dSYM.zip
+*.dSYM

@@ -14,7 +14,7 @@ struct PersonalAccount: View {
     
     @Environment(\.colorScheme) var colorScheme
     
-    let funcs = MoreFunctions()
+    private var appStorage = AppStorageService()
     
     @State private var isShowSettings: Bool = false
     @State private var name: String = ""
@@ -70,8 +70,8 @@ struct PersonalAccount: View {
                         
                         Picker("Подгруппа", selection: $subGroup) {
                             Text("Все подгруппы").tag(0)
-                            Text("Первая подгруппы").tag(1)
-                            Text("Вторая подгруппы").tag(2)
+                            Text("Первая подгруппа").tag(1)
+                            Text("Вторая подгруппа").tag(2)
                         }
                         .pickerStyle(.navigationLink)
                         
@@ -79,14 +79,22 @@ struct PersonalAccount: View {
                     
                     .onChange(of: favoriteGroup) {
                         Task {
-                            await network.getScheduleGroup(group: favoriteGroup)
-                            try funcs.saveDataForWidgetToAppStorage(network.arrayOfScheduleGroup.schedules)
+                            do {
+                                await network.getScheduleGroup(group: favoriteGroup) // получение расписания
+                                try appStorage.saveDataForWidgetToAppStorage(network.arrayOfScheduleGroup.schedules) // загрузка расписания в виджет
+                            } catch {
+                                print("Неудачная попытка загрузить расписание в AppStorage: \(error)")
+                            }
                             
                             WidgetCenter.shared.reloadAllTimelines()
-                            
-//                            await viewModelForNetwork.getScheduleGroup(group: favoriteGroup)
                         }
-                    } // вот тут при изменении номера группы надо изменять номер группы и ее расписание (номер группы изменяется реактивно, а для изменения группы надо вызывать функцию получения и сохранения расписания)
+                    }
+                    // тут при изменении номера группы надо изменять номер группы и ее расписание (номер группы изменяется реактивно, а для изменения группы надо вызывать функцию получения и сохранения расписания)
+                    
+                    .onChange(of: subGroup) {
+                        WidgetCenter.shared.reloadAllTimelines()
+                        // надо будет тут опять вызывать обновление данных в виджете так как надо отфильтровать по подгруппе
+                    }
                 }
                 .scrollContentBackground(.hidden)
                 .navigationBarTitle("Личный кабинет")
@@ -96,6 +104,7 @@ struct PersonalAccount: View {
                             isShowSettings.toggle()
                         } label: {
                             Image(systemName: "gearshape")
+//                                .symbolEffect()
                         }
                     }
                 }
