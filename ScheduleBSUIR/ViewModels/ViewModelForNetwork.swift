@@ -167,54 +167,81 @@ class ViewModelForNetwork: ObservableObject {
     
     
     @Published var scheduleForEmployees: [EmployeeModel] = []
-    @Published var isLoadingscheduleForEmployees: Bool = false
+    @Published var isLoadingScheduleForEmployees: Bool = false
     @Published var errorOfEmployeesArray: String = ""
     
-    func getArrayOfEmployees() async throws {
+    func getArrayOfEmployees() async {
         do {
             scheduleForEmployees = try await networkService.getArrayOfEmployees()
             withAnimation(.easeIn) {
-                isLoadingscheduleForEmployees = true
+                isLoadingScheduleForEmployees = true
             }
         } catch {
             withAnimation(.easeIn) {
                 errorOfEmployeesArray = error.localizedDescription
-                isLoadingscheduleForEmployees = true
+                isLoadingScheduleForEmployees = true
             }
-            print("Проблема с получением списка преподавателей: \(error)")
+            print("Проблема с получением списка преподавателей: \(error.localizedDescription)")
         }
     }
     
+    func scheduleForEmployeesInNull() {
+        scheduleForEmployees = []
+        isLoadingScheduleForEmployees = false
+        errorOfEmployeesArray = ""
+    }
     
-    @Published var scheduleForEachEmployee: EmployeeResponse = EmployeeResponse(employees: [], page: 0, size: 0, total: 0)
-    @Published var isLoadingscheduleForEachEmployee: Bool = false
+    
+    @Published var scheduleForEachEmployee: EachEmployeeResponse = EachEmployeeResponse(startDate: "", endDate: "", startExamsDate: "", endExamsDate: "", employeeDto: EmployeeDto(id: 0, firstName: "", middleName: "", lastName: "", photoLink: "", email: "", urlId: "", calendarId: "", chief: false), schedules: Schedules(monday: [], tuesday: [], wednesday: [], thursday: [], friday: [], saturday: [], sunday: []), currentPeriod: "")
+    @Published var isLoadingScheduleForEachEmployee: Bool = false
     @Published var errorOfEachEmployee: String = ""
     
-    func getEachEmployeeSchedule() async throws {
+    func getEachEmployeeSchedule(_ urlId: String) async {
         do {
-            scheduleForEachEmployee = try await networkService.getEachEmployeeSchedule("Строка")
+            scheduleForEachEmployee = try await networkService.getEachEmployeeSchedule(urlId)
             withAnimation(.easeIn) {
-                isLoadingscheduleForEachEmployee = true
+                isLoadingScheduleForEachEmployee = true
             }
         } catch {
             withAnimation(.easeIn) {
                 errorOfEachEmployee = error.localizedDescription
-                isLoadingscheduleForEachEmployee = true
+                isLoadingScheduleForEachEmployee = true
             }
-            print("Проблема с получением расписания преподавателя: \(error)")
+            print("Проблема с получением расписания преподавателя: \(error.localizedDescription)")
         }
     }
     
+    @Published var scheduleByDays2: [(dayName: String, lessons: [Lesson])] = []
     
-    
-    
+    func convertToScheduleDays2(_ schedule: EachEmployeeResponse) { // конвертация в (День: [Занятия])
+        let days = [
+            ("Понедельник", schedule.schedules.monday),
+            ("Вторник", schedule.schedules.tuesday),
+            ("Среда", schedule.schedules.wednesday),
+            ("Четверг", schedule.schedules.thursday),
+            ("Пятница", schedule.schedules.friday),
+            ("Суббота", schedule.schedules.saturday),
+            ("Воскресенье", schedule.schedules.sunday)
+        ]
+        
+        scheduleByDays2 = days.compactMap { dayName, optionalLessons in
+            guard let lessons = optionalLessons, !lessons.isEmpty else {
+                return (dayName, [])
+            }
+            return (dayName, lessons)
+        }
+    }
+}
+
+
+
 //    private func mapAFError(_ aferror: AFError?, urlerror: URLError?) -> String {
 ////        if let aferror {
 ////            switch aferror {
-////            
+////
 ////            }
 ////        }
-//        
+//
 //        if let urlerror {
 //            switch urlerror {
 //            case .notConnectedToInternet:
@@ -228,7 +255,7 @@ class ViewModelForNetwork: ObservableObject {
 //            }
 //        }
 //    }
-}
+
 
 
 //extension URLError {

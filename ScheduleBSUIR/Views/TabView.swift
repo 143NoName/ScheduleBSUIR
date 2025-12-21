@@ -24,7 +24,7 @@ struct TabBarView: View {
     @StateObject private var viewModelForFilter = ViewModelForFilterService()
                  private var appStorage = AppStorageService() // плохо, что view знает о сервисе, можно сдеать viewModel
     
-    @State private var selectedTab: Int = 1
+    @State private var selectedTab: Int = 2
     @State private var splashScreen: Bool = true
     
     @State private var isPresentedSplashScreen: Bool = true
@@ -40,16 +40,16 @@ struct TabBarView: View {
                     Groups()
                 }
                 
+                Tab("Преподаватели", systemImage: "calendar.and.person", value: 1) {
+                    EmployeesTab()
+                }
+                
                 if favoriteGroup != "" {
-                    Tab("Моя группа", systemImage: "star", value: 1) {
+                    Tab("Моя группа", systemImage: "star", value: 2) {
                         NavigationStack {
                             EachGroup(groupName: favoriteGroup)
                         }
                     }
-                }
-                
-                Tab("Преподаватели", systemImage: "calendar.and.person", value: 2) {
-                    Text("Преподаватели")
                 }
                 
                 Tab("Личный кабинет", systemImage: "person.circle", value: 3) {

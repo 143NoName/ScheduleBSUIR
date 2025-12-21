@@ -10,7 +10,6 @@ import SwiftUI
 struct Groups: View {
     
     @EnvironmentObject var network: ViewModelForNetwork
-    
     @Environment(\.colorScheme) var colorScheme
     
     @State var searchText: String = ""
@@ -34,7 +33,6 @@ struct Groups: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                
                 if colorScheme == .light {
                     Color.gray
                         .opacity(0.1)
@@ -43,29 +41,7 @@ struct Groups: View {
                 
                 VStack {
                     if !network.isLoadingArrayOfGroupsNum {
-                        List {
-                            ForEach(0..<20) { _ in
-                                VStack(alignment: .leading) {
-                                    RoundedRectangle(cornerRadius: 6)
-                                        .fill(Color.gray.opacity(0.5))
-                                        .frame(width: 100, height: 17)
-                                    HStack {
-                                        RoundedRectangle(cornerRadius: 6)
-                                            .fill(Color.gray.opacity(0.5))
-                                            .frame(height: 15)
-                                        RoundedRectangle(cornerRadius: 6)
-                                            .fill(Color.gray.opacity(0.5))
-                                            .frame(height: 15)
-                                        RoundedRectangle(cornerRadius: 6)
-                                            .fill(Color.gray.opacity(0.5))
-                                            .frame(height: 15)
-                                    }
-                                    .frame(width: 200)
-                                }
-                            }
-                        }
-                        .scrollContentBackground(.hidden)
-                        
+                        ViewEachGroupIsLoading()
                     } else {
                         List {
                             if !network.errorOfGroupsNum.isEmpty {
@@ -85,12 +61,14 @@ struct Groups: View {
                 .navigationTitle(loadedGroup)
                 
                 .if(network.isLoadingArrayOfGroupsNum) { view in
-                    view.searchable(text: $searchText, placement: .navigationBarDrawer, prompt: "Поиск по группам")
+                    view.searchable(text: $searchText, placement: .navigationBarDrawer, prompt: "Поиск группы")
                 } // было бы хорошо сделать UITextField в UIKit или просто как то кастомизировать через UIViewRepresentable
                 
                 .refreshable {
-                    network.groupArrayInNull()
-                    await network.getArrayOfGroupNum()       // получение списка групп
+                    Task {
+                        network.groupArrayInNull()
+                        await network.getArrayOfGroupNum()       // получение списка групп
+                    }
                 }
                 
                 .ignoresSafeArea(edges: .bottom)
@@ -101,17 +79,6 @@ struct Groups: View {
             .navigationDestination(for: String.self) { group in
                 EachGroup(groupName: group)
             }
-        }
-    }
-}
-
-extension View {
-    @ViewBuilder
-    func `if`<Content: View>(_ condition: Bool, transform: (Self) -> Content) -> some View {
-        if condition {
-            transform(self)
-        } else {
-            self
         }
     }
 }
@@ -129,7 +96,7 @@ private struct ViewEachGroup: View {
     var body: some View {
         VStack(alignment: .leading) {
             Text(group.name)
-                .font(.system(size: 18, weight: .medium))
+                .font(.system(size: 16, weight: .medium))
             HStack {
                 if let facultyAbbrev = group.facultyAbbrev {
                     Text(facultyAbbrev)
@@ -148,5 +115,32 @@ private struct ViewEachGroup: View {
             .frame(width: 200)
             .font(.system(size: 14, weight: .light))
         }
+    }
+}
+
+private struct ViewEachGroupIsLoading: View {
+    var body: some View {
+        List {
+            ForEach(0..<20) { _ in
+                VStack(alignment: .leading) {
+                    RoundedRectangle(cornerRadius: 6)
+                        .fill(Color.gray.opacity(0.5))
+                        .frame(width: 100, height: 17)
+                    HStack {
+                        RoundedRectangle(cornerRadius: 6)
+                            .fill(Color.gray.opacity(0.5))
+                            .frame(height: 15)
+                        RoundedRectangle(cornerRadius: 6)
+                            .fill(Color.gray.opacity(0.5))
+                            .frame(height: 15)
+                        RoundedRectangle(cornerRadius: 6)
+                            .fill(Color.gray.opacity(0.5))
+                            .frame(height: 15)
+                    }
+                    .frame(width: 200)
+                }
+            }
+        }
+        .scrollContentBackground(.hidden)
     }
 }

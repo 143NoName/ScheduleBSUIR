@@ -8,6 +8,8 @@
 import SwiftUI
 import Alamofire
 
+import os.log
+
 protocol NetworkServiceProtocol {
     func getCurrentWeek() async throws -> Int
     
@@ -15,7 +17,7 @@ protocol NetworkServiceProtocol {
     func getScheduleGroup(_ group: String) async throws -> ScheduleResponse
     
     func getArrayOfEmployees() async throws -> [EmployeeModel]
-    func getEachEmployeeSchedule(_ id: String) async throws -> EmployeeResponse
+    func getEachEmployeeSchedule(_ id: String) async throws -> EachEmployeeResponse
 }
 
 class NetworkService: NetworkServiceProtocol {
@@ -73,6 +75,7 @@ class NetworkService: NetworkServiceProtocol {
     
     // ПРЕПОДАВАТЕЛИ
     
+    var logger = Logger(subsystem: "AF", category: "AF")
     
     
     func getArrayOfEmployees() async throws -> [EmployeeModel] {
@@ -81,20 +84,20 @@ class NetworkService: NetworkServiceProtocol {
             .serializingData()
             .value
         do {
-            let response = try decoder.decode(EmployeeResponse.self, from: data)
-            return response.employees
+            let response = try decoder.decode([EmployeeModel].self, from: data)
+            return response
         } catch {
             throw error
         }
     }
     
-    func getEachEmployeeSchedule(_ id: String) async throws -> EmployeeResponse {
-        let data = try await AF.request("https://iis.bsuir.by/api/v1/employees/schedule/\(id)")
+    func getEachEmployeeSchedule(_ urlId: String) async throws -> EachEmployeeResponse {
+        let data = try await AF.request("https://iis.bsuir.by/api/v1/employees/schedule/\(urlId)")
             .validate()
             .serializingData()
             .value
         do {
-            return try decoder.decode(EmployeeResponse.self, from: data)
+            return try decoder.decode(EachEmployeeResponse.self, from: data)
         } catch {
             throw error
         }

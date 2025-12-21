@@ -53,10 +53,8 @@ struct EachLessonLoading: View {
 }
 
 struct EachLesson: View {
-    
-//    @EnvironmentObject var viewModelForNetwork: ViewModelForNetwork
-    
-    let funcs = MoreFunctions()
+        
+    let funcs = MoreFunctions() // используется функций закончился ли урок по времени и по дате
     
     let lesson: Lesson
     
@@ -104,8 +102,9 @@ struct EachLesson: View {
                 }
             }
             
+//            guard let employees = lesson.employees else { return EmptyView() }
             
-            AsyncImage(url: URL(string: lesson.employees[0].photoLink!)) { phase in
+            AsyncImage(url: URL(string: lesson.employees?[0].photoLink! ?? "")) { phase in // проверка опционального значения
                 switch phase {
                 case .empty:
                     ProgressView()

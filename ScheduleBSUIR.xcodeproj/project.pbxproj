@@ -70,9 +70,9 @@
 
 /* Begin PBXFileReference section */
 		498676EB2ED8560500892C4B /* ScheduleCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ScheduleCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		49B687BE2EF09D020012B3BB /* ScheduleBSUIRTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = ScheduleBSUIRTests.xctest; path = "/Library/Моя прога/SwiftUI/ScheduleBSUIR/build/Debug-iphoneos/ScheduleBSUIR.app/PlugIns/ScheduleBSUIRTests.xctest"; sourceTree = "<absolute>"; };
-		49B687BF2EF09D020012B3BB /* ScheduleBSUIRUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = ScheduleBSUIRUITests.xctest; path = "/Library/Моя прога/SwiftUI/ScheduleBSUIR/build/Debug-iphoneos/ScheduleBSUIRUITests-Runner.app/PlugIns/ScheduleBSUIRUITests.xctest"; sourceTree = "<absolute>"; };
 		49B688132EF29F550012B3BB /* ScheduleBSUIRWidgetExtensionDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ScheduleBSUIRWidgetExtensionDebug.entitlements; sourceTree = "<group>"; };
+		49B797F52EF5756B00C0A18F /* ScheduleBSUIRTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ScheduleBSUIRTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		49B797F62EF5756B00C0A18F /* ScheduleBSUIRUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ScheduleBSUIRUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		49F20D672EE0C9A1005F184A /* ScheduleBSUIR.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ScheduleBSUIR.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AF5B118F2EB4DD7800EBC825 /* ScheduleBSUIRWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ScheduleBSUIRWidgetExtension.entitlements; sourceTree = "<group>"; };
 		AFF20D862EB365B100383B2B /* ScheduleBSUIRWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ScheduleBSUIRWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -86,6 +86,7 @@
 			membershipExceptions = (
 				Models/ModelForEachEmployee.swift,
 				Models/ModelForEachGroup.swift,
+				Models/ModelLesson.swift,
 			);
 			target = AFF20D852EB365B100383B2B /* ScheduleBSUIRWidgetExtension */;
 		};
@@ -199,6 +200,8 @@
 				AFF20D862EB365B100383B2B /* ScheduleBSUIRWidgetExtension.appex */,
 				498676EB2ED8560500892C4B /* ScheduleCore.framework */,
 				49F20D672EE0C9A1005F184A /* ScheduleBSUIR.app */,
+				49B797F52EF5756B00C0A18F /* ScheduleBSUIRTests.xctest */,
+				49B797F62EF5756B00C0A18F /* ScheduleBSUIRUITests.xctest */,
 			);
 			sourceTree = "<group>";
 		};
@@ -289,7 +292,7 @@
 			packageProductDependencies = (
 			);
 			productName = ScheduleBSUIRTests;
-			productReference = 49B687BE2EF09D020012B3BB /* ScheduleBSUIRTests.xctest */;
+			productReference = 49B797F52EF5756B00C0A18F /* ScheduleBSUIRTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		AFA213082EAE29F30010C9F6 /* ScheduleBSUIRUITests */ = {
@@ -309,7 +312,7 @@
 			packageProductDependencies = (
 			);
 			productName = ScheduleBSUIRUITests;
-			productReference = 49B687BF2EF09D020012B3BB /* ScheduleBSUIRUITests.xctest */;
+			productReference = 49B797F62EF5756B00C0A18F /* ScheduleBSUIRUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 		AFF20D852EB365B100383B2B /* ScheduleBSUIRWidgetExtension */ = {
@@ -490,6 +493,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = YP54583LG6;
@@ -529,6 +533,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = YP54583LG6;

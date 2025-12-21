@@ -11,9 +11,6 @@ import WidgetKit
 struct EachGroup: View {
     
     @EnvironmentObject var network: ViewModelForNetwork
-//    @EnvironmentObject var filter: ViewModelForFilterService
-//    @Environment(\.viewModelForAppStorageKey) var appStorage
-    
     
     @Environment(\.colorScheme) var colorScheme
     
@@ -25,9 +22,9 @@ struct EachGroup: View {
     
     @AppStorage("favoriteGroup", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var favoriteGroup: String = ""
         
-    let calendar = Calendar.current // используется для нахождения сегодняшего дня (надо вынести в отдельную функцию)
+    let calendar = Calendar.current
     
-    let groupName: String
+    let groupName: String // получение номера группы для загрузки расписания и для navigationTitle
     
     @State var isShowMore: Bool = false
 
@@ -40,7 +37,7 @@ struct EachGroup: View {
                     .ignoresSafeArea(edges: .all)
             }
             
-            VStack(alignment: .leading) {
+//            VStack(alignment: .leading) {
                 List {
                     if !network.isLoadingArrayOfScheduleGroup {
                         Section(header:
@@ -80,75 +77,9 @@ struct EachGroup: View {
                     }
                 }
                 .scrollContentBackground(.hidden)
-            }
+//            }
             
-            VStack(spacing: 0) {
-                Button {
-                    if let updateWeekNum = WeeksInPicker(rawValue: network.currentWeek) {
-                        weekNumber = updateWeekNum
-                    }
-                        
-                    if let currentDay = DaysInPicker(rawValue: calendar.component(.weekday, from: Date()) - 1)  {
-                        weekDay = currentDay
-                    }
-                } label: {
-                    Text("К сегодняшнему дню")
-                        .padding(EdgeInsets(top: 2, leading: 8, bottom: 2, trailing: 8))
-                }
-                .buttonStyle(GlassButtonStyle(.regular))
-                
-                VStack {
-                    VStack(alignment: .leading) {
-                        Text("День недели")
-                            .font(.system(size: 16, weight: .semibold))
-                            .padding(.leading)
-                        Picker("", selection: $weekDay) {
-                            Text("пн").tag(DaysInPicker.monday)
-                            Text("вт").tag(DaysInPicker.tuesday)
-                            Text("ср").tag(DaysInPicker.wednesday)
-                            Text("чт").tag(DaysInPicker.thursday)
-                            Text("пт").tag(DaysInPicker.friday)
-                            Text("сб").tag(DaysInPicker.saturday)
-                            Text("вс").tag(DaysInPicker.sunday)
-                        }
-                        .pickerStyle(.segmented)
-    
-                    }
-                    .frame(height: 30)
-                    .padding(EdgeInsets(top: 0, leading: 16, bottom: 40, trailing: 16))
-                    
-                    HStack(spacing: 20) {
-                        VStack(alignment: .leading) {
-                            Text("Подгруппа")
-                                .font(.system(size: 16, weight: .semibold))
-                                .padding(.leading)
-                            Picker("", selection: $subGroup) {
-                                Text("Все").tag(SubGroupInPicker.all)
-                                Text("1").tag(SubGroupInPicker.first)
-                                Text("2").tag(SubGroupInPicker.second)
-                            }
-                            .pickerStyle(.segmented)
-                        }
-    
-                        VStack(alignment: .leading) {
-                            Text("Неделя")
-                                .font(.system(size: 16, weight: .semibold))
-                                .padding(.leading)
-                            Picker("", selection: $weekNumber) {
-                                Text("1").tag(WeeksInPicker.first)
-                                Text("2").tag(WeeksInPicker.second)
-                                Text("3").tag(WeeksInPicker.third)
-                                Text("4").tag(WeeksInPicker.fourth)
-                            }
-                            .pickerStyle(.segmented)
-                        }
-                    }
-                    .padding(.horizontal)
-                }
-                .frame(height: 200)
-                .glassEffect(.regular , in: .rect(cornerRadius: 20))
-                .padding()
-            }
+            SelectorView(subGroup: $subGroup, weekNumber: $weekNumber, weekDay: $weekDay)
         }
         
         .onDisappear {
@@ -165,20 +96,6 @@ struct EachGroup: View {
                         .font(.system(size: 18, weight: .semibold))
                 }
             }
-        }
-        
-        .onChange(of: subGroup) {
-            network.filterSchedule(currentWeek: weekNumber, subGroup: subGroup)
-            // при изменении подгруппы фильтрация расписания
-        }
-        
-        .onChange(of: weekNumber) {
-            network.filterSchedule(currentWeek: weekNumber, subGroup: subGroup)
-            // при изменении недели фильтрация расписания
-        }
-        
-        .sheet(isPresented: $isShowMore) {
-
         }
         
         .task {
