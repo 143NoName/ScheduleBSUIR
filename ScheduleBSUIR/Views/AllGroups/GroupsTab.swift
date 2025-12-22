@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct Groups: View {
+struct GroupsTab: View {
     
     @EnvironmentObject var network: ViewModelForNetwork
     @Environment(\.colorScheme) var colorScheme
@@ -76,18 +76,15 @@ struct Groups: View {
             .task {
                 await network.getArrayOfGroupNum()       // получение списка групп
             }
-            .navigationDestination(for: String.self) { group in
-                ScheduleView() // groupName не нужно уже
-                    .task {
-                        await network.getScheduleGroup(group: group) // получение расписания группы
-                    }
+            .navigationDestination(for: String.self) { groupName in
+                EachGroup(groupName: groupName)
             }
         }
     }
 }
 
 #Preview {
-    Groups()
+    GroupsTab()
         .environmentObject(ViewModelForNetwork())
 }
 

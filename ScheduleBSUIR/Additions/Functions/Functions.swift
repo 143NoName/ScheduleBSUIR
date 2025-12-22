@@ -130,6 +130,20 @@ struct MoreFunctions {
         return ""
     }
     
+    // переход к сегодняшнему дню
+    func findToday(todayWeek: Int, weekNumber: inout WeeksInPicker, weekDay: inout DaysInPicker) {
+        if let updateWeekNum = WeeksInPicker(rawValue: todayWeek) {
+            weekNumber = updateWeekNum
+        }
+        
+        var calendar = Calendar.current
+        calendar.firstWeekday = 2
+        
+        if let currentDay = DaysInPicker(rawValue: calendar.component(.weekday, from: Date()))  {
+            weekDay = currentDay
+        }
+    }
+    
     
     
      // РАБОТА С APPSTORAGE

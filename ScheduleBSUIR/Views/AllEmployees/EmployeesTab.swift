@@ -62,7 +62,7 @@ struct EmployeesTab: View {
 
                 .refreshable {
                     Task {
-                        network.scheduleForEmployeesInNull()
+                        network.employeesArrayInNull()
                         await network.getArrayOfEmployees()
                     }
                 }
@@ -74,12 +74,8 @@ struct EmployeesTab: View {
                 await network.getArrayOfEmployees()
             }
             
-            .navigationDestination(for: String.self) { employeeUrlId in
-                ScheduleView() // urlId не нужно уже
-                    .task {
-                        await network.getEachEmployeeSchedule(employeeUrlId)
-                        // получение списка уроков
-                    }
+            .navigationDestination(for: String.self) { employeeName in
+                EachEmployee(employeeName: employeeName)
             }
         }
     }

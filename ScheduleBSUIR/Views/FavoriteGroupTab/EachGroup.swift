@@ -8,7 +8,7 @@
 import SwiftUI
 import WidgetKit
 
-struct ScheduleView: View {
+struct EachGroup: View {
     
     @EnvironmentObject var network: ViewModelForNetwork
     @Environment(\.colorScheme) var colorScheme
@@ -22,6 +22,8 @@ struct ScheduleView: View {
     @AppStorage("favoriteGroup", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var favoriteGroup: String = ""
         
     let calendar = Calendar.current
+    
+    let groupName: String
         
     @State var isShowMore: Bool = false
     
@@ -32,6 +34,7 @@ struct ScheduleView: View {
             network.arrayOfScheduleGroup.studentGroupDto.name
         }
     }
+    #warning("При отсутствии данных, напишется Загрузка...")
 
     var body: some View {
         ZStack(alignment: .bottom) {
@@ -43,13 +46,12 @@ struct ScheduleView: View {
             }
             
             List {
-                #warning("Все проверки ведутся с данными для групп, а могут тут использоваться и преподаватели")
                 if !network.isLoadingArrayOfScheduleGroup {
                     Section(header:
                         Text("Загрузка...")
                             .foregroundStyle(colorScheme == .dark ? .white : .black)
                     ) {
-                        ForEach(0..<6, id: \.self) { _ in
+                        ForEach(0..<5, id: \.self) { _ in
                             EachLessonLoading()
                         }
                     }
@@ -82,14 +84,14 @@ struct ScheduleView: View {
             }
             .scrollContentBackground(.hidden)
             
-            SelectorView(subGroup: $subGroup, weekNumber: $weekNumber, weekDay: $weekDay)
+            SelectorViewForGroup(todayWeek: network.currentWeek, subGroup: $subGroup, weekNumber: $weekNumber, weekDay: $weekDay)
         }
-        
+        .navigationTitle(pageName)
         .onDisappear {
-            network.allInNull() // чистка всего при деинициализации
+            network.scheduleForEachGroupInNull() // чистка расписания при деинициализации
         }
 
-        .navigationTitle(pageName)
+
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
@@ -102,8 +104,11 @@ struct ScheduleView: View {
         }
         
         .task {
-//            filter.filterSchedule(currentWeek: weekNumber, subGroup: subGroup, scheduleDays: network.scheduleDays)
-                  network.filterSchedule(currentWeek: weekNumber, subGroup: subGroup) // фильтрация по неделе и по подгруппе
+            // получение расписания группы
+            await network.getScheduleGroup(group: groupName)
+            
+            // фильтрация по неделе и по подгруппе
+            network.filterGroupSchedule(currentWeek: weekNumber, subGroup: subGroup)
             
             if let updateWeekNum = WeeksInPicker(rawValue: network.currentWeek) {
                 weekNumber = updateWeekNum
@@ -115,19 +120,14 @@ struct ScheduleView: View {
             #warning("Тут надо вынести в отдельную функцию")
             #warning("Также надо переделать филтрация по неделе и подгруппе при появлении")
         }
-        .onDisappear {
-            print("Деинициализация")
-        }
     }
 }
 
 #Preview {
     NavigationStack {
-        ScheduleView()
+        EachGroup(groupName: "261402")
             .environmentObject(ViewModelForNetwork())
-//            .task {
-//                await network.getScheduleGroup(group: "261402") // получение расписания группы
-//            }
+
     }
     
 }

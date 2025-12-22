@@ -37,7 +37,7 @@ struct TabBarView: View {
         ZStack {
             TabView(selection: $selectedTab) {
                 Tab("Все группы", systemImage: "person.3", value: 0) {
-                    Groups()
+                    GroupsTab()
                 }
                 
                 Tab("Преподаватели", systemImage: "calendar.and.person", value: 1) {
@@ -47,10 +47,7 @@ struct TabBarView: View {
                 if favoriteGroup != "" {
                     Tab("Моя группа", systemImage: "star", value: 2) {
                         NavigationStack {
-                            ScheduleView() // groupName уже не нужен
-                                .task {
-                                    await network.getScheduleGroup(group: favoriteGroup) // получение расписания группы
-                                }
+                            EachGroup(groupName: favoriteGroup)
                         }
                     }
                 }
