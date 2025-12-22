@@ -47,7 +47,10 @@ struct TabBarView: View {
                 if favoriteGroup != "" {
                     Tab("Моя группа", systemImage: "star", value: 2) {
                         NavigationStack {
-                            EachGroup(groupName: favoriteGroup)
+                            ScheduleView() // groupName уже не нужен
+                                .task {
+                                    await network.getScheduleGroup(group: favoriteGroup) // получение расписания группы
+                                }
                         }
                     }
                 }

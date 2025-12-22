@@ -75,7 +75,11 @@ struct EmployeesTab: View {
             }
             
             .navigationDestination(for: String.self) { employeeUrlId in
-                EachEmployee(urlId: employeeUrlId)
+                ScheduleView() // urlId не нужно уже
+                    .task {
+                        await network.getEachEmployeeSchedule(employeeUrlId)
+                        // получение списка уроков
+                    }
             }
         }
     }

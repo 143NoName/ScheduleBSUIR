@@ -7,11 +7,6 @@
 
 import Foundation
 
-
-//protocol ScheduleResponseProtocol {
-//    let schedule: AllLessons
-//}
-
 struct EachEmployeeResponse: Codable {
     let startDate: String?
     let endDate: String?

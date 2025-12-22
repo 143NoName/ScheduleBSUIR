@@ -77,7 +77,10 @@ struct Groups: View {
                 await network.getArrayOfGroupNum()       // получение списка групп
             }
             .navigationDestination(for: String.self) { group in
-                EachGroup(groupName: group)
+                ScheduleView() // groupName не нужно уже
+                    .task {
+                        await network.getScheduleGroup(group: group) // получение расписания группы
+                    }
             }
         }
     }

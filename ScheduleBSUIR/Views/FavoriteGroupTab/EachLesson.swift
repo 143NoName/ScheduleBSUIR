@@ -69,6 +69,20 @@ struct EachLesson: View {
         return .white
     }
     
+    @ViewBuilder
+    var calcImageGroup: some View {
+        if lesson.numSubgroup == 0 {
+            Image(systemName: "person.2")
+        } else if lesson.numSubgroup == 1 || lesson.numSubgroup == 2 {
+            HStack(spacing: 0) {
+                Image(systemName: "person")
+                Text("\(lesson.numSubgroup)")
+            }
+        } else {
+            EmptyView()
+        }
+    }
+    
     var body: some View {
         HStack(spacing: 10) {
             VStack(alignment: .trailing) {
@@ -93,14 +107,7 @@ struct EachLesson: View {
             
             Spacer()
             
-            if lesson.numSubgroup == 0 {
-                Image(systemName: "person.2")
-            } else if lesson.numSubgroup == 1 || lesson.numSubgroup == 2 {
-                HStack(spacing: 0) {
-                    Image(systemName: "person")
-                    Text("\(lesson.numSubgroup)")
-                }
-            }
+            calcImageGroup
             
 //            guard let employees = lesson.employees else { return EmptyView() }
             

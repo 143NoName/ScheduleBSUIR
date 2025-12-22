@@ -27,6 +27,7 @@ struct PersonalAccount: View {
     @AppStorage("subGroup", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var subGroup: Int = 0
     
     var body: some View {
+        #warning("Добавить возможность выбора кто пользователь (ученик или перподаватель)")
         NavigationStack {
             ZStack {
                 if colorScheme == .light {

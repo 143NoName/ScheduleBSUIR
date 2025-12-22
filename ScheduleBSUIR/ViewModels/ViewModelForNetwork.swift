@@ -69,6 +69,7 @@ class ViewModelForNetwork: ObservableObject {
         endDate: "",
         startExamsDate: nil,
         endExamsDate: nil,
+        studentGroupDto: StudentGroupDto(name: "", facultyAbbrev: "", facultyName: "", specialityName: "", specialityAbbrev: "", educationDegree: 0),
         employeeDto: nil,
         schedules: Schedules(
             monday: [],
@@ -102,12 +103,12 @@ class ViewModelForNetwork: ObservableObject {
         }
     }
     
-    func allInNull() {
-        arrayOfScheduleGroup = ScheduleResponse(
+    func allInNull() { arrayOfScheduleGroup = ScheduleResponse(
             startDate: "",
             endDate: "",
             startExamsDate: nil,
             endExamsDate: nil,
+            studentGroupDto: StudentGroupDto(name: "", facultyAbbrev: "", facultyName: "", specialityName: "", specialityAbbrev: "", educationDegree: 0),
             employeeDto: nil,
             schedules: Schedules(
                 monday: [],
@@ -125,7 +126,7 @@ class ViewModelForNetwork: ObservableObject {
         errorOfScheduleGroup = ""
     }
     
-    @Published var scheduleByDays: [(dayName: String, lessons: [Lesson])] = []
+    @Published var scheduleGroupByDays: [(dayName: String, lessons: [Lesson])] = []
     
     func convertToScheduleDays() { // конвертация в (День: [Занятия])
         let days = [
@@ -138,7 +139,7 @@ class ViewModelForNetwork: ObservableObject {
             ("Воскресенье", arrayOfScheduleGroup.schedules.sunday)
         ]
         
-        scheduleByDays = days.compactMap { dayName, optionalLessons in
+        scheduleGroupByDays = days.compactMap { dayName, optionalLessons in
             guard let lessons = optionalLessons, !lessons.isEmpty else {
                 return (dayName, [])
             }
@@ -149,7 +150,7 @@ class ViewModelForNetwork: ObservableObject {
     // используется в .onChange при изменении подгруппы и недели
     func filterSchedule(currentWeek: WeeksInPicker, subGroup: SubGroupInPicker) {
         convertToScheduleDays() // для того чтобы перед фильтрацией вернуть все пары, которые были отфильтрованы раньше
-        let filteredArray = scheduleByDays.map { (dayName, lessons) in
+        let filteredArray = scheduleGroupByDays.map { (dayName, lessons) in
             let filteredLessons = lessons.filter { lesson in
                 lesson.weekNumber.contains(currentWeek.rawValue) &&
                 (subGroup.subGroupInNumber == 0 ? lesson.numSubgroup == 0 || lesson.numSubgroup == 1 || lesson.numSubgroup == 2 : lesson.numSubgroup == subGroup.subGroupInNumber || lesson.numSubgroup == 0) &&
@@ -157,7 +158,7 @@ class ViewModelForNetwork: ObservableObject {
             }
             return (dayName, filteredLessons)
         }
-        scheduleByDays = filteredArray
+        scheduleGroupByDays = filteredArray
     }
     
     
@@ -199,6 +200,7 @@ class ViewModelForNetwork: ObservableObject {
     func getEachEmployeeSchedule(_ urlId: String) async {
         do {
             scheduleForEachEmployee = try await networkService.getEachEmployeeSchedule(urlId)
+            convertToScheduleDaysEmployee()
             withAnimation(.easeIn) {
                 isLoadingScheduleForEachEmployee = true
             }
@@ -211,20 +213,20 @@ class ViewModelForNetwork: ObservableObject {
         }
     }
     
-    @Published var scheduleByDays2: [(dayName: String, lessons: [Lesson])] = []
+    @Published var scheduleEmployeeByDays: [(dayName: String, lessons: [Lesson])] = []
     
-    func convertToScheduleDays2(_ schedule: EachEmployeeResponse) { // конвертация в (День: [Занятия])
+    func convertToScheduleDaysEmployee() { // конвертация в (День: [Занятия])
         let days = [
-            ("Понедельник", schedule.schedules.monday),
-            ("Вторник", schedule.schedules.tuesday),
-            ("Среда", schedule.schedules.wednesday),
-            ("Четверг", schedule.schedules.thursday),
-            ("Пятница", schedule.schedules.friday),
-            ("Суббота", schedule.schedules.saturday),
-            ("Воскресенье", schedule.schedules.sunday)
+            ("Понедельник", scheduleForEachEmployee.schedules.monday),
+            ("Вторник", scheduleForEachEmployee.schedules.tuesday),
+            ("Среда", scheduleForEachEmployee.schedules.wednesday),
+            ("Четверг", scheduleForEachEmployee.schedules.thursday),
+            ("Пятница", scheduleForEachEmployee.schedules.friday),
+            ("Суббота", scheduleForEachEmployee.schedules.saturday),
+            ("Воскресенье", scheduleForEachEmployee.schedules.sunday)
         ]
         
-        scheduleByDays2 = days.compactMap { dayName, optionalLessons in
+        scheduleEmployeeByDays = days.compactMap { dayName, optionalLessons in
             guard let lessons = optionalLessons, !lessons.isEmpty else {
                 return (dayName, [])
             }

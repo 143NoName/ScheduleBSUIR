@@ -7,6 +7,10 @@
 
 import Foundation
 
+protocol ScheduleResponseProtocol {
+    var schedule: Schedules { get }
+}
+
 struct Schedules: Codable, Sendable {
     let monday: [Lesson]?
     let tuesday: [Lesson]?

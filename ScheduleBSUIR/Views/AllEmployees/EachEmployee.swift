@@ -12,7 +12,7 @@ struct EachEmployee: View {
     @EnvironmentObject var network: ViewModelForNetwork
     @Environment(\.colorScheme) var colorScheme
     
-    @State var urlId: String
+    let funcs = MoreFunctions() // так не правильно
     
     @AppStorage("weekDay") var weekDay: DaysInPicker = .monday
     @AppStorage("subGroupe") var subGroup: SubGroupInPicker = .all
@@ -27,33 +27,47 @@ struct EachEmployee: View {
     }
     
     var body: some View {
-        ZStack {
+        ZStack(alignment: .bottom) {
             if colorScheme == .light {
                 Color.gray
                     .opacity(0.1)
                     .ignoresSafeArea(edges: .all)
             }
-        
             List {
-//                ForEach() { _ in
-//                    
-//                }
+                Section(header:
+                            Text("Расписание")
+                                .foregroundStyle(colorScheme == .dark ? .white : .black),
+                        footer:
+                            Color.clear
+                                .frame(height: 300)
+                ) {
+                    ForEach(network.scheduleEmployeeByDays.enumerated(), id: \.offset) { index, day in
+                        if funcs.comparisonDay(weekDay, lessonDay: day.dayName) {
+                            if day.lessons.isEmpty {
+                                IfDayLessonIsEmpty()
+                            } else {
+                                ForEach(day.lessons.enumerated(), id: \.offset) { index, lesson in
+                                    EachLesson(lesson: lesson)
+                                }
+//                                                .backgroundStyle(.NewColor) // хочу сделать одинаковый цвет для листа и для окна выбора дня, недели и подгруппы
+                            }
+                        }
+                    }
+                }
             }
-                
+            .scrollContentBackground(.hidden)
+            
             SelectorView(subGroup: $subGroup, weekNumber: $weekNumber, weekDay: $weekDay)
-                
         }
             
             
         .navigationTitle(loadedEmployeeName)
-        
-        .task {
-            await network.getEachEmployeeSchedule(urlId)
-        }
     }
 }
 
 #Preview {
-    EachEmployee(urlId: "e-andros")
-        .environmentObject(ViewModelForNetwork())
+    NavigationStack {
+        EachEmployee()
+            .environmentObject(ViewModelForNetwork())
+    }
 }
