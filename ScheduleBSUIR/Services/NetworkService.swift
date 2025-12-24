@@ -71,7 +71,7 @@ class NetworkService: NetworkServiceProtocol {
         }
     }
     
-    
+    #warning("Если запросявно отменен, то надо его востановить (Request explicitly cancelled.)")
     
     // ПРЕПОДАВАТЕЛИ
     

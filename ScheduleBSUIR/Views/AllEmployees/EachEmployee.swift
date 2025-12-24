@@ -34,7 +34,7 @@ struct EachEmployee: View {
             
             if colorScheme == .light {
                 Color.gray
-                    .opacity(0.1)
+                    .opacity(0.15)
                     .ignoresSafeArea(edges: .all)
             }
             
@@ -80,8 +80,12 @@ struct EachEmployee: View {
             SelectorViewForEmployee(todayWeek: network.currentWeek, weekNumber: $weekNumber, weekDay: $weekDay)
         }
         .navigationTitle(pageName)
-        .onDisappear {
-            network.scheduleForEachGroupInNull() // чистка расписания при деинициализации
+//        .onDisappear {
+//            network.scheduleForEachGroupInNull() // чистка расписания при деинициализации
+//        }
+        
+        .refreshable {
+            await network.getEachEmployeeSchedule(employeeName)
         }
             
 

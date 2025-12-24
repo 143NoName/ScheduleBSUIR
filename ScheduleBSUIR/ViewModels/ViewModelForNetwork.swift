@@ -166,6 +166,8 @@ class ViewModelForNetwork: ObservableObject {
         scheduleGroupByDays = filteredArray
     }
     
+    #warning("Разделить на 2 отдельные и сделать или универмальной или отдельно для преподавателей (только для недели)")
+    
     
     
     // MARK: - Для преподавателей
@@ -178,6 +180,7 @@ class ViewModelForNetwork: ObservableObject {
     
     // получение списка всех преподавателей
     func getArrayOfEmployees() async {
+        employeesArrayInNull()
         do {
             scheduleForEmployees = try await networkService.getArrayOfEmployees()
             withAnimation(.easeIn) {
@@ -206,6 +209,7 @@ class ViewModelForNetwork: ObservableObject {
     
     // получение расписания отдельного преподавателя
     func getEachEmployeeSchedule(_ urlId: String) async {
+        scheduleForEachEmployeeInNull()
         do {
             scheduleForEachEmployee = try await networkService.getEachEmployeeSchedule(urlId)
             convertToScheduleDaysEmployee()
@@ -248,6 +252,18 @@ class ViewModelForNetwork: ObservableObject {
             }
             return (dayName, lessons)
         }
+    }
+    
+    func filterByWeekGroupSchedule(currentWeek: WeeksInPicker) {
+        convertToScheduleDaysEmployee() // вернуть все перед новой фильтрацией (надо как то выбирать для групп и для преподавателей)
+        let filteredArray = scheduleEmployeeByDays.map { (dayName, lessons) in
+            let filteredLessons = lessons.filter { lesson in
+                lesson.weekNumber.contains(currentWeek.rawValue) &&
+                !["Консультация", "Экзамен"].contains(lesson.lessonTypeAbbrev)
+            }
+            return (dayName, filteredLessons)
+        }
+        scheduleEmployeeByDays = filteredArray
     }
 }
 

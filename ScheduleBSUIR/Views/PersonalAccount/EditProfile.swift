@@ -38,7 +38,7 @@ struct EditProfile: View {
         ZStack {
             if colorScheme == .light {
                 Color.gray
-                    .opacity(0.1)
+                    .opacity(0.15)
                     .ignoresSafeArea(edges: .all)
             }
             

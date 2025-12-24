@@ -55,7 +55,6 @@ struct TabBarView: View {
                 Tab("Личный кабинет", systemImage: "person.circle", value: 3) {
                     PersonalAccount()
                 }
-                
             }
             
             .task {

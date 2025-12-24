@@ -41,7 +41,7 @@ struct EachGroup: View {
             
             if colorScheme == .light {
                 Color.gray
-                    .opacity(0.1)
+                    .opacity(0.15)
                     .ignoresSafeArea(edges: .all)
             }
             
@@ -87,8 +87,15 @@ struct EachGroup: View {
             SelectorViewForGroup(todayWeek: network.currentWeek, subGroup: $subGroup, weekNumber: $weekNumber, weekDay: $weekDay)
         }
         .navigationTitle(pageName)
-        .onDisappear {
-            network.scheduleForEachGroupInNull() // чистка расписания при деинициализации
+        
+//        .onDisappear {
+//            network.scheduleForEachGroupInNull() // чистка расписания при деинициализации
+//        }
+        
+        .refreshable {
+            await network.getScheduleGroup(group: groupName)
+            network.filterGroupSchedule(currentWeek: weekNumber, subGroup: subGroup)
+            
         }
 
 
@@ -110,15 +117,8 @@ struct EachGroup: View {
             // фильтрация по неделе и по подгруппе
             network.filterGroupSchedule(currentWeek: weekNumber, subGroup: subGroup)
             
-            if let updateWeekNum = WeeksInPicker(rawValue: network.currentWeek) {
-                weekNumber = updateWeekNum
-            }
-            
-            if let currentDay = DaysInPicker(rawValue: calendar.component(.weekday, from: Date()) - 1)  {
-                weekDay = currentDay
-            }
-            #warning("Тут надо вынести в отдельную функцию")
-            #warning("Также надо переделать филтрация по неделе и подгруппе при появлении")
+            // нахождение сегодняшнего дня (недели и дня недели)
+            funcs.findToday(todayWeek: network.currentWeek, weekNumber: &weekNumber, weekDay: &weekDay)
         }
     }
 }
@@ -131,3 +131,5 @@ struct EachGroup: View {
     }
     
 }
+
+#warning("Попробовать вернуть обычный цвет списка")
