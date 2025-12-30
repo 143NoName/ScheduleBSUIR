@@ -74,6 +74,7 @@ struct GroupsTab: View {
                 .ignoresSafeArea(edges: .bottom)
             }
             .task {
+                network.groupArrayInNull()
                 await network.getArrayOfGroupNum()       // получение списка групп
             }
             .navigationDestination(for: String.self) { groupName in

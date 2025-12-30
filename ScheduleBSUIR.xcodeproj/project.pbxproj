@@ -69,8 +69,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		493917452EFC4B360080E1E4 /* ScheduleBSUIRTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ScheduleBSUIRTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		493917462EFC4B360080E1E4 /* ScheduleBSUIRUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ScheduleBSUIRUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		493917452EFC4B360080E1E4 /* ScheduleBSUIRTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = ScheduleBSUIRTests.xctest; path = "/Library/Моя прога/SwiftUI/ScheduleBSUIR/build/Debug-iphoneos/ScheduleBSUIR.app/PlugIns/ScheduleBSUIRTests.xctest"; sourceTree = "<absolute>"; };
+		493917462EFC4B360080E1E4 /* ScheduleBSUIRUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = ScheduleBSUIRUITests.xctest; path = "/Library/Моя прога/SwiftUI/ScheduleBSUIR/build/Debug-iphoneos/ScheduleBSUIRUITests-Runner.app/PlugIns/ScheduleBSUIRUITests.xctest"; sourceTree = "<absolute>"; };
 		498676EB2ED8560500892C4B /* ScheduleCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ScheduleCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		49B688132EF29F550012B3BB /* ScheduleBSUIRWidgetExtensionDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ScheduleBSUIRWidgetExtensionDebug.entitlements; sourceTree = "<group>"; };
 		49F20D672EE0C9A1005F184A /* ScheduleBSUIR.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ScheduleBSUIR.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -200,8 +200,6 @@
 				AFF20D862EB365B100383B2B /* ScheduleBSUIRWidgetExtension.appex */,
 				498676EB2ED8560500892C4B /* ScheduleCore.framework */,
 				49F20D672EE0C9A1005F184A /* ScheduleBSUIR.app */,
-				493917452EFC4B360080E1E4 /* ScheduleBSUIRTests.xctest */,
-				493917462EFC4B360080E1E4 /* ScheduleBSUIRUITests.xctest */,
 			);
 			sourceTree = "<group>";
 		};
@@ -721,12 +719,14 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Solo.ScheduleBSUIR;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -759,12 +759,14 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Solo.ScheduleBSUIR;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

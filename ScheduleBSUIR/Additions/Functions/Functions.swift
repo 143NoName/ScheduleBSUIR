@@ -137,12 +137,31 @@ struct MoreFunctions {
             weekNumber = updateWeekNum
         }
         
-        var calendar = Calendar.current
-        calendar.firstWeekday = 2
-        
-        if let currentDay = DaysInPicker(rawValue: calendar.component(.weekday, from: Date()))  {
+        if let currentDay = DaysInPicker(rawValue: getWeekDay())  {
             weekDay = currentDay
         }
+    }
+    
+    // получение сегодняшнего дня недели правильно
+    func getWeekDay() -> Int {
+        let calendar = Calendar.current
+        
+        let day = calendar.component(.weekday, from: Date())
+                
+        let index: Int
+        
+        switch day {
+        case 1: index = 0
+        case 2: index = 1
+        case 3: index = 2
+        case 4: index = 3
+        case 5: index = 4
+        case 6: index = 5
+        case 7: index = 6
+        default: index = 0
+        }
+        
+        return index
     }
     
     

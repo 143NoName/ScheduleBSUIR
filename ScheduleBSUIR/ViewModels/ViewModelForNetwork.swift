@@ -158,7 +158,7 @@ class ViewModelForNetwork: ObservableObject {
         let filteredArray = scheduleGroupByDays.map { (dayName, lessons) in
             let filteredLessons = lessons.filter { lesson in
                 lesson.weekNumber.contains(currentWeek.rawValue) &&
-                (subGroup.subGroupInNumber == 0 ? lesson.numSubgroup == 0 || lesson.numSubgroup == 1 || lesson.numSubgroup == 2 : lesson.numSubgroup == subGroup.subGroupInNumber || lesson.numSubgroup == 0) &&
+                (subGroup.inNumber == 0 ? lesson.numSubgroup == 0 || lesson.numSubgroup == 1 || lesson.numSubgroup == 2 : lesson.numSubgroup == subGroup.inNumber || lesson.numSubgroup == 0) &&
                 !["Консультация", "Экзамен"].contains(lesson.lessonTypeAbbrev)
             }
             return (dayName, filteredLessons)

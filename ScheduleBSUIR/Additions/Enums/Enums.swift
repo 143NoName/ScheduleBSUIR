@@ -13,7 +13,7 @@ enum SubGroupInPicker: String, CaseIterable, Identifiable {
     case second = "2"
     var id: Self { self }
     
-    var subGroupInNumber: Int {
+    var inNumber: Int {
         switch self {
         case .all: return 0
         case .first: return 1
@@ -21,11 +21,11 @@ enum SubGroupInPicker: String, CaseIterable, Identifiable {
         }
     }
     
-    var allSubGroups: [Int] {
+    var inString: String {
         switch self {
-            case .all: return [0, 1, 2]
-            case .first: return [0, 1]
-            case .second: return [0, 2]
+        case .all: return "Все"
+        case .first: return "Первая"
+        case .second: return "Вторая"
         }
     }
 }
@@ -59,6 +59,15 @@ enum WeeksInPicker: Int, CaseIterable, Identifiable {
     case third = 3
     case fourth = 4
     var id: Self { self }
+    
+    var inString: String {
+        switch self {
+        case .first: return "Первая"
+        case .second: return "Вторая"
+        case .third: return "Третья"
+        case .fourth: return "Четвёртая"
+        }
+    }
 }
 
 enum InEditProfile {

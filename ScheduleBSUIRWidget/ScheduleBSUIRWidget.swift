@@ -103,7 +103,7 @@ extension ScheduleBSUIRWidgetEntryView {
         case 5: index = 4
         case 6: index = 5
         case 7: index = 6
-        default: index = 1
+        default: index = 0
         }
         
         return formatter.shortStandaloneWeekdaySymbols[index]

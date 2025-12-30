@@ -23,14 +23,25 @@ struct EmployeeModel: Codable, Identifiable {
     let rank: String?
     let photoLink: String?
     let degree: String?
-    let urlId: String?
+    let urlId: String
     let calendarId: String?
-    let fio: String?
+//    let fio: String?
     
     var fullName: String {
         "\(lastName ?? "") \(firstName ?? "") \(middleName ?? "")"
     }
-//    
+    var fio: String {
+        guard let lastName, let firstName = firstName?.first, let middleName = middleName?.first else { return "" }
+        return "\(lastName) \(firstName) \(middleName)"
+    }
+    
+//    var fio: String {
+//        guard let firstName = firstName.first, let middleName = middleName.first else { return "" }
+//        return "\(lastName) \(firstName). \(middleName)."
+//    }
+    
+    
+//
 //    // URL для фото (добавляем базовый URL если нужно)
 //    var photoURL: URL? {
 //        guard let link = photoLink, !link.isEmpty else { return nil }

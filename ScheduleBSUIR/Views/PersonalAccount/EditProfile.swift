@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+// нигде не используется
 struct EditProfile: View {
     
     @Environment(\.colorScheme) var colorScheme

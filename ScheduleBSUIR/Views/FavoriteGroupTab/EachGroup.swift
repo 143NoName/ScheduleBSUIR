@@ -10,6 +10,8 @@ import WidgetKit
 
 struct EachGroup: View {
     
+    #warning("Надо ограничить уроки по началу и концу сесиии")
+    
     @EnvironmentObject var network: ViewModelForNetwork
     @Environment(\.colorScheme) var colorScheme
     
@@ -19,7 +21,7 @@ struct EachGroup: View {
     @AppStorage("subGroupe") var subGroup: SubGroupInPicker = .all
     @AppStorage("weekNumber") var weekNumber: WeeksInPicker = .first
     
-    @AppStorage("favoriteGroup", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var favoriteGroup: String = ""
+//    @AppStorage("favoriteGroup", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var favoriteGroup: String = "Не выбрано"
         
     let calendar = Calendar.current
     
@@ -44,7 +46,7 @@ struct EachGroup: View {
                     .opacity(0.15)
                     .ignoresSafeArea(edges: .all)
             }
-            
+            #warning("Лист рисует все все группы, надо использовать ScrollView c LazyVStack или создать пагинацию")
             List {
                 if !network.isLoadingArrayOfScheduleGroup {
                     Section(header:
@@ -58,6 +60,7 @@ struct EachGroup: View {
                 } else {
                     if !network.errorOfScheduleGroup.isEmpty {
                         IfHaveErrorSchedule()
+                        #warning("Сделать ошибку такой же стеклянной")
                     } else {
                         Section(header:
                                     Text("Расписание")
@@ -97,7 +100,6 @@ struct EachGroup: View {
             network.filterGroupSchedule(currentWeek: weekNumber, subGroup: subGroup)
             
         }
-
 
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
