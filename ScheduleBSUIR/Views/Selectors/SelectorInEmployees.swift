@@ -110,10 +110,10 @@ private struct MaxViewSelector: View {
             }
             .padding(10)
             
-//            .onChange(of: weekNumber) {
-//                network.filterByWeekGroupSchedule(currentWeek: weekNumber)
+            .onChange(of: weekNumber) {
+                network.filterByWeekGroupSchedule(currentWeek: weekNumber)
 //                // при изменении недели фильтрация расписания
-//            }
+            }
         }
     }
 }

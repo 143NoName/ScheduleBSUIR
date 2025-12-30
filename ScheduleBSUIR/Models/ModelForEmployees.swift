@@ -32,7 +32,7 @@ struct EmployeeModel: Codable, Identifiable {
     }
     var fio: String {
         guard let lastName, let firstName = firstName?.first, let middleName = middleName?.first else { return "" }
-        return "\(lastName) \(firstName) \(middleName)"
+        return "\(lastName) \(firstName). \(middleName)."
     }
     
 //    var fio: String {

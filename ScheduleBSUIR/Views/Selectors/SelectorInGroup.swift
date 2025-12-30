@@ -12,8 +12,8 @@ struct SelectorViewForGroup: View {
     
     let funcs = MoreFunctions()
     
-    let calendar = Calendar.current
-    let date = Date()
+//    let calendar = Calendar.current
+//    let date = Date()
     
     let todayWeek: Int
     
@@ -77,6 +77,7 @@ private struct MaxViewSelector: View {
     
     @EnvironmentObject var network: ViewModelForNetwork
     
+    
     @Binding var subGroup: SubGroupInPicker
     @Binding var weekNumber: WeeksInPicker
     @Binding var weekDay: DaysInPicker
@@ -127,15 +128,15 @@ private struct MaxViewSelector: View {
                 }
             }
             .padding(10)
-//            .onChange(of: subGroup) {
-//                network.filterGroupSchedule(currentWeek: weekNumber, subGroup: subGroup)
+            .onChange(of: subGroup) {
+                network.filterGroupSchedule(currentWeek: weekNumber, subGroup: subGroup)
 //                // при изменении подгруппы фильтрация расписания
-//            }
+            }
 //            
-//            .onChange(of: weekNumber) {
-//                network.filterGroupSchedule(currentWeek: weekNumber, subGroup: subGroup)
+            .onChange(of: weekNumber) {
+                network.filterGroupSchedule(currentWeek: weekNumber, subGroup: subGroup)
 //                // при изменении недели фильтрация расписания
-//            }
+            }
         }
     }
 }

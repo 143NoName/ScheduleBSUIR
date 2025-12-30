@@ -71,7 +71,6 @@ struct EmployeesTab: View {
             }
             
             .task {
-                network.employeesArrayInNull()
                 await network.getArrayOfEmployees()
             }
             

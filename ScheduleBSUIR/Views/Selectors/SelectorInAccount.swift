@@ -37,12 +37,16 @@ struct SelectorViewForPersonalAccount: View {
                                     Text("Другое").tag(WhoUser.none)
                                 }
                                 .pickerStyle(.segmented)
+                                
+//                                .onChange(of: whoUser) {
+//                                    
+//                                }
                             }
                             .padding(10)
                         }
                     } else {
                         if whoUser == .student {
-                            MinViewGroupInSelector(showAll: $showAll)                       // уменьшенный вид для группы
+                            MinViewGroupInSelector(whoUser: whoUser, showAll: $showAll)                       // уменьшенный вид для группы
                         } else if whoUser == .employee {
                             MimViewEmployeeInSelector(whoUser: whoUser, showAll: $showAll)  // уменьшенный вид для преподавателей
                         } else {
@@ -91,6 +95,7 @@ struct ButtonShowMaxOrMin: View {
 
 
 // MARK: полный вид
+
 // ученик
 struct MaxViewGroupInSelector: View {
     
@@ -128,7 +133,6 @@ struct MaxViewGroupInSelector: View {
             .padding(.leading, 10)
             
             // обновление виджета
-            
 //            .onChange(of: favoriteGroup) {
 //                Task {
 //                    do {
@@ -155,37 +159,6 @@ struct MaxViewGroupInSelector: View {
         }
     }
 }
-
-struct PickerGroups: View {
-    
-    @Environment(\.dismiss) var dismiss
-    @Environment(\.colorScheme) var colorScheme
-    @EnvironmentObject var network: ViewModelForNetwork
-    @AppStorage("favoriteGroup", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var favoriteGroup: String = "Не выбрано"
-    
-    var body: some View {
-        ZStack {
-            if colorScheme == .light {
-                Color.gray
-                    .opacity(0.15)
-                    .ignoresSafeArea(edges: .all)
-            }
-            List {
-                ForEach(network.arrayOfGroupsNum) { each in
-                    Button {
-                        favoriteGroup = each.name
-                        dismiss()
-                    } label: {
-                        Text(each.name)
-                            .tint(Color.primary)
-                    }
-                }
-            }
-            .scrollContentBackground(.hidden)
-        }
-        .navigationTitle("Группы")
-    }
-}
 // ученик
 
 // преподаватель
@@ -196,14 +169,19 @@ struct MaxViewEmployeeInSelector: View {
     @AppStorage("employeeName", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var employeeName: String = "Не выбрано"
     
     var employeeNameToFio: String {
-        let words = employeeName.split(separator: " ")
-            .enumerated()
-            .map { index, word in
-                index < 1 ? word : "\(word.first!)."
-            }
-            .joined(separator: " ")
-        return words
+        if employeeName != "Не выбрано" {
+            let words = employeeName.split(separator: " ")
+                .enumerated()
+                .map { index, word in
+                    index < 1 ? word : "\(word.first!)."
+                }
+                .joined(separator: " ")
+            return words
+        } else {
+            return employeeName
+        }
     }
+    #warning("В AppStorage сохраняется urlId, а не фио")
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -230,49 +208,19 @@ struct MaxViewEmployeeInSelector: View {
         }
     }
 }
-
-struct PickerEmployees: View {
-    
-    @Environment(\.dismiss) var dismiss
-    @Environment(\.colorScheme) var colorScheme
-    @EnvironmentObject var network: ViewModelForNetwork
-    @AppStorage("employeeName", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var employeeName: String = "Не выбрано"
-    
-    var body: some View {
-        ZStack {
-            if colorScheme == .light {
-                Color.gray
-                    .opacity(0.15)
-                    .ignoresSafeArea(edges: .all)
-            }
-            List {
-                ForEach(network.scheduleForEmployees) { each in
-                    Button {
-                        employeeName = each.fio
-                        dismiss()
-                    } label: {
-                        Text(each.fio)
-                            .tint(Color.primary)
-                    }
-                }
-            }
-            .scrollContentBackground(.hidden)
-        }
-        .navigationTitle("Преподаватели")
-    }
-}
 // преподаватель
 // полный вид
 
 
 // MARK: минимальный вид
+
 // ученик
 struct MinViewGroupInSelector: View {
     #warning("subGroup это число или enum")
     @AppStorage("subGroup", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var subGroup: SubGroupInPicker = .all
     @AppStorage("favoriteGroup", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var favoriteGroup: String = "Не выбрано"
     #warning("Вместо appStorage лучше просто передавать это знаяения (из главного вида в мелкие)")
-    @State var whoUser: WhoUser = .student
+    let whoUser: WhoUser
     
     @Binding var showAll: Bool
     
@@ -314,13 +262,17 @@ struct MimViewEmployeeInSelector: View {
     @AppStorage("employeeName", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var employeeName: String = "Не выбрано"
     
     var employeeNameToFio: String {
-        let words = employeeName.split(separator: " ")
-            .enumerated()
-            .map { index, word in
-                index < 1 ? word : "\(word.first!)."
-            }
-            .joined(separator: " ")
-        return words
+        if employeeName != "Не выбрано" {
+            let words = employeeName.split(separator: " ")
+                .enumerated()
+                .map { index, word in
+                    index < 1 ? word : "\(word.first!)."
+                }
+                .joined(separator: " ")
+            return words
+        } else {
+            return employeeName
+        }
     }
     
     var body: some View {
@@ -328,7 +280,7 @@ struct MimViewEmployeeInSelector: View {
             VStack(alignment: .leading) {
                 Text("ФИО:")
                     .font(.system(size: 16, weight: .semibold))
-                Text("\(employeeNameToFio)")
+                Text(employeeNameToFio)
             }
             Spacer()
             VStack(alignment: .leading) {
@@ -373,8 +325,8 @@ struct MimViewNoneInSelector: View {
 // никто
 // минимальный вид
 
-
 // MARK: универсальный
+
 // универсальный пикер
 struct UniversalPicker<T: Identifiable>: View {
     
@@ -395,6 +347,14 @@ struct UniversalPicker<T: Identifiable>: View {
                     .ignoresSafeArea(edges: .all)
             }
             List {
+                Button {
+                    selected = "Не выбрано"
+                    dismiss()
+                } label: {
+                    Text("Не выбрано")
+                        .tint(Color.primary)
+                }
+                
                 ForEach(items) { each in
                     Button {
                         selected = each[keyPath: secondValue]

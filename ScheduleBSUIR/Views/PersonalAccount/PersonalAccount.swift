@@ -30,7 +30,6 @@ struct PersonalAccount: View {
     @State private var userPhoto: UIImage? = nil             // само изображение
     
 //    @State private var isShowSettings: Bool = false
-//    @State private var name: String = ""
 
     @State private var studentName: String = ""
     @State private var studentSurname: String = ""
@@ -124,12 +123,14 @@ struct PersonalAccount: View {
                             }
                             if whoUser == .employee {
                                 Section {
-                                    VStack {
-                                        Text("\(network.scheduleForEachEmployee.employeeDto.firstName)")
-                                        Text("Тут например будет какая то информация")
-                                        Text("Тут например будет какая то информация")
-                                        Text("Тут например будет какая то информация")
-                                        Text("Тут например будет какая то информация")
+                                    if !network.isLoadingScheduleForEmployees {
+                                        ProgressView()
+                                    } else {
+                                        VStack {
+                                            Text("\(network.scheduleForEachEmployee.employeeDto.fullName)")
+                                            Text("\(network.scheduleForEachEmployee.employeeDto.email ?? "")")
+                                            Text("\(network.scheduleForEachEmployee.employeeDto.fullName)")
+                                        }
                                     }
                                 }
                             }
@@ -148,7 +149,7 @@ struct PersonalAccount: View {
                     .scrollContentBackground(.hidden)
                     .photosPicker(isPresented: $isShowPhotosPicker, selection: $selectedItem, matching: .images)
                     .onChange(of: selectedItem) { _, newValue in
-                        loadPhotoFromPhotoPicker(from: newValue)
+                        loadPhotoFromPhotoPicker(from: newValue) // изменение фото
                     }
                     #warning("Пикер работает, но загружается одно фото на все приложение")
                 }
@@ -157,13 +158,19 @@ struct PersonalAccount: View {
                 
                 .navigationBarTitle("Личный кабинет")
                 
-//                .task {
+                
+                
+//                .onChange(of: whoUser) {
 //                    getListStudentOrEmployees() // получение списка преподавателей или учеников
 //                }
-                
-                .onChange(of: whoUser) {
-                    getListStudentOrEmployees() // получение списка преподавателей или учеников
-                }
+            }
+            
+            .onChange(of: whoUser) {
+                getListStudentOrEmployees()
+            }
+            
+            .refreshable {
+                getListStudentOrEmployees()
             }
 //            .navigationDestination(for: InEditProfile.self) { parametr in
 //                EditProfile(parametr: parametr)

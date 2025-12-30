@@ -30,15 +30,17 @@ struct EmployeeDto: Codable {
     let middleName: String
     let lastName: String
     let photoLink: String?
-//    let degree: Int?
-//    let degreeAbbrev: String?
-//    let rank: Int?
     let email: String?
     let urlId: String
     let calendarId: String?
     let chief: Bool?
     
     var fullName: String {
+//        guard let firstName = firstName.first, let middleName = middleName.first else { return "" }
+        return "\(lastName) \(firstName) \(middleName)"
+    }
+    
+    var fio: String {
         guard let firstName = firstName.first, let middleName = middleName.first else { return "" }
         return "\(lastName) \(firstName). \(middleName)."
     }

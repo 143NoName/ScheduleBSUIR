@@ -47,7 +47,6 @@ class ViewModelForNetwork: ObservableObject {
     
     // получение списка групп от API
     func getArrayOfGroupNum() async {
-//        groupArrayInNull()
         do {
             arrayOfGroupsNum = try await networkService.getArrayOfGroupNum()
             withAnimation(.easeIn) {
@@ -172,7 +171,7 @@ class ViewModelForNetwork: ObservableObject {
     
     // MARK: - Для преподавателей
     
-    
+    #warning("Мне не нравится, что рисписание загружается в один массив, и оттуда все получают данные")
     
     @Published var scheduleForEmployees: [EmployeeModel] = []
     @Published var isLoadingScheduleForEmployees: Bool = false
@@ -180,7 +179,6 @@ class ViewModelForNetwork: ObservableObject {
     
     // получение списка всех преподавателей
     func getArrayOfEmployees() async {
-        employeesArrayInNull()
         do {
             scheduleForEmployees = try await networkService.getArrayOfEmployees()
             withAnimation(.easeIn) {

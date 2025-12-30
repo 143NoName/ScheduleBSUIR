@@ -13,6 +13,7 @@ struct EachGroup: View {
     #warning("Надо ограничить уроки по началу и концу сесиии")
     
     @EnvironmentObject var network: ViewModelForNetwork
+    @Environment(\.dismiss) var dismiss
     @Environment(\.colorScheme) var colorScheme
     
     let funcs = MoreFunctions() // так не правильно
@@ -24,7 +25,6 @@ struct EachGroup: View {
 //    @AppStorage("favoriteGroup", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var favoriteGroup: String = "Не выбрано"
         
     let calendar = Calendar.current
-    
     let groupName: String
         
     @State var isShowMore: Bool = false
@@ -77,7 +77,6 @@ struct EachGroup: View {
                                         ForEach(day.lessons.enumerated(), id: \.offset) { index, lesson in
                                             EachLesson(lesson: lesson)
                                         }
-//                                                .backgroundStyle(.NewColor) // хочу сделать одинаковый цвет для листа и для окна выбора дня, недели и подгруппы
                                     }
                                 }
                             }
@@ -91,14 +90,10 @@ struct EachGroup: View {
         }
         .navigationTitle(pageName)
         
-//        .onDisappear {
-//            network.scheduleForEachGroupInNull() // чистка расписания при деинициализации
-//        }
-        
         .refreshable {
+            network.scheduleForEachGroupInNull()
             await network.getScheduleGroup(group: groupName)
             network.filterGroupSchedule(currentWeek: weekNumber, subGroup: subGroup)
-            
         }
 
         .toolbar {
@@ -122,6 +117,10 @@ struct EachGroup: View {
             // нахождение сегодняшнего дня (недели и дня недели)
             funcs.findToday(todayWeek: network.currentWeek, weekNumber: &weekNumber, weekDay: &weekDay)
         }
+        
+        .onDisappear {
+            dismiss()
+        }
     }
 }
 
@@ -133,5 +132,3 @@ struct EachGroup: View {
     }
     
 }
-
-#warning("Попробовать вернуть обычный цвет списка")

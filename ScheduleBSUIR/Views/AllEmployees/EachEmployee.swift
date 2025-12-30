@@ -10,6 +10,7 @@ import SwiftUI
 struct EachEmployee: View {
     
     @EnvironmentObject var network: ViewModelForNetwork
+    @Environment(\.dismiss) var dismiss
     @Environment(\.colorScheme) var colorScheme
     
     let funcs = MoreFunctions() // так не правильно
@@ -25,7 +26,7 @@ struct EachEmployee: View {
         if !network.isLoadingScheduleForEachEmployee {
             return "Загрузка..."
         } else {
-            return network.scheduleForEachEmployee.employeeDto.fullName
+            return network.scheduleForEachEmployee.employeeDto.fio
         }
     }
     
@@ -87,9 +88,6 @@ struct EachEmployee: View {
         .refreshable {
             await network.getEachEmployeeSchedule(employeeName)
         }
-            
-
-        
         
         .task {
             // получение расписания преподавателя
@@ -101,6 +99,10 @@ struct EachEmployee: View {
             if let updateWeekNum = WeeksInPicker(rawValue: network.currentWeek) {
                 weekNumber = updateWeekNum
             }
+        }
+        
+        .onDisappear {
+            dismiss()
         }
     }
 }
