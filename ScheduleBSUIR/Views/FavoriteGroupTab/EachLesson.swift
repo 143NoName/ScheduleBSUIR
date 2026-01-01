@@ -53,10 +53,8 @@ struct EachLessonLoading: View {
 }
 
 struct EachLesson: View {
-    
-//    @EnvironmentObject var viewModelForNetwork: ViewModelForNetwork
-    
-    let funcs = MoreFunctions()
+        
+    let funcs = MoreFunctions() // используется функций закончился ли урок по времени и по дате
     
     let lesson: Lesson
     
@@ -69,6 +67,20 @@ struct EachLesson: View {
             return .red
         }
         return .white
+    }
+    
+    @ViewBuilder
+    var calcImageGroup: some View {
+        if lesson.numSubgroup == 0 {
+            Image(systemName: "person.2")
+        } else if lesson.numSubgroup == 1 || lesson.numSubgroup == 2 {
+            HStack(spacing: 0) {
+                Image(systemName: "person")
+                Text("\(lesson.numSubgroup)")
+            }
+        } else {
+            EmptyView()
+        }
     }
     
     var body: some View {
@@ -95,17 +107,11 @@ struct EachLesson: View {
             
             Spacer()
             
-            if lesson.numSubgroup == 0 {
-                Image(systemName: "person.2")
-            } else if lesson.numSubgroup == 1 || lesson.numSubgroup == 2 {
-                HStack(spacing: 0) {
-                    Image(systemName: "person")
-                    Text("\(lesson.numSubgroup)")
-                }
-            }
+            calcImageGroup
             
+//            guard let employees = lesson.employees else { return EmptyView() }
             
-            AsyncImage(url: URL(string: lesson.employees[0].photoLink!)) { phase in
+            AsyncImage(url: URL(string: lesson.employees?[0].photoLink! ?? "")) { phase in // проверка опционального значения
                 switch phase {
                 case .empty:
                     ProgressView()

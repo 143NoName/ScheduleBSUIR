@@ -12,113 +12,23 @@ struct ScheduleResponse: Codable, Sendable {
     let endDate: String?
     let startExamsDate: String?
     let endExamsDate: String?
+    let studentGroupDto: StudentGroupDto
     let employeeDto: Employee?
     let schedules: Schedules
     let currentTerm: String?
     let currentPeriod: String?
 }
 
-struct Schedules: Codable, Sendable {
-    let monday: [Lesson]?
-    let tuesday: [Lesson]?
-    let wednesday: [Lesson]?
-    let thursday: [Lesson]?
-    let friday: [Lesson]?
-    let saturday: [Lesson]?
-    let sunday: [Lesson]?
-    
-    // Для получения данных из сети с русскими названиями, но потом перевод в анг как в модели
-    private enum CodingKeys: String, CodingKey {
-        case monday = "Понедельник"
-        case tuesday = "Вторник"
-        case wednesday = "Среда"
-        case thursday = "Четверг"
-        case friday = "Пятница"
-        case saturday = "Суббота"
-        case sunday = "Воскресенье"
-    }
-    
-    // получение более удобного формата расписания
-    var lessonsByDay: [(day: String, lessons: [Lesson])] {
-        [
-            ("Понедельник", monday ?? []),
-            ("Вторик", tuesday ?? []),
-            ("Среда", wednesday ?? []),
-            ("Четверг", thursday ?? []),
-            ("Пятница", friday ?? []),
-            ("Суббота", saturday ?? []),
-            ("Воскресенье", sunday ?? [])
-        ]
-    }
-    
-    // преобразование из Schedules в FormatedSchedules
-    func getFormatedSchedules() -> [FormatedSchedules] {
-        lessonsByDay.map { day, lessons in
-            FormatedSchedules(day: day, lesson: lessons)
-        }
-    }
-}
-
-// модель для виджета (загрузка в него данных и их фильтрация)
-struct FormatedSchedules: Codable {
-    let day: String
-    let lesson: [Lesson]
-}
-
-extension Schedules { // получение расписания на сегодня по дню недели (в итоге не нужно будет)
-    func atDay(_ weekday: Int) -> [Lesson]? {
-        switch weekday {
-        case 2: return monday      // Понедельник
-        case 3: return tuesday     // Вторник
-        case 4: return wednesday   // Среда
-        case 5: return thursday    // Четверг
-        case 6: return friday      // Пятница
-        case 7: return saturday    // Суббота
-        case 1: return sunday      // Воскресенье
-        default: return nil
-        }
-    }
-}
-
-struct Lesson: Codable, Sendable {
-    let auditories: [String]
-    let endLessonTime: String
-    let lessonTypeAbbrev: String
-    let note: String?
-    let numSubgroup: Int
-    let startLessonTime: String
-    let studentGroups: [StudentGroupInfo]
-    let subject: String
-    let subjectFullName: String
-    let weekNumber: [Int]
-    let employees: [Employee]
-    let dateLesson: String?
-    let startLessonDate: String?
-    let endLessonDate: String?
-    let announcement: Bool
-    let split: Bool
-}
-
-struct StudentGroupInfo: Codable, Sendable {
-    let specialityName: String
-    let specialityCode: String
-    let numberOfStudents: Int
+struct StudentGroupDto: Codable {
     let name: String
+//    let facultyId: Int
+    let facultyAbbrev: String
+    let facultyName: String
+//    let specialityDepartmentEducationFormId: Int
+    let specialityName: String
+    let specialityAbbrev: String?
+//    let cours: Int
+//    let id: Int
+//    let calendarId: String
     let educationDegree: Int
-}
-
-struct Employee: Codable, Sendable {
-    let id: Int
-    let firstName: String?
-    let middleName: String?
-    let lastName: String?
-    let photoLink: String?
-    let degree: String?
-    let degreeAbbrev: String?
-    let rank: String?
-    let email: String?
-    let urlId: String?
-    let calendarId: String?
-    let jobPositions: String?
-    let chief: Bool?
 }

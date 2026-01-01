@@ -18,7 +18,7 @@ struct FilterService: FilterServiceProtocol {
         return scheduleDays.map { (groupName, lessons) in
             let filteredLessons = lessons.filter { each in
                 each.weekNumber.contains(currentWeek.rawValue) &&
-                (subGroup.subGroupInNumber == 0 ? each.numSubgroup == 0 || each.numSubgroup == 1 || each.numSubgroup == 2 : each.numSubgroup == subGroup.subGroupInNumber || each.numSubgroup == 0) &&
+                (subGroup.inNumber == 0 ? each.numSubgroup == 0 || each.numSubgroup == 1 || each.numSubgroup == 2 : each.numSubgroup == subGroup.inNumber || each.numSubgroup == 0) &&
                 !["Консультация", "Экзамен"].contains(each.lessonTypeAbbrev)
             }
             return (groupName, filteredLessons)
@@ -29,7 +29,7 @@ struct FilterService: FilterServiceProtocol {
         scheduleDays = scheduleDays.map { (groupName, lessons) in
             let filteredLessons = lessons.filter { each in
                 each.weekNumber.contains(currentWeek.rawValue) &&
-                (subGroup.subGroupInNumber == 0 ? each.numSubgroup == 0 || each.numSubgroup == 1 || each.numSubgroup == 2 : each.numSubgroup == subGroup.subGroupInNumber || each.numSubgroup == 0) &&
+                (subGroup.inNumber == 0 ? each.numSubgroup == 0 || each.numSubgroup == 1 || each.numSubgroup == 2 : each.numSubgroup == subGroup.inNumber || each.numSubgroup == 0) &&
                 !["Консультация", "Экзамен"].contains(each.lessonTypeAbbrev)
             }
             print((groupName, filteredLessons))

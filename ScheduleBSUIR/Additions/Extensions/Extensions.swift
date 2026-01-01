@@ -7,11 +7,24 @@
 
 import SwiftUI
 
+// расширение для String. Для преобразования строки в дату
 extension String {
     func toDate() -> Date? {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd.MM.yyyy"
         dateFormatter.locale = Locale(identifier: "ru_RU")
         return dateFormatter.date(from: self)
+    }
+}
+
+// расширение для View. Для отображения .searchable по условию
+extension View {
+    @ViewBuilder
+    func `if`<Content: View>(_ condition: Bool, transform: (Self) -> Content) -> some View {
+        if condition {
+            transform(self)
+        } else {
+            self
+        }
     }
 }

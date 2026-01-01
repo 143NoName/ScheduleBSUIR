@@ -130,9 +130,44 @@ struct MoreFunctions {
         return ""
     }
     
+    #warning("На день позже")
+    // переход к сегодняшнему дню
+    func findToday(todayWeek: Int, weekNumber: inout WeeksInPicker, weekDay: inout DaysInPicker) {
+        if let updateWeekNum = WeeksInPicker(rawValue: todayWeek) {
+            weekNumber = updateWeekNum
+        }
+        
+        if let currentDay = DaysInPicker(rawValue: getWeekDay())  {
+            weekDay = currentDay
+        }
+    }
+    
+    // получение сегодняшнего дня недели правильно
+    func getWeekDay() -> Int {
+        let calendar = Calendar.current
+        
+        let day = calendar.component(.weekday, from: Date())
+                
+        let index: Int
+        
+        switch day {
+        case 1: index = 0
+        case 2: index = 1
+        case 3: index = 2
+        case 4: index = 3
+        case 5: index = 4
+        case 6: index = 5
+        case 7: index = 6
+        default: index = 0
+        }
+        
+        return index
+    }
+    
     
     
      // РАБОТА С APPSTORAGE
+    
     
     
     @AppStorage("groupSchedule", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var groupSchedule: Data?

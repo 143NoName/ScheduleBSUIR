@@ -24,43 +24,51 @@ struct TabBarView: View {
     @StateObject private var viewModelForFilter = ViewModelForFilterService()
                  private var appStorage = AppStorageService() // плохо, что view знает о сервисе, можно сдеать viewModel
     
-    @State private var selectedTab: Int = 1
+    @State private var selectedTab: Int = 2
     @State private var splashScreen: Bool = true
+    
+    @State var whoUser: WhoUser = .none
     
     @State private var isPresentedSplashScreen: Bool = true
     @State var scale: CGFloat = 1
     @State var opacity: Double = 1
     
-    @AppStorage("favoriteGroup", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var favoriteGroup: String = ""
+    @AppStorage("favoriteGroup", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var favoriteGroup: String = "Не выбрано"
+    @AppStorage("employeeName", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var employeeName: String = "Не выбрано"
+
     
     var body: some View {
         ZStack {
             TabView(selection: $selectedTab) {
                 Tab("Все группы", systemImage: "person.3", value: 0) {
-                    Groups()
+                    GroupsTab()
                 }
                 
-                if favoriteGroup != "" {
-                    Tab("Моя группа", systemImage: "star", value: 1) {
+                Tab("Преподаватели", systemImage: "calendar.and.person", value: 1) {
+                    EmployeesTab()
+                }
+                
+                if whoUser == .student && favoriteGroup != "Не выбрано" {
+                    Tab("Моя группа", systemImage: "star", value: 2) {
                         NavigationStack {
                             EachGroup(groupName: favoriteGroup)
                         }
                     }
-                }
-                
-                Tab("Преподаватели", systemImage: "calendar.and.person", value: 2) {
-                    Text("Преподаватели")
+                } else if whoUser == .employee && employeeName != "Не выбрано" {
+                    Tab("Мое расписание", systemImage: "star", value: 2) {
+                        Text("obvoiebwrv")
+                    }
                 }
                 
                 Tab("Личный кабинет", systemImage: "person.circle", value: 3) {
-                    PersonalAccount()
+                    PersonalAccount(whoUser: $whoUser)
                 }
-                
             }
             
             .task {
                 await network.getCurrentWeek()           // получение текущей недели
                 await network.getArrayOfGroupNum()       // получение списка групп
+                await network.getArrayOfEmployees()      // получение списка преподавателей
                 
                 do {
                     try appStorage.saveDataForWidgetToAppStorage(network.arrayOfScheduleGroup.schedules)
@@ -71,21 +79,22 @@ struct TabBarView: View {
                 appStorage.saveWeekNumberToAppStorage(network.currentWeek)        
             }
             
+            #warning("Создание большого количество потоков")
             // показывать начальное окно
-            if isPresentedSplashScreen {
-                StartView(opacity: $opacity, scale: $scale)
-                .onAppear {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                        withAnimation(.easeOut(duration: 1)) {
-                            scale = 15
-                            opacity = 0
-                        }
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.1) {
-                            isPresentedSplashScreen = false
-                        }
-                    }
-                }
-            }
+//            if isPresentedSplashScreen {
+//                StartView(opacity: $opacity, scale: $scale)
+//                .onAppear {
+//                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+//                        withAnimation(.easeOut(duration: 1)) {
+//                            scale = 15
+//                            opacity = 0
+//                        }
+//                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.1) {
+//                            isPresentedSplashScreen = false
+//                        }
+//                    }
+//                }
+//            }
             
         }
         .environmentObject(network)

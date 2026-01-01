@@ -86,6 +86,7 @@
 			membershipExceptions = (
 				Models/ModelForEachEmployee.swift,
 				Models/ModelForEachGroup.swift,
+				Models/ModelLesson.swift,
 			);
 			target = AFF20D852EB365B100383B2B /* ScheduleBSUIRWidgetExtension */;
 		};

@@ -22,6 +22,8 @@ class ViewModelForNetwork: ObservableObject {
     
     private let funcs = MoreFunctions()
     
+    // MARK: - Для номера недели
+    
     @Published var currentWeek: Int = 0
     @Published var errorOfCurrentWeek: String = ""
     
@@ -37,13 +39,14 @@ class ViewModelForNetwork: ObservableObject {
         }
     }
     
+    // MARK: - Для групп
+    
     @Published var arrayOfGroupsNum: [StudentGroups] = []
     @Published var isLoadingArrayOfGroupsNum: Bool = false
     @Published var errorOfGroupsNum: String = ""
     
     // получение списка групп от API
     func getArrayOfGroupNum() async {
-//        groupArrayInNull()
         do {
             arrayOfGroupsNum = try await networkService.getArrayOfGroupNum()
             withAnimation(.easeIn) {
@@ -69,6 +72,7 @@ class ViewModelForNetwork: ObservableObject {
         endDate: "",
         startExamsDate: nil,
         endExamsDate: nil,
+        studentGroupDto: StudentGroupDto(name: "", facultyAbbrev: "", facultyName: "", specialityName: "", specialityAbbrev: "", educationDegree: 0),
         employeeDto: nil,
         schedules: Schedules(
             monday: [],
@@ -89,7 +93,7 @@ class ViewModelForNetwork: ObservableObject {
     func getScheduleGroup(group: String) async {
         do {
             arrayOfScheduleGroup = try await networkService.getScheduleGroup(group)
-            convertToScheduleDays() // сразу преобразовать в (День: [Занятия])
+            convertGroupToScheduleDays() // сразу преобразовать в (День: [Занятия])
             withAnimation(.easeIn) {
                 isLoadingArrayOfScheduleGroup = true
             }
@@ -102,12 +106,13 @@ class ViewModelForNetwork: ObservableObject {
         }
     }
     
-    func allInNull() {
+    func scheduleForEachGroupInNull() {
         arrayOfScheduleGroup = ScheduleResponse(
             startDate: "",
             endDate: "",
             startExamsDate: nil,
             endExamsDate: nil,
+            studentGroupDto: StudentGroupDto(name: "", facultyAbbrev: "", facultyName: "", specialityName: "", specialityAbbrev: "", educationDegree: 0),
             employeeDto: nil,
             schedules: Schedules(
                 monday: [],
@@ -125,9 +130,9 @@ class ViewModelForNetwork: ObservableObject {
         errorOfScheduleGroup = ""
     }
     
-    @Published var scheduleByDays: [(dayName: String, lessons: [Lesson])] = []
+    @Published var scheduleGroupByDays: [(dayName: String, lessons: [Lesson])] = []
     
-    func convertToScheduleDays() { // конвертация в (День: [Занятия])
+    func convertGroupToScheduleDays() { // конвертация в (День: [Занятия])
         let days = [
             ("Понедельник", arrayOfScheduleGroup.schedules.monday),
             ("Вторник", arrayOfScheduleGroup.schedules.tuesday),
@@ -138,7 +143,7 @@ class ViewModelForNetwork: ObservableObject {
             ("Воскресенье", arrayOfScheduleGroup.schedules.sunday)
         ]
         
-        scheduleByDays = days.compactMap { dayName, optionalLessons in
+        scheduleGroupByDays = days.compactMap { dayName, optionalLessons in
             guard let lessons = optionalLessons, !lessons.isEmpty else {
                 return (dayName, [])
             }
@@ -147,74 +152,128 @@ class ViewModelForNetwork: ObservableObject {
     }
     
     // используется в .onChange при изменении подгруппы и недели
-    func filterSchedule(currentWeek: WeeksInPicker, subGroup: SubGroupInPicker) {
-        convertToScheduleDays() // для того чтобы перед фильтрацией вернуть все пары, которые были отфильтрованы раньше
-        let filteredArray = scheduleByDays.map { (dayName, lessons) in
+    func filterGroupSchedule(currentWeek: WeeksInPicker, subGroup: SubGroupInPicker) {
+        convertGroupToScheduleDays() // для того чтобы перед фильтрацией вернуть все пары, которые были отфильтрованы раньше
+        let filteredArray = scheduleGroupByDays.map { (dayName, lessons) in
             let filteredLessons = lessons.filter { lesson in
                 lesson.weekNumber.contains(currentWeek.rawValue) &&
-                (subGroup.subGroupInNumber == 0 ? lesson.numSubgroup == 0 || lesson.numSubgroup == 1 || lesson.numSubgroup == 2 : lesson.numSubgroup == subGroup.subGroupInNumber || lesson.numSubgroup == 0) &&
+                (subGroup.inNumber == 0 ? lesson.numSubgroup == 0 || lesson.numSubgroup == 1 || lesson.numSubgroup == 2 : lesson.numSubgroup == subGroup.inNumber || lesson.numSubgroup == 0) &&
                 !["Консультация", "Экзамен"].contains(lesson.lessonTypeAbbrev)
             }
             return (dayName, filteredLessons)
         }
-        scheduleByDays = filteredArray
+        scheduleGroupByDays = filteredArray
     }
     
+    #warning("Разделить на 2 отдельные и сделать или универмальной или отдельно для преподавателей (только для недели)")
     
     
-    // для преподавателей
     
+    // MARK: - Для преподавателей
     
+    #warning("Мне не нравится, что рисписание загружается в один массив, и оттуда все получают данные")
     
     @Published var scheduleForEmployees: [EmployeeModel] = []
-    @Published var isLoadingscheduleForEmployees: Bool = false
+    @Published var isLoadingScheduleForEmployees: Bool = false
     @Published var errorOfEmployeesArray: String = ""
     
-    func getArrayOfEmployees() async throws {
+    // получение списка всех преподавателей
+    func getArrayOfEmployees() async {
         do {
             scheduleForEmployees = try await networkService.getArrayOfEmployees()
             withAnimation(.easeIn) {
-                isLoadingscheduleForEmployees = true
+                isLoadingScheduleForEmployees = true
             }
         } catch {
             withAnimation(.easeIn) {
                 errorOfEmployeesArray = error.localizedDescription
-                isLoadingscheduleForEmployees = true
+                isLoadingScheduleForEmployees = true
             }
-            print("Проблема с получением списка преподавателей: \(error)")
+            print("Проблема с получением списка преподавателей: \(error.localizedDescription)")
         }
     }
     
+    // очистка списка преподавателей
+    func employeesArrayInNull() {
+        scheduleForEmployees = []
+        isLoadingScheduleForEmployees = false
+        errorOfEmployeesArray = ""
+    }
     
-    @Published var scheduleForEachEmployee: EmployeeResponse = EmployeeResponse(employees: [], page: 0, size: 0, total: 0)
-    @Published var isLoadingscheduleForEachEmployee: Bool = false
+    
+    @Published var scheduleForEachEmployee: EachEmployeeResponse = EachEmployeeResponse(startDate: "", endDate: "", startExamsDate: "", endExamsDate: "", employeeDto: EmployeeDto(id: 0, firstName: "", middleName: "", lastName: "", photoLink: "", email: "", urlId: "", calendarId: "", chief: false), schedules: Schedules(monday: [], tuesday: [], wednesday: [], thursday: [], friday: [], saturday: [], sunday: []), currentPeriod: "")
+    @Published var isLoadingScheduleForEachEmployee: Bool = false
     @Published var errorOfEachEmployee: String = ""
     
-    func getEachEmployeeSchedule() async throws {
+    // получение расписания отдельного преподавателя
+    func getEachEmployeeSchedule(_ urlId: String) async {
+        scheduleForEachEmployeeInNull()
         do {
-            scheduleForEachEmployee = try await networkService.getEachEmployeeSchedule("Строка")
+            scheduleForEachEmployee = try await networkService.getEachEmployeeSchedule(urlId)
+            convertToScheduleDaysEmployee()
             withAnimation(.easeIn) {
-                isLoadingscheduleForEachEmployee = true
+                isLoadingScheduleForEachEmployee = true
             }
         } catch {
             withAnimation(.easeIn) {
                 errorOfEachEmployee = error.localizedDescription
-                isLoadingscheduleForEachEmployee = true
+                isLoadingScheduleForEachEmployee = true
             }
-            print("Проблема с получением расписания преподавателя: \(error)")
+            print("Проблема с получением расписания преподавателя: \(error.localizedDescription)")
         }
     }
     
+    // очистка расписания преподавателей
+    func scheduleForEachEmployeeInNull() {
+        scheduleForEachEmployee = EachEmployeeResponse(startDate: "", endDate: "", startExamsDate: "", endExamsDate: "", employeeDto: EmployeeDto(id: 0, firstName: "", middleName: "", lastName: "", photoLink: "", email: "", urlId: "", calendarId: "", chief: false), schedules: Schedules(monday: [], tuesday: [], wednesday: [], thursday: [], friday: [], saturday: [], sunday: []), currentPeriod: "")
+        isLoadingScheduleForEachEmployee = false
+        errorOfEachEmployee = ""
+    }
     
+    @Published var scheduleEmployeeByDays: [(dayName: String, lessons: [Lesson])] = []
     
+    // конвертация в (День: [Занятия])
+    func convertToScheduleDaysEmployee() {
+        let days = [
+            ("Понедельник", scheduleForEachEmployee.schedules.monday),
+            ("Вторник", scheduleForEachEmployee.schedules.tuesday),
+            ("Среда", scheduleForEachEmployee.schedules.wednesday),
+            ("Четверг", scheduleForEachEmployee.schedules.thursday),
+            ("Пятница", scheduleForEachEmployee.schedules.friday),
+            ("Суббота", scheduleForEachEmployee.schedules.saturday),
+            ("Воскресенье", scheduleForEachEmployee.schedules.sunday)
+        ]
+        
+        scheduleEmployeeByDays = days.compactMap { dayName, optionalLessons in
+            guard let lessons = optionalLessons, !lessons.isEmpty else {
+                return (dayName, [])
+            }
+            return (dayName, lessons)
+        }
+    }
     
+    func filterByWeekGroupSchedule(currentWeek: WeeksInPicker) {
+        convertToScheduleDaysEmployee() // вернуть все перед новой фильтрацией (надо как то выбирать для групп и для преподавателей)
+        let filteredArray = scheduleEmployeeByDays.map { (dayName, lessons) in
+            let filteredLessons = lessons.filter { lesson in
+                lesson.weekNumber.contains(currentWeek.rawValue) &&
+                !["Консультация", "Экзамен"].contains(lesson.lessonTypeAbbrev)
+            }
+            return (dayName, filteredLessons)
+        }
+        scheduleEmployeeByDays = filteredArray
+    }
+}
+
+
+
 //    private func mapAFError(_ aferror: AFError?, urlerror: URLError?) -> String {
 ////        if let aferror {
 ////            switch aferror {
-////            
+////
 ////            }
 ////        }
-//        
+//
 //        if let urlerror {
 //            switch urlerror {
 //            case .notConnectedToInternet:
@@ -228,7 +287,7 @@ class ViewModelForNetwork: ObservableObject {
 //            }
 //        }
 //    }
-}
+
 
 
 //extension URLError {
