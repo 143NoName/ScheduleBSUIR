@@ -45,11 +45,13 @@ struct TabBarView: View {
                 }
                 
                 Tab("Группы", systemImage: "person.3", value: 1) {
-                    UniversalList(array: network.arrayOfGroupsNum,  isLoadedArray: network.isLoadingArrayOfGroupsNum, isErrorLoadingArray: network.errorOfScheduleGroup, name: \.name, faculty: \.facultyAbbrev, specialization: \.specialityAbbrev, course: \.course, image: nil, depart: nil, urlID: nil)
+//                    UniversalList(array: network.arrayOfGroupsNum,  isLoadedArray: network.isLoadingArrayOfGroupsNum, isErrorLoadingArray: network.errorOfScheduleGroup, name: \.name, faculty: \.facultyAbbrev, specialization: \.specialityAbbrev, course: \.course, image: nil, depart: nil, urlID: nil)
+                    UniversalListView(items: network.arrayOfGroupsNum, name: \.name, isLoading: network.isLoadingArrayOfGroupsNum, errorLoading: network.errorOfScheduleGroup , title: "Группы")
                 }
                 
                 Tab("Преподаватели", systemImage: "calendar.and.person", value: 2) {
-                    UniversalList(array: network.scheduleForEmployees, isLoadedArray: network.isLoadingScheduleForEmployees, isErrorLoadingArray: network.errorOfEmployeesArray, name: \.fullName, faculty: nil, specialization: nil, course: nil, image: \.photoLink, depart: \.academicDepartment, urlID: \.urlId)
+//                    UniversalList(array: network.scheduleForEmployees, isLoadedArray: network.isLoadingScheduleForEmployees, isErrorLoadingArray: network.errorOfEmployeesArray, name: \.fullName, faculty: nil, specialization: nil, course: nil, image: \.photoLink, depart: \.academicDepartment, urlID: \.urlId)
+                    UniversalListView(items: network.scheduleForEmployees, name: \.fullName, isLoading:  network.isLoadingScheduleForEmployees, errorLoading: network.errorOfEmployeesArray, title: "Преподаватели")
                 }
                 
 //                Tab("Преподаватели", systemImage: "calendar.and.person", value: 1) {

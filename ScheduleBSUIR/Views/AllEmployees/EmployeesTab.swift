@@ -70,9 +70,9 @@ struct EmployeesTab: View {
                 .ignoresSafeArea(edges: .bottom)
             }
             
-            .task {
-                await network.getArrayOfEmployees()
-            }
+//            .task {
+//                await network.getArrayOfEmployees()
+//            }
             
             .navigationDestination(for: String.self) { employeeName in
                 EachEmployee(employeeName: employeeName)

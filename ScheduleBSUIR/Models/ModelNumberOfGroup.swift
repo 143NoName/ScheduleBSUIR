@@ -6,6 +6,14 @@
 //
 
 import Foundation
+import SwiftUI
+
+protocol ModelsProtocol {
+//    let id: String
+//    var displayName: String { get }
+    func makeCell() -> AnyView
+}
+
 
 struct ModelNumbersOfGroups: Decodable, Identifiable {
     let id: Int
@@ -14,9 +22,11 @@ struct ModelNumbersOfGroups: Decodable, Identifiable {
     let speciality: String?
     let course: Int?
     let educationForm: String?
+    
+    
 }
 
-struct StudentGroups: Codable, Identifiable {
+struct StudentGroups: Decodable, Identifiable, ModelsProtocol {
     let id: Int
     let name: String
     let facultyId: Int?
@@ -28,4 +38,8 @@ struct StudentGroups: Codable, Identifiable {
     let course: Int?
     let educationDegree: Int?
     let calendarId: String?
+    
+    func makeCell() -> AnyView {
+       AnyView(ViewForGroup(group: self))
+    }
 }
