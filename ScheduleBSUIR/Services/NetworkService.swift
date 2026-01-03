@@ -104,3 +104,36 @@ class NetworkService: NetworkServiceProtocol {
         }
     }
 }
+
+
+struct Network<T: Decodable> {
+    
+    let decoder = JSONDecoder()
+    
+    
+    
+    func getArray(_ url: String) async throws -> [T] {
+        let data = try await AF.request(url)
+            .validate()
+            .serializingData()
+            .value
+        do {
+            let response = try decoder.decode([T].self, from: data)
+            return response
+        } catch {
+            throw error
+        }
+    }
+    
+    func getEach(_ url: String, component: String) async throws -> T {
+        let data = try await AF.request("\(url)/\(component)")
+            .validate()
+            .serializingData()
+            .value
+        do {
+            return try decoder.decode(T.self, from: data)
+        } catch {
+            throw error
+        }
+    }
+}

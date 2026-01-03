@@ -35,14 +35,15 @@ struct UniversalList<T: Identifiable>: View {
     let isLoadedArray: Bool
     let isErrorLoadingArray: String
     
-    let name: KeyPath<T, String>                // "имя" то ли группы то ли преподавателя
+    let name: KeyPath<T, String>                 // "имя" то ли группы то ли преподавателя
     
     let faculty: KeyPath<T, String?>?            // факультет для группы
     let specialization: KeyPath<T, String?>?     // специальность для группы
-    let course: KeyPath<T, Int?>?             // курс для группы
+    let course: KeyPath<T, Int?>?                // курс для группы
     
     let image: KeyPath<T, String?>?              // изображение для преподавателя
     let depart: KeyPath<T, [String]?>?           // кафедры для преподавателя
+    let urlID: KeyPath<T, String>?              // ссылка  для получения расписания
     
     var whoToShow: WhoToShow {
         if faculty != nil, specialization != nil, course != nil {
@@ -84,7 +85,11 @@ struct UniversalList<T: Identifiable>: View {
                 
                 VStack {
                     if !isLoadedArray {
-                        ViewGroupIsLoading()
+                        if whoToShow == .group {
+                            ViewGroupIsLoading()
+                        } else if whoToShow == .employee {
+                            EmployeesEachIsLoading()
+                        }
                     } else {
                         CostomList {
                             if !isErrorLoadingArray.isEmpty {
@@ -96,10 +101,14 @@ struct UniversalList<T: Identifiable>: View {
                                     //                                    }
                                     
                                     if whoToShow == .group {
-                                        ViewForGroup(name: each[keyPath: name], faculty: each[keyPath: faculty!] ?? "", specialization: each[keyPath: specialization!] ?? "", course: each[keyPath: course!] ?? 0)
+                                        NavigationLink(value: name) {
+                                            ViewForGroup(name: each[keyPath: name], faculty: each[keyPath: faculty!] ?? "", specialization: each[keyPath: specialization!] ?? "", course: each[keyPath: course!] ?? 0)
+                                        }
                                     }
                                     else if whoToShow == .employee {
-                                        ViewForEmployee(image: each[keyPath: image!] ?? "", name: each[keyPath: name], academicDepartment: each[keyPath: depart!] ?? [])
+                                        NavigationLink(value: each[keyPath: urlID!]) {
+                                            ViewForEmployee(image: each[keyPath: image!] ?? "", name: each[keyPath: name], academicDepartment: each[keyPath: depart!] ?? [])
+                                        }
                                     }
                                 }
                             }
@@ -128,7 +137,7 @@ struct UniversalList<T: Identifiable>: View {
 }
 
 #Preview {
-    UniversalList(array: ViewModelForNetwork().arrayOfGroupsNum, isLoadedArray: true, isErrorLoadingArray: "", name: \.name, faculty: \.facultyAbbrev, specialization: \.specialityAbbrev, course: \.course, image: nil, depart: nil)
+    UniversalList(array: ViewModelForNetwork().arrayOfGroupsNum, isLoadedArray: true, isErrorLoadingArray: "", name: \.name, faculty: \.facultyAbbrev, specialization: \.specialityAbbrev, course: \.course, image: nil, depart: nil, urlID: nil)
         .environmentObject(ViewModelForNetwork())
 }
 
@@ -221,6 +230,45 @@ private struct ViewGroupIsLoading: View {
                             .frame(height: 15)
                     }
                     .frame(width: 200)
+                }
+            }
+        }
+        .scrollContentBackground(.hidden)
+    }
+}
+
+private struct EmployeesEachIsLoading: View {
+    var body: some View {
+        List {
+            ForEach(0..<10) { _ in
+                HStack {
+                    RoundedRectangle(cornerRadius: 15)
+                        .fill(Color.gray.opacity(0.5))
+                        .frame(width: 40, height: 40)
+                    VStack(alignment: .leading) {
+                        HStack {
+                            RoundedRectangle(cornerRadius: 6)
+                                .fill(Color.gray.opacity(0.5))
+                                .frame(width: 70, height: 17)
+                            RoundedRectangle(cornerRadius: 6)
+                                .fill(Color.gray.opacity(0.5))
+                                .frame(width: 60, height: 17)
+                            RoundedRectangle(cornerRadius: 6)
+                                .fill(Color.gray.opacity(0.5))
+                                .frame(width: 60, height: 17)
+                        }
+                        HStack {
+                            RoundedRectangle(cornerRadius: 6)
+                                .fill(Color.gray.opacity(0.5))
+                                .frame(width: 40, height: 15)
+                            RoundedRectangle(cornerRadius: 6)
+                                .fill(Color.gray.opacity(0.5))
+                                .frame(width: 40, height: 15)
+                            RoundedRectangle(cornerRadius: 6)
+                                .fill(Color.gray.opacity(0.5))
+                                .frame(width: 40, height: 15)
+                        }
+                    }
                 }
             }
         }

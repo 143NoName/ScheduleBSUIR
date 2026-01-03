@@ -45,11 +45,11 @@ struct TabBarView: View {
                 }
                 
                 Tab("Группы", systemImage: "person.3", value: 1) {
-                    UniversalList(array: network.arrayOfGroupsNum,  isLoadedArray: network.isLoadingArrayOfGroupsNum, isErrorLoadingArray: network.errorOfScheduleGroup, name: \.name, faculty: \.facultyAbbrev, specialization: \.specialityAbbrev, course: \.course, image: nil, depart: nil)
+                    UniversalList(array: network.arrayOfGroupsNum,  isLoadedArray: network.isLoadingArrayOfGroupsNum, isErrorLoadingArray: network.errorOfScheduleGroup, name: \.name, faculty: \.facultyAbbrev, specialization: \.specialityAbbrev, course: \.course, image: nil, depart: nil, urlID: nil)
                 }
                 
                 Tab("Преподаватели", systemImage: "calendar.and.person", value: 2) {
-                    UniversalList(array: network.scheduleForEmployees, isLoadedArray: network.isLoadingScheduleForEmployees, isErrorLoadingArray: network.errorOfEmployeesArray, name: \.fullName, faculty: nil, specialization: nil, course: nil, image: \.photoLink, depart: \.academicDepartment)
+                    UniversalList(array: network.scheduleForEmployees, isLoadedArray: network.isLoadingScheduleForEmployees, isErrorLoadingArray: network.errorOfEmployeesArray, name: \.fullName, faculty: nil, specialization: nil, course: nil, image: \.photoLink, depart: \.academicDepartment, urlID: \.urlId)
                 }
                 
 //                Tab("Преподаватели", systemImage: "calendar.and.person", value: 1) {
