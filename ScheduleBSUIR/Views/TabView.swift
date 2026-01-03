@@ -24,7 +24,7 @@ struct TabBarView: View {
     @StateObject private var viewModelForFilter = ViewModelForFilterService()
                  private var appStorage = AppStorageService() // плохо, что view знает о сервисе, можно сдеать viewModel
     
-    @State private var selectedTab: Int = 2
+    @State private var selectedTab: Int = 1
     @State private var splashScreen: Bool = true
     
     @State var whoUser: WhoUser = .none
@@ -44,42 +44,55 @@ struct TabBarView: View {
                     GroupsTab()
                 }
                 
-                Tab("Преподаватели", systemImage: "calendar.and.person", value: 1) {
-                    EmployeesTab()
+                Tab("Группы", systemImage: "person.3", value: 1) {
+                    UniversalList(array: network.arrayOfGroupsNum,  isLoadedArray: network.isLoadingArrayOfGroupsNum, isErrorLoadingArray: network.errorOfScheduleGroup, name: \.name, faculty: \.facultyAbbrev, specialization: \.specialityAbbrev, course: \.course, image: nil, depart: nil)
                 }
                 
-                if whoUser == .student && favoriteGroup != "Не выбрано" {
-                    Tab("Моя группа", systemImage: "star", value: 2) {
-                        NavigationStack {
-                            EachGroup(groupName: favoriteGroup)
-                        }
-                    }
-                } else if whoUser == .employee && employeeName != "Не выбрано" {
-                    Tab("Мое расписание", systemImage: "star", value: 2) {
-                        Text("obvoiebwrv")
-                    }
+                Tab("Преподаватели", systemImage: "calendar.and.person", value: 2) {
+                    UniversalList(array: network.scheduleForEmployees, isLoadedArray: network.isLoadingScheduleForEmployees, isErrorLoadingArray: network.errorOfEmployeesArray, name: \.fullName, faculty: nil, specialization: nil, course: nil, image: \.photoLink, depart: \.academicDepartment)
                 }
                 
-                Tab("Личный кабинет", systemImage: "person.circle", value: 3) {
-                    PersonalAccount(whoUser: $whoUser)
-                }
+//                Tab("Преподаватели", systemImage: "calendar.and.person", value: 1) {
+//                    EmployeesTab()
+//                }
+//                
+//                if whoUser == .student && favoriteGroup != "Не выбрано" {
+//                    Tab("Моя группа", systemImage: "star", value: 2) {
+//                        NavigationStack {
+//                            EachGroup(groupName: favoriteGroup)
+//                        }
+//                    }
+//                } else if whoUser == .employee && employeeName != "Не выбрано" {
+//                    Tab("Мое расписание", systemImage: "star", value: 2) {
+//                        Text("obvoiebwrv")
+//                    }
+//                }
+//                
+//                Tab("Личный кабинет", systemImage: "person.circle", value: 3) {
+//                    PersonalAccount(whoUser: $whoUser)
+//                }
             }
             
             .task {
-                await network.getCurrentWeek()           // получение текущей недели
-                await network.getArrayOfGroupNum()       // получение списка групп
-                await network.getArrayOfEmployees()      // получение списка преподавателей
+                await Task.detached {
+//                    print(Thread.isMainThread)
+                    await network.getCurrentWeek()           // получение текущей недели
+                    await network.getArrayOfGroupNum()       // получение списка групп
+                    await network.getArrayOfEmployees()      // получение списка преподавателей
+                    
+                    do {
+                        try appStorage.saveDataForWidgetToAppStorage(network.arrayOfScheduleGroup.schedules)
+                    } catch {
+                        print("Неудачная попытка загрузить расписание в AppStorage: \(error)")
+                    }
+                    
+                    
+                }.value
                 
-                do {
-                    try appStorage.saveDataForWidgetToAppStorage(network.arrayOfScheduleGroup.schedules)
-                } catch {
-                    print("Неудачная попытка загрузить расписание в AppStorage: \(error)")
-                }
-                
-                appStorage.saveWeekNumberToAppStorage(network.currentWeek)        
+                appStorage.saveWeekNumberToAppStorage(network.currentWeek)
             }
             
-            #warning("Создание большого количество потоков")
+//            #warning("Создание большого количество потоков")
             // показывать начальное окно
 //            if isPresentedSplashScreen {
 //                StartView(opacity: $opacity, scale: $scale)

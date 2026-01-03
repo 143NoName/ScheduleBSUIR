@@ -71,10 +71,11 @@ struct GroupsTab: View {
                     }
                 }
             }
-            .task {
-//                network.groupArrayInNull()
-                await network.getArrayOfGroupNum()       // получение списка групп
-            }
+            // выполняется в TabView
+//            .task {
+////                network.groupArrayInNull()
+//                await network.getArrayOfGroupNum()       // получение списка групп
+//            }
             .navigationDestination(for: String.self) { groupName in
                 EachGroup(groupName: groupName)
             }

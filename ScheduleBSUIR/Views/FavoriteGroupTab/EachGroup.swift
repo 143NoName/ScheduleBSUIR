@@ -46,7 +46,23 @@ struct EachGroup: View {
                     .opacity(0.15)
                     .ignoresSafeArea(edges: .all)
             }
-            #warning("Лист рисует все все группы, надо использовать ScrollView c LazyVStack или создать пагинацию")
+            
+//            ScrollView {
+//                LazyHStack(spacing: 0) {
+//                    ForEach(network.scheduleGroupByDays.enumerated(), id: \.offset) { index, day in
+//                        if funcs.comparisonDay(weekDay, lessonDay: day.dayName) {
+//                            if day.lessons.isEmpty {
+//                                IfDayLessonIsEmpty()
+//                            } else {
+//                                ForEach(day.lessons.enumerated(), id: \.offset) { index, lesson in
+//                                    EachLesson(lesson: lesson)
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+            
             List {
                 if !network.isLoadingArrayOfScheduleGroup {
                     Section(header:

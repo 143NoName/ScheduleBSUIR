@@ -9,6 +9,7 @@ import SwiftUI
 import Alamofire
 
 import os.log
+#warning("Замерять длительность выполнения функции")
 
 protocol NetworkServiceProtocol {
     func getCurrentWeek() async throws -> Int
@@ -71,7 +72,7 @@ class NetworkService: NetworkServiceProtocol {
         }
     }
     
-    #warning("Если запросявно отменен, то надо его востановить (Request explicitly cancelled.)")
+    #warning("Если запрос явно отменен, то надо его востановить (Request explicitly cancelled.)")
     
     // ПРЕПОДАВАТЕЛИ
     

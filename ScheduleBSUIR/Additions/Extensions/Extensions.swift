@@ -28,3 +28,20 @@ extension View {
         }
     }
 }
+
+
+struct CostomList<Content: View>: View {
+    
+    let content: Content
+    
+    init(@ViewBuilder content: () -> Content) {
+        self.content = content()
+    }
+    
+    var body: some View {
+        List {
+            content
+        }
+        .scrollContentBackground(.hidden)
+    }
+}

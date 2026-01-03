@@ -39,6 +39,13 @@ struct EachEmployee: View {
                     .ignoresSafeArea(edges: .all)
             }
             
+//            ScrollView {
+//                LazyHStack(spacing: 0) {
+//                    ForEach(network.scheduleEmployeeByDays.enumerated(), id: \.offset) { index, day in
+//                        Text()
+//                    }
+//                }
+//            }
             List {
                 if !network.isLoadingScheduleForEachEmployee {
                     Section(header:
