@@ -72,8 +72,8 @@
 		498676EB2ED8560500892C4B /* ScheduleCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ScheduleCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		49B688132EF29F550012B3BB /* ScheduleBSUIRWidgetExtensionDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ScheduleBSUIRWidgetExtensionDebug.entitlements; sourceTree = "<group>"; };
 		49F20D672EE0C9A1005F184A /* ScheduleBSUIR.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ScheduleBSUIR.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		49F40EB32F08705E00893873 /* ScheduleBSUIRTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ScheduleBSUIRTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		49F40EB42F08705E00893873 /* ScheduleBSUIRUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ScheduleBSUIRUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		49F40EB32F08705E00893873 /* ScheduleBSUIRTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = ScheduleBSUIRTests.xctest; path = "/Library/Моя прога/SwiftUI/ScheduleBSUIR/build/Debug-iphoneos/ScheduleBSUIR.app/PlugIns/ScheduleBSUIRTests.xctest"; sourceTree = "<absolute>"; };
+		49F40EB42F08705E00893873 /* ScheduleBSUIRUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = ScheduleBSUIRUITests.xctest; path = "/Library/Моя прога/SwiftUI/ScheduleBSUIR/build/Debug-iphoneos/ScheduleBSUIRUITests-Runner.app/PlugIns/ScheduleBSUIRUITests.xctest"; sourceTree = "<absolute>"; };
 		AF5B118F2EB4DD7800EBC825 /* ScheduleBSUIRWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ScheduleBSUIRWidgetExtension.entitlements; sourceTree = "<group>"; };
 		AFF20D862EB365B100383B2B /* ScheduleBSUIRWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ScheduleBSUIRWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		AFF20D882EB365B100383B2B /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
@@ -200,8 +200,6 @@
 				AFF20D862EB365B100383B2B /* ScheduleBSUIRWidgetExtension.appex */,
 				498676EB2ED8560500892C4B /* ScheduleCore.framework */,
 				49F20D672EE0C9A1005F184A /* ScheduleBSUIR.app */,
-				49F40EB32F08705E00893873 /* ScheduleBSUIRTests.xctest */,
-				49F40EB42F08705E00893873 /* ScheduleBSUIRUITests.xctest */,
 			);
 			sourceTree = "<group>";
 		};

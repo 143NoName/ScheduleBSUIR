@@ -275,10 +275,11 @@ struct ViewForEmployee: View {
 
 
 // унивесальный вид для списков
-struct UniversalListView<T: ModelsProtocol & Identifiable>: View {
+struct UniversalListView<T: ModelsProtocol & Identifiable & Hashable>: View {
     
     let items: [T]
     let name: KeyPath<T, String>
+    let naviagtionValue: KeyPath<T, String>
     let isLoading: Bool
     let errorLoading: String
     let title: String
@@ -296,24 +297,35 @@ struct UniversalListView<T: ModelsProtocol & Identifiable>: View {
         }
     }
     
-    var loadedArrayOfEmployees: String {
+    var pageName: String {
         if !isLoading {
-            return "Загрузка..."
+            "Загрузка..."
         } else {
-            return "Преподаватели"
+            if errorLoading == "" {
+                title
+            } else {
+                "Ошибка"
+            }
         }
     }
     
     var body: some View {
         NavigationStack {
             List(searcable) { item in // понимает какой тип данных был передан и в зависимости от этого берет view каждого элемента (либо StudentGroups либо EmployeeModel)
-                item.makeCell()
+                NavigationLink(value: item) {
+                    item.makeCell()
+                }
             }
-            .navigationTitle(title)
+            .navigationTitle(pageName)
             
             .if(isLoading) { view in
                 view.searchable(text: $searchText, placement: .navigationBarDrawer, prompt: "Поиск преподавателя")
             } // было бы хорошо сделать UITextField в UIKit или просто как то кастомизировать через UIViewRepresentable
+            
+            .navigationDestination(for: T.self) { navValue in
+//                EachGroup(groupName: navValue)
+                navValue.makeNav()
+            }
         }
     }
 }

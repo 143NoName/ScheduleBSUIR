@@ -12,6 +12,7 @@ protocol ModelsProtocol {
 //    let id: String
 //    var displayName: String { get }
     func makeCell() -> AnyView
+    func makeNav() -> AnyView
 }
 
 
@@ -26,7 +27,7 @@ struct ModelNumbersOfGroups: Decodable, Identifiable {
     
 }
 
-struct StudentGroups: Decodable, Identifiable, ModelsProtocol {
+struct StudentGroups: Decodable, Identifiable, Hashable, ModelsProtocol {
     let id: Int
     let name: String
     let facultyId: Int?
@@ -41,5 +42,9 @@ struct StudentGroups: Decodable, Identifiable, ModelsProtocol {
     
     func makeCell() -> AnyView {
        AnyView(ViewForGroup(group: self))
+    }
+    
+    func makeNav() -> AnyView {
+        AnyView(EachGroup(groupName: name))
     }
 }

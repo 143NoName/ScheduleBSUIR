@@ -15,7 +15,7 @@ struct EmployeeResponse: Codable {
     let total: Int
 }
 
-struct EmployeeModel: Codable, Identifiable, ModelsProtocol {
+struct EmployeeModel: Codable, Identifiable, Hashable, ModelsProtocol {
     let id: Int
     let academicDepartment: [String]?
     let firstName: String?
@@ -27,8 +27,14 @@ struct EmployeeModel: Codable, Identifiable, ModelsProtocol {
     let urlId: String
     let calendarId: String?
     
+    // создание view для отрисовки каждого элемента (гркппа или преподаватель)
     func makeCell() -> AnyView {
        AnyView(ViewForEmployee(employee: self))
+    }
+    
+    // передача view для навигации (сразу )
+    func makeNav() -> AnyView {
+        AnyView(EachEmployee(employeeName: urlId))
     }
     
     var fullName: String {

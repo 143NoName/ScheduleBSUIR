@@ -21,22 +21,23 @@ struct EachGroup: View {
     @AppStorage("weekDay") var weekDay: DaysInPicker = .monday
     @AppStorage("subGroupe") var subGroup: SubGroupInPicker = .all
     @AppStorage("weekNumber") var weekNumber: WeeksInPicker = .first
-    
-//    @AppStorage("favoriteGroup", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var favoriteGroup: String = "Не выбрано"
-        
+            
     let calendar = Calendar.current
     let groupName: String
         
     @State var isShowMore: Bool = false
     
     var pageName: String {
-        if network.arrayOfScheduleGroup.studentGroupDto.name.isEmpty {
+        if !network.isLoadingArrayOfScheduleGroup {
             "Загрузка..."
         } else {
-            network.arrayOfScheduleGroup.studentGroupDto.name
+            if network.errorOfScheduleGroup == "" {
+                network.arrayOfScheduleGroup.studentGroupDto.name
+            } else {
+                "Ошибка"
+            }
         }
     }
-    #warning("При отсутствии данных, напишется Загрузка...")
 
     var body: some View {
         ZStack(alignment: .bottom) {
@@ -46,22 +47,6 @@ struct EachGroup: View {
                     .opacity(0.15)
                     .ignoresSafeArea(edges: .all)
             }
-            
-//            ScrollView {
-//                LazyHStack(spacing: 0) {
-//                    ForEach(network.scheduleGroupByDays.enumerated(), id: \.offset) { index, day in
-//                        if funcs.comparisonDay(weekDay, lessonDay: day.dayName) {
-//                            if day.lessons.isEmpty {
-//                                IfDayLessonIsEmpty()
-//                            } else {
-//                                ForEach(day.lessons.enumerated(), id: \.offset) { index, lesson in
-//                                    EachLesson(lesson: lesson)
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//            }
             
             List {
                 if !network.isLoadingArrayOfScheduleGroup {
@@ -105,6 +90,7 @@ struct EachGroup: View {
             SelectorViewForGroup(todayWeek: network.currentWeek, subGroup: $subGroup, weekNumber: $weekNumber, weekDay: $weekDay)
         }
         .navigationTitle(pageName)
+//        .navigationBarTitleDisplayMode(.inline)
         
         .refreshable {
             network.scheduleForEachGroupInNull()
@@ -135,7 +121,9 @@ struct EachGroup: View {
         }
         
         .onDisappear {
-            dismiss()
+            dismiss() // при переходе в другой tab чтобы выходило к списку
+            network.scheduleForEachGroupInNull() // очистить при выходе (ошибки убрать и т.д.)
+            
         }
     }
 }

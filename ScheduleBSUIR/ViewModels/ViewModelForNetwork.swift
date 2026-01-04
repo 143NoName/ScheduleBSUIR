@@ -99,8 +99,8 @@ class ViewModelForNetwork: ObservableObject {
             }
         } catch {
             withAnimation(.easeIn) {
-                isLoadingArrayOfScheduleGroup = true
                 errorOfScheduleGroup = error.localizedDescription
+                isLoadingArrayOfScheduleGroup = true
             }
             print(error.localizedDescription)
         }

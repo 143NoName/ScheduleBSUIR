@@ -27,7 +27,7 @@ struct IfHaveErrorSchedule: View {
     @EnvironmentObject var viewModelForNetwork: ViewModelForNetwork
     
     var body: some View {
-        HStack() {
+        HStack {
             Image(systemName: "multiply")
                 .resizable()
                 .foregroundStyle(.red)
@@ -36,6 +36,7 @@ struct IfHaveErrorSchedule: View {
             Text(viewModelForNetwork.errorOfScheduleGroup)
                 .font(.system(size: 16, weight: .medium))
         }
+//        .glassEffect(.regular , in: .rect(cornerRadius: 20))
         .padding(EdgeInsets(top: 12, leading: 20, bottom: 12, trailing: 20))
     }
 }

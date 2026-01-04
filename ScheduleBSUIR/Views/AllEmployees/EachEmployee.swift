@@ -24,28 +24,23 @@ struct EachEmployee: View {
     
     var pageName: String {
         if !network.isLoadingScheduleForEachEmployee {
-            return "Загрузка..."
+            "Загрузка..."
         } else {
-            return network.scheduleForEachEmployee.employeeDto.fio
+            if network.errorOfEachEmployee == "" {
+                network.scheduleForEachEmployee.employeeDto.fio
+            } else {
+                "Ошибка"
+            }
         }
     }
     
     var body: some View {
         ZStack(alignment: .bottom) {
-            
             if colorScheme == .light {
                 Color.gray
                     .opacity(0.15)
                     .ignoresSafeArea(edges: .all)
             }
-            
-//            ScrollView {
-//                LazyHStack(spacing: 0) {
-//                    ForEach(network.scheduleEmployeeByDays.enumerated(), id: \.offset) { index, day in
-//                        Text()
-//                    }
-//                }
-//            }
             List {
                 if !network.isLoadingScheduleForEachEmployee {
                     Section(header:
@@ -88,9 +83,6 @@ struct EachEmployee: View {
             SelectorViewForEmployee(todayWeek: network.currentWeek, weekNumber: $weekNumber, weekDay: $weekDay)
         }
         .navigationTitle(pageName)
-//        .onDisappear {
-//            network.scheduleForEachGroupInNull() // чистка расписания при деинициализации
-//        }
         
         .refreshable {
             await network.getEachEmployeeSchedule(employeeName)
@@ -109,7 +101,8 @@ struct EachEmployee: View {
         }
         
         .onDisappear {
-            dismiss()
+            dismiss() // при переходе в другой tab чтобы выходило к списку
+            network.scheduleForEachEmployeeInNull() // очистить при выходе (ошибки убрать и т.д.)
         }
     }
 }
