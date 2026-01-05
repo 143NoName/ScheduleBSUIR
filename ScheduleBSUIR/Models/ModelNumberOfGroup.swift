@@ -8,11 +8,12 @@
 import Foundation
 import SwiftUI
 
-protocol ModelsProtocol {
+protocol EachListsProtocol {
 //    let id: String
 //    var displayName: String { get }
+    var url: String { get }
     func makeCell() -> AnyView
-    func makeNav() -> AnyView
+    func makeNav() -> AnyView // скоро будет не нужно
 }
 
 
@@ -23,11 +24,9 @@ struct ModelNumbersOfGroups: Decodable, Identifiable {
     let speciality: String?
     let course: Int?
     let educationForm: String?
-    
-    
 }
 
-struct StudentGroups: Decodable, Identifiable, Hashable, ModelsProtocol {
+struct StudentGroups: Decodable, Identifiable, Hashable, EachListsProtocol {
     let id: Int
     let name: String
     let facultyId: Int?
@@ -40,11 +39,15 @@ struct StudentGroups: Decodable, Identifiable, Hashable, ModelsProtocol {
     let educationDegree: Int?
     let calendarId: String?
     
+    var url: String {
+        return name
+    }
+    
     func makeCell() -> AnyView {
        AnyView(ViewForGroup(group: self))
     }
     
-    func makeNav() -> AnyView {
+    func makeNav() -> AnyView { // скоро будет не нужно
         AnyView(EachGroup(groupName: name))
     }
 }

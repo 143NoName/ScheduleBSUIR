@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 protocol ScheduleResponseProtocol {
     var schedule: Schedules { get }
@@ -68,6 +69,11 @@ extension Schedules { // получение расписания на сегод
 }
 
 
+
+protocol EachScheduleProtocol {
+    func makeSchedule() -> AnyView
+}
+
 // модель для виджета (загрузка в него данных и их фильтрация)
 struct FormatedSchedules: Codable {
     let day: String
@@ -75,7 +81,8 @@ struct FormatedSchedules: Codable {
 }
 
 // расписание уроков по отдельности
-struct Lesson: Codable, Sendable {
+struct Lesson: Codable, EachScheduleProtocol {
+//    let id = UUID()
     let auditories: [String]
     let endLessonTime: String
     let lessonTypeAbbrev: String
@@ -92,6 +99,11 @@ struct Lesson: Codable, Sendable {
     let endLessonDate: String?
     let announcement: Bool
     let split: Bool
+    
+    // это view которое добавляется к универсальному view
+    func makeSchedule() -> AnyView {
+        AnyView(EachLesson(lesson: self))
+    }
 }
 
 struct StudentGroupInfo: Codable, Sendable {

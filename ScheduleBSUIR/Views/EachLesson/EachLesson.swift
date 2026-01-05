@@ -54,7 +54,7 @@ struct EachLessonLoading: View {
 
 struct EachLesson: View {
         
-    let funcs = MoreFunctions() // используется функций закончился ли урок по времени и по дате
+//    let funcs = MoreFunctions() // используется функций закончился ли урок по времени и по дате
     
     let lesson: Lesson
     
@@ -98,19 +98,18 @@ struct EachLesson: View {
                 Text("\(lesson.lessonTypeAbbrev) по \(lesson.subject)")
                 Text("\(lesson.auditories.first ?? "")")
                 
-                if !funcs.comparisonLessonOverDate(lesson: lesson).isEmpty {
-                    Text("\(funcs.comparisonLessonOverDate(lesson: lesson))")
-                        .font(.system(size: 16, weight: .bold))
-                        .foregroundStyle(Color.red)
-                }
+                #warning("Lesson требуется в контексте Widget, но тогда перестает быть виден let funcs = MoreFunctions() (типо он только для приложения, но не для Widget)")
+//                if !funcs.comparisonLessonOverDate(lesson: lesson).isEmpty {
+//                    Text("\(funcs.comparisonLessonOverDate(lesson: lesson))")
+//                        .font(.system(size: 16, weight: .bold))
+//                        .foregroundStyle(Color.red)
+//                }
             }
             
             Spacer()
             
             calcImageGroup
-            
-//            guard let employees = lesson.employees else { return EmptyView() }
-            
+                        
             AsyncImage(url: URL(string: lesson.employees?[0].photoLink! ?? "")) { phase in // проверка опционального значения
                 switch phase {
                 case .empty:
@@ -134,6 +133,6 @@ struct EachLesson: View {
         }
 
         .font(.system(size: 14))
-        .opacity(funcs.comparisonLessonOverTime(lesson: lesson) || !funcs.comparisonLessonOverDate(lesson: lesson).isEmpty ? 0.5 : 1)
+//        .opacity(funcs.comparisonLessonOverTime(lesson: lesson) || !funcs.comparisonLessonOverDate(lesson: lesson).isEmpty ? 0.5 : 1)
     }
 }

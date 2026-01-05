@@ -8,12 +8,6 @@
 import SwiftUI
 import PhotosUI
 
-enum WhoUser: String {
-    case student = "Ученик"
-    case employee = "Преподаватель"
-    case none = "Другое"
-}
-
 struct PersonalAccount: View {
     
     @EnvironmentObject var network: ViewModelForNetwork

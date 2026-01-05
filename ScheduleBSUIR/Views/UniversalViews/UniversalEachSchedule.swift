@@ -1,14 +1,13 @@
 //
-//  EachGroup.swift
+//  UniversalEachSchedule.swift
 //  ScheduleBSUIR
 //
-//  Created by user on 27.10.25.
+//  Created by andrew on 5.01.26.
 //
 
 import SwiftUI
-import WidgetKit
 
-struct EachGroup: View {
+struct UniversalEachSchedule: View {
     
     #warning("Надо ограничить уроки по началу и концу сесиии")
     
@@ -21,18 +20,24 @@ struct EachGroup: View {
     @AppStorage("weekDay") var weekDay: DaysInPicker = .monday
     @AppStorage("subGroupe") var subGroup: SubGroupInPicker = .all
     @AppStorage("weekNumber") var weekNumber: WeeksInPicker = .first
+    
+    @State var isShowMore: Bool = false
             
     let calendar = Calendar.current
-    let groupName: String
-        
-    @State var isShowMore: Bool = false
+
+    let url: String                 // ссылка для получения параметра для ссылки
+    let isLoading: Bool             // значение загрузки    // не нужно
+    let errorLoading: String        // значение ошибки      // не нужно
+    let title: String               // название страницы (pageName)
     
+    #warning("При просмотре расписания отдельного учителя или группы нет фильтрации по неделе")
+
     var pageName: String {
-        if !network.isLoadingArrayOfScheduleGroup {
+        if !isLoading {
             "Загрузка..."
         } else {
-            if network.errorOfScheduleGroup == "" {
-                network.arrayOfScheduleGroup.studentGroupDto.name
+            if errorLoading.isEmpty {
+                title
             } else {
                 "Ошибка"
             }
@@ -49,7 +54,7 @@ struct EachGroup: View {
             }
             
             List {
-                if !network.isLoadingArrayOfScheduleGroup {
+                if !isLoading {
                     Section(header:
                         Text("Загрузка...")
                             .foregroundStyle(colorScheme == .dark ? .white : .black)
@@ -59,7 +64,7 @@ struct EachGroup: View {
                         }
                     }
                 } else {
-                    if !network.errorOfScheduleGroup.isEmpty {
+                    if !errorLoading.isEmpty {
                         IfHaveErrorSchedule()
                         #warning("Сделать ошибку такой же стеклянной")
                     } else {
@@ -92,9 +97,17 @@ struct EachGroup: View {
         .navigationTitle(pageName)
 //        .navigationBarTitleDisplayMode(.inline)
         
+        .task {
+            do {
+                let data: [EachEmployeeResponse] = try await Network().getArray(.group)
+            } catch {
+                print("")
+            }
+        }
+        
         .refreshable {
             network.scheduleForEachGroupInNull()
-            await network.getScheduleGroup(group: groupName)
+            await network.getScheduleGroup(group: url)
             network.filterGroupSchedule(currentWeek: weekNumber, subGroup: subGroup)
         }
 
@@ -111,7 +124,7 @@ struct EachGroup: View {
         
         .task {
             // получение расписания группы
-            await network.getScheduleGroup(group: groupName)
+            await network.getScheduleGroup(group: url)
             
             // фильтрация по неделе и по подгруппе
             network.filterGroupSchedule(currentWeek: weekNumber, subGroup: subGroup)
@@ -128,11 +141,9 @@ struct EachGroup: View {
     }
 }
 
-#Preview {
-    NavigationStack {
-        EachGroup(groupName: "261402")
-            .environmentObject(ViewModelForNetwork())
-
-    }
-    
-}
+//#Preview {
+//    NavigationStack {
+//        UniversalEachSchedule(lessons: ViewModelForNetwork().arrayOfScheduleGroup, name: \.studentGroupDto.name, url: 261402, isLoading: <#T##Bool#>, errorLoading: <#T##String#>, title: <#T##String#>)
+//            .environmentObject(ViewModelForNetwork())
+//    }
+//}

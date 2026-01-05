@@ -117,3 +117,44 @@ enum Weekday: String {
     case saturday = "Суббота"
     case sunday = "Воскресенье"
 }
+
+// используется для выбора пользователя и для выбора его в панеле снизу
+enum WhoUser: String {
+    case student = "Ученик"
+    case employee = "Преподаватель"
+    case none = "Другое"
+}
+
+// используется для навигации в списках и расписании (для универсальных view)
+enum GroupOrEmployee {
+    case group
+    case employee
+    
+//    var pageName: String {
+//        switch self {
+//        case .group: return "Группы"
+//        case .employee: return "Преподаватели"
+//        }
+//    }
+//    
+//    var forSearch: String {
+//        switch self {
+//        case .group: return "группы"
+//        case .employee: return "преподавателя"
+//        }
+//    }
+//    
+    var urlForArray: String {
+        switch self {
+        case .group: return "https://iis.bsuir.by/api/v1/student-groups"
+        case .employee: return "https://iis.bsuir.by/api/v1/employees/all"
+        }
+    }
+    
+    var urlForSchedule: String {
+        switch self {
+        case .group: return "https://iis.bsuir.by/api/v1/schedule?studentGroup="
+        case .employee: return "https://iis.bsuir.by/api/v1/employees/schedule/"
+        }
+    }
+}

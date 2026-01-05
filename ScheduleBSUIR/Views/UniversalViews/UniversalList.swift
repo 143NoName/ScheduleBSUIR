@@ -7,25 +7,6 @@
 
 import SwiftUI
 
-enum WhoToShow {
-    case group
-    case employee
-    
-    var pageName: String {
-        switch self {
-        case .group: return "Группы"
-        case .employee: return "Преподаватели"
-        }
-    }
-    
-    var forSearch: String {
-        switch self {
-        case .group: return "группы"
-        case .employee: return "преподавателя"
-        }
-    }
-}
-
 //struct UniversalList<T: Identifiable>: View {
 //    
 //    @EnvironmentObject var network: ViewModelForNetwork
@@ -210,7 +191,7 @@ enum WhoToShow {
 //}
 
 
-
+// дополнительный вид для списка групп (отдельно каждая группа)
 struct ViewForGroup: View {
     
     let group: StudentGroups
@@ -232,6 +213,7 @@ struct ViewForGroup: View {
     }
 }
 
+// дополнительный вид для списка (отдельно каждый преподаватель)
 struct ViewForEmployee: View {
     
     let employee: EmployeeModel
@@ -275,14 +257,14 @@ struct ViewForEmployee: View {
 
 
 // унивесальный вид для списков
-struct UniversalListView<T: ModelsProtocol & Identifiable & Hashable>: View {
+struct UniversalListView<T: EachListsProtocol & Identifiable & Hashable>: View {
     
-    let items: [T]
-    let name: KeyPath<T, String>
-    let naviagtionValue: KeyPath<T, String>
-    let isLoading: Bool
-    let errorLoading: String
-    let title: String
+    let items: [T]                              // массив групп или преподавателей
+    let name: KeyPath<T, String>                // значение для поиска
+    let naviagtionValue: KeyPath<T, String>     // значение для навигации // пока не используется
+    let isLoading: Bool                         // значение загрузки
+    let errorLoading: String                    // значение ошибки
+    let title: String                           // название страницы (pageName)
     
     @State private var searchText: String = ""
     
@@ -290,7 +272,6 @@ struct UniversalListView<T: ModelsProtocol & Identifiable & Hashable>: View {
         if searchText.isEmpty {
             return items
         } else {
-            #warning("Проверять есть ли что то в items")
             return items.filter { each in
                 each[keyPath: name].contains(searchText)
             }
@@ -312,7 +293,7 @@ struct UniversalListView<T: ModelsProtocol & Identifiable & Hashable>: View {
     var body: some View {
         NavigationStack {
             List(searcable) { item in // понимает какой тип данных был передан и в зависимости от этого берет view каждого элемента (либо StudentGroups либо EmployeeModel)
-                NavigationLink(value: item) {
+                NavigationLink(value: item.url) {
                     item.makeCell()
                 }
             }
@@ -322,17 +303,15 @@ struct UniversalListView<T: ModelsProtocol & Identifiable & Hashable>: View {
                 view.searchable(text: $searchText, placement: .navigationBarDrawer, prompt: "Поиск преподавателя")
             } // было бы хорошо сделать UITextField в UIKit или просто как то кастомизировать через UIViewRepresentable
             
-            .navigationDestination(for: T.self) { navValue in
-//                EachGroup(groupName: navValue)
-                navValue.makeNav()
+            .navigationDestination(for: String.self) { url in
+                UniversalEachSchedule(url: url, isLoading: true, errorLoading: "", title: "щцтщм")                
             }
         }
     }
 }
 
-
-
-
+// вид загрузка всего списка
+// для групп
 private struct ViewGroupIsLoading: View {
     var body: some View {
         List {
@@ -360,7 +339,8 @@ private struct ViewGroupIsLoading: View {
     }
 }
 
-private struct EmployeesEachIsLoading: View {
+// для преподавателей
+private struct ViewEmployeesEachIsLoading: View {
     var body: some View {
         List {
             ForEach(0..<10) { _ in

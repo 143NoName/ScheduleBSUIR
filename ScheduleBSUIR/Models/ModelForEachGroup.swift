@@ -6,8 +6,10 @@
 //
 
 import Foundation
+import SwiftUI
 
-struct ScheduleResponse: Codable, Sendable {
+#warning("Изменить имя структуры")
+struct ScheduleResponse: Codable {
     let startDate: String?
     let endDate: String?
     let startExamsDate: String?

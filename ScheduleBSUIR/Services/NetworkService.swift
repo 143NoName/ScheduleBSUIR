@@ -76,6 +76,7 @@ class NetworkService: NetworkServiceProtocol {
     
     // ПРЕПОДАВАТЕЛИ
     
+    
     var logger = Logger(subsystem: "AF", category: "AF")
     
     
@@ -106,32 +107,32 @@ class NetworkService: NetworkServiceProtocol {
 }
 
 
-struct Network<T: Decodable> {
+// универсальный сервис получения данных
+class Network {
     
     let decoder = JSONDecoder()
     
-    
-    
-    func getArray(_ url: String) async throws -> [T] {
-        let data = try await AF.request(url)
+    func getArray<ArrayOf: Decodable>(_ who: GroupOrEmployee) async throws -> [ArrayOf] {
+        let data = try await AF.request(who.urlForArray)
             .validate()
             .serializingData()
             .value
         do {
-            let response = try decoder.decode([T].self, from: data)
+            print(who.urlForArray)
+            let response = try decoder.decode([ArrayOf].self, from: data)
             return response
         } catch {
             throw error
         }
     }
     
-    func getEach(_ url: String, component: String) async throws -> T {
-        let data = try await AF.request("\(url)/\(component)")
+    func getEacSchedule<ScheduleOf: Decodable>(_ who: GroupOrEmployee, component: String) async throws -> ScheduleOf {
+        let data = try await AF.request(who.urlForSchedule + component)
             .validate()
             .serializingData()
             .value
         do {
-            return try decoder.decode(T.self, from: data)
+            return try decoder.decode(ScheduleOf.self, from: data)
         } catch {
             throw error
         }

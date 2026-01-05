@@ -1,13 +1,16 @@
 //
-//  EachEmployeeView.swift
+//  EachGroup.swift
 //  ScheduleBSUIR
 //
-//  Created by andrew on 19.12.25.
+//  Created by user on 27.10.25.
 //
 
 import SwiftUI
+import WidgetKit
 
-struct EachEmployee: View {
+struct EachGroup: View {
+    
+    #warning("Надо ограничить уроки по началу и концу сесиии")
     
     @EnvironmentObject var network: ViewModelForNetwork
     @Environment(\.dismiss) var dismiss
@@ -15,34 +18,39 @@ struct EachEmployee: View {
     
     let funcs = MoreFunctions() // так не правильно
     
-    let employeeName: String
-    
     @AppStorage("weekDay") var weekDay: DaysInPicker = .monday
     @AppStorage("subGroupe") var subGroup: SubGroupInPicker = .all
     @AppStorage("weekNumber") var weekNumber: WeeksInPicker = .first
+            
+    let calendar = Calendar.current
+    let groupName: String
+        
+    @State var isShowMore: Bool = false
+    #warning("При просмотре расписания отдельного учителя или группы нет фильтрации по неделе")
 
-    
     var pageName: String {
-        if !network.isLoadingScheduleForEachEmployee {
+        if !network.isLoadingArrayOfScheduleGroup {
             "Загрузка..."
         } else {
-            if network.errorOfEachEmployee.isEmpty {
-                network.scheduleForEachEmployee.employeeDto.fio
+            if network.errorOfScheduleGroup.isEmpty {
+                network.arrayOfScheduleGroup.studentGroupDto.name
             } else {
                 "Ошибка"
             }
         }
     }
-    #warning("При просмотре расписания отдельного учителя или группы нет фильтрации по неделе")
+
     var body: some View {
         ZStack(alignment: .bottom) {
+            
             if colorScheme == .light {
                 Color.gray
                     .opacity(0.15)
                     .ignoresSafeArea(edges: .all)
             }
+            
             List {
-                if !network.isLoadingScheduleForEachEmployee {
+                if !network.isLoadingArrayOfScheduleGroup {
                     Section(header:
                         Text("Загрузка...")
                             .foregroundStyle(colorScheme == .dark ? .white : .black)
@@ -52,8 +60,9 @@ struct EachEmployee: View {
                         }
                     }
                 } else {
-                    if !network.errorOfEachEmployee.isEmpty {
+                    if !network.errorOfScheduleGroup.isEmpty {
                         IfHaveErrorSchedule()
+                        #warning("Сделать ошибку такой же стеклянной")
                     } else {
                         Section(header:
                                     Text("Расписание")
@@ -62,15 +71,14 @@ struct EachEmployee: View {
                                     Color.clear
                                         .frame(height: 300)
                         ) {
-                            ForEach(network.scheduleEmployeeByDays.enumerated(), id: \.offset) { index, day in
-                                if funcs.comparisonDay(weekDay, lessonDay: day.dayName) { // фильтрация по дню недели
+                            ForEach(network.scheduleGroupByDays.enumerated(), id: \.offset) { index, day in
+                                if funcs.comparisonDay(weekDay, lessonDay: day.dayName) {
                                     if day.lessons.isEmpty {
                                         IfDayLessonIsEmpty()
                                     } else {
                                         ForEach(day.lessons.enumerated(), id: \.offset) { index, lesson in
                                             EachLesson(lesson: lesson)
                                         }
-//                                                .backgroundStyle(.NewColor) // хочу сделать одинаковый цвет для листа и для окна выбора дня, недели и подгруппы
                                     }
                                 }
                             }
@@ -80,36 +88,52 @@ struct EachEmployee: View {
             }
             .scrollContentBackground(.hidden)
             
-            SelectorViewForEmployee(todayWeek: network.currentWeek, weekNumber: $weekNumber, weekDay: $weekDay)
+            SelectorViewForGroup(todayWeek: network.currentWeek, subGroup: $subGroup, weekNumber: $weekNumber, weekDay: $weekDay)
         }
         .navigationTitle(pageName)
+//        .navigationBarTitleDisplayMode(.inline)
         
         .refreshable {
-            await network.getEachEmployeeSchedule(employeeName)
+            network.scheduleForEachGroupInNull()
+            await network.getScheduleGroup(group: groupName)
+            network.filterGroupSchedule(currentWeek: weekNumber, subGroup: subGroup)
+        }
+
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    isShowMore.toggle()
+                } label: {
+                    Text("i")
+                        .font(.system(size: 18, weight: .semibold))
+                }
+            }
         }
         
         .task {
-            // получение расписания преподавателя
-            await network.getEachEmployeeSchedule(employeeName)
+            // получение расписания группы
+            await network.getScheduleGroup(group: groupName)
             
             // фильтрация по неделе и по подгруппе
             network.filterGroupSchedule(currentWeek: weekNumber, subGroup: subGroup)
             
-            if let updateWeekNum = WeeksInPicker(rawValue: network.currentWeek) {
-                weekNumber = updateWeekNum
-            }
+            // нахождение сегодняшнего дня (недели и дня недели)
+            funcs.findToday(todayWeek: network.currentWeek, weekNumber: &weekNumber, weekDay: &weekDay)
         }
         
         .onDisappear {
             dismiss() // при переходе в другой tab чтобы выходило к списку
-            network.scheduleForEachEmployeeInNull() // очистить при выходе (ошибки убрать и т.д.)
+            network.scheduleForEachGroupInNull() // очистить при выходе (ошибки убрать и т.д.)
+            
         }
     }
 }
 
 #Preview {
     NavigationStack {
-        EachEmployee(employeeName: "e-andros")
+        EachGroup(groupName: "261402")
             .environmentObject(ViewModelForNetwork())
+
     }
+    
 }
