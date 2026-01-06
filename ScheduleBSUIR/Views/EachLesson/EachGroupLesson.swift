@@ -8,8 +8,7 @@
 import SwiftUI
 
 
-struct EachLessonLoading: View {
-    
+struct EachGroupLessonLoading: View {
     var body: some View {
         HStack {
             VStack {
@@ -49,10 +48,10 @@ struct EachLessonLoading: View {
 }
 
 #Preview {
-    EachLessonLoading()
+    EachGroupLessonLoading()
 }
 
-struct EachLesson: View {
+struct EachGroupLesson: View {
         
 //    let funcs = MoreFunctions() // используется функций закончился ли урок по времени и по дате
     

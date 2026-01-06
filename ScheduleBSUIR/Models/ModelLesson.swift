@@ -81,7 +81,7 @@ struct FormatedSchedules: Codable {
 }
 
 // расписание уроков по отдельности
-struct Lesson: Codable, EachScheduleProtocol {
+struct Lesson: Codable {
 //    let id = UUID()
     let auditories: [String]
     let endLessonTime: String
@@ -99,11 +99,6 @@ struct Lesson: Codable, EachScheduleProtocol {
     let endLessonDate: String?
     let announcement: Bool
     let split: Bool
-    
-    // это view которое добавляется к универсальному view
-    func makeSchedule() -> AnyView {
-        AnyView(EachLesson(lesson: self))
-    }
 }
 
 struct StudentGroupInfo: Codable, Sendable {

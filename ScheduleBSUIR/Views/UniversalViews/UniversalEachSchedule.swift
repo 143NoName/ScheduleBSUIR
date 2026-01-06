@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct UniversalEachSchedule: View {
+struct UniversalEachSchedule<Each: Identifiable, EachLesson: View>: View {
     
     #warning("Надо ограничить уроки по началу и концу сесиии")
     
@@ -30,6 +30,8 @@ struct UniversalEachSchedule: View {
     let errorLoading: String        // значение ошибки      // не нужно
     let title: String               // название страницы (pageName)
     
+    @ViewBuilder let eachLesson: (Each) -> EachLesson
+    
     #warning("При просмотре расписания отдельного учителя или группы нет фильтрации по неделе")
 
     var pageName: String {
@@ -44,6 +46,7 @@ struct UniversalEachSchedule: View {
         }
     }
 
+    
     // Вариант 1
     // В универсальном view запрашивать эти функции (получения, очистки)
     // Сделать протокол, для 2 разных viewModel
@@ -82,7 +85,7 @@ struct UniversalEachSchedule: View {
                             .foregroundStyle(colorScheme == .dark ? .white : .black)
                     ) {
                         ForEach(0..<5, id: \.self) { _ in
-                            EachLessonLoading()
+                            EachGroupLessonLoading()
                         }
                     }
                 } else {
@@ -103,7 +106,7 @@ struct UniversalEachSchedule: View {
                                         IfDayLessonIsEmpty()
                                     } else {
                                         ForEach(day.lessons.enumerated(), id: \.offset) { index, lesson in
-                                            EachLesson(lesson: lesson)
+                                            EachGroupLesson(lesson: lesson)
                                         }
                                     }
                                 }
@@ -118,14 +121,6 @@ struct UniversalEachSchedule: View {
         }
         .navigationTitle(pageName)
 //        .navigationBarTitleDisplayMode(.inline)
-        
-        .task {
-            do {
-                let data: [EachEmployeeResponse] = try await Network().getArray(.group)
-            } catch {
-                print("")
-            }
-        }
         
         .refreshable {
             network.scheduleForEachGroupInNull()
@@ -156,9 +151,8 @@ struct UniversalEachSchedule: View {
         }
         
         .onDisappear {
-            dismiss() // при переходе в другой tab чтобы выходило к списку
-            network.scheduleForEachGroupInNull() // очистить при выходе (ошибки убрать и т.д.)
-            
+            dismiss()                               // при переходе в другой tab чтобы выходило к списку
+            network.scheduleForEachGroupInNull()    // очистить при выходе (ошибки убрать и т.д.)
         }
     }
 }

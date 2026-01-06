@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import SwiftUI
 
 struct EmployeeResponse: Codable {
     let employees: [EmployeeModel]
@@ -15,7 +14,7 @@ struct EmployeeResponse: Codable {
     let total: Int
 }
 
-struct EmployeeModel: Codable, Identifiable, Hashable, EachListsProtocol {
+struct EmployeeModel: Codable, Identifiable, Hashable {
     let id: Int
     let academicDepartment: [String]?
     let firstName: String?
@@ -30,17 +29,7 @@ struct EmployeeModel: Codable, Identifiable, Hashable, EachListsProtocol {
     var url: String {
         return urlId
     }
-    
-    // создание view для отрисовки каждого элемента (гркппа или преподаватель)
-    func makeCell() -> AnyView {
-       AnyView(ViewForEmployee(employee: self))
-    }
-    
-    // передача view для навигации (сразу )
-//    func makeNav() -> AnyView {
-//        AnyView(EachEmployee(employeeName: urlId))
-//    }
-    
+
     var fullName: String {
         "\(lastName ?? "") \(firstName ?? "") \(middleName ?? "")"
     }

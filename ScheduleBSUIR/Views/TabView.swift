@@ -40,18 +40,40 @@ struct TabBarView: View {
     var body: some View {
         ZStack {
             TabView(selection: $selectedTab) {
-                Tab("Все группы", systemImage: "person.3", value: 0) {
-                    GroupsTab()
+//                Tab("Все группы", systemImage: "person.3", value: 0) {
+//                    GroupsTab()
+//                }
+                
+                Tab("Группы", systemImage: "person.3", value: 0) {
+                    UniversalListView(items: network.arrayOfGroupsNum,
+                                      name: \.name,
+                                      naviagtionValue: \.name,
+                                      isLoading: network.isLoadingArrayOfGroupsNum,
+                                      errorLoading: network.errorOfScheduleGroup,
+                                      title: "Группы"
+                    ) { each in
+                        ViewForGroup(group: each)
+                    } navigation: { url in
+                        EachGroup(groupName: url)
+                    } loadigView: {
+                        ViewGroupIsLoading()
+                    }
                 }
                 
-                Tab("Группы", systemImage: "person.3", value: 1) {
-//                    UniversalList(array: network.arrayOfGroupsNum,  isLoadedArray: network.isLoadingArrayOfGroupsNum, isErrorLoadingArray: network.errorOfScheduleGroup, name: \.name, faculty: \.facultyAbbrev, specialization: \.specialityAbbrev, course: \.course, image: nil, depart: nil, urlID: nil)
-                    UniversalListView(items: network.arrayOfGroupsNum, name: \.name, naviagtionValue: \.name , isLoading: network.isLoadingArrayOfGroupsNum, errorLoading: network.errorOfScheduleGroup , title: "Группы")
-                }
-                
-                Tab("Преподаватели", systemImage: "calendar.and.person", value: 2) {
-//                    UniversalList(array: network.scheduleForEmployees, isLoadedArray: network.isLoadingScheduleForEmployees, isErrorLoadingArray: network.errorOfEmployeesArray, name: \.fullName, faculty: nil, specialization: nil, course: nil, image: \.photoLink, depart: \.academicDepartment, urlID: \.urlId)
-                    UniversalListView(items: network.scheduleForEmployees, name: \.fullName, naviagtionValue: \.urlId, isLoading:  network.isLoadingScheduleForEmployees, errorLoading: network.errorOfEmployeesArray, title: "Преподаватели")
+                Tab("Преподаватели", systemImage: "calendar.and.person", value: 1) {
+                    UniversalListView(items: network.scheduleForEmployees,
+                                      name: \.fullName,
+                                      naviagtionValue: \.urlId,
+                                      isLoading: network.isLoadingScheduleForEmployees,
+                                      errorLoading: network.errorOfEmployeesArray,
+                                      title: "Преподаватели"
+                    ) { each in
+                        ViewForEmployee(employee: each)
+                    } navigation: { url in
+                        EachEmployee(employeeName: url)
+                    } loadigView: {
+                        ViewEmployeesEachIsLoading()
+                    }
                 }
                 
 //                Tab("Преподаватели", systemImage: "calendar.and.person", value: 1) {
@@ -77,13 +99,12 @@ struct TabBarView: View {
             
             .task {
                 await Task.detached {
-//                    print(Thread.isMainThread)
                     await network.getCurrentWeek()           // получение текущей недели
                     await network.getArrayOfGroupNum()       // получение списка групп
                     await network.getArrayOfEmployees()      // получение списка преподавателей
                     
                     do {
-                        try appStorage.saveDataForWidgetToAppStorage(network.arrayOfScheduleGroup.schedules)
+                        try await appStorage.saveDataForWidgetToAppStorage(network.arrayOfScheduleGroup.schedules)
                     } catch {
                         print("Неудачная попытка загрузить расписание в AppStorage: \(error)")
                     }

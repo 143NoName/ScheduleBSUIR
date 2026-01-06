@@ -6,14 +6,6 @@
 //
 
 import Foundation
-import SwiftUI
-
-protocol EachListsProtocol {
-    var url: String { get }
-    func makeCell() -> AnyView
-//    func makeNav() -> AnyView // скоро будет не нужно
-}
-
 
 struct ModelNumbersOfGroups: Decodable, Identifiable {
     let id: Int
@@ -24,7 +16,7 @@ struct ModelNumbersOfGroups: Decodable, Identifiable {
     let educationForm: String?
 }
 
-struct StudentGroups: Decodable, Identifiable, Hashable, EachListsProtocol {
+struct StudentGroups: Decodable, Identifiable, Hashable {
     let id: Int
     let name: String
     let facultyId: Int?
@@ -39,10 +31,6 @@ struct StudentGroups: Decodable, Identifiable, Hashable, EachListsProtocol {
     
     var url: String {
         return name
-    }
-    
-    func makeCell() -> AnyView {
-       AnyView(ViewForGroup(group: self))
     }
     
 //    func makeNav() -> AnyView { // скоро будет не нужно

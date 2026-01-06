@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import SwiftUI
 
 #warning("Изменить имя структуры")
 struct ScheduleResponse: Codable {

@@ -56,7 +56,7 @@ struct EachGroup: View {
                             .foregroundStyle(colorScheme == .dark ? .white : .black)
                     ) {
                         ForEach(0..<5, id: \.self) { _ in
-                            EachLessonLoading()
+                            EachGroupLessonLoading()
                         }
                     }
                 } else {
@@ -77,7 +77,7 @@ struct EachGroup: View {
                                         IfDayLessonIsEmpty()
                                     } else {
                                         ForEach(day.lessons.enumerated(), id: \.offset) { index, lesson in
-                                            EachLesson(lesson: lesson)
+                                            EachGroupLesson(lesson: lesson)
                                         }
                                     }
                                 }

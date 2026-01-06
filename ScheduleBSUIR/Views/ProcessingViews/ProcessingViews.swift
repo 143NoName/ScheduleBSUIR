@@ -35,6 +35,7 @@ struct IfHaveErrorSchedule: View {
             Spacer()
             Text(viewModelForNetwork.errorOfScheduleGroup)
                 .font(.system(size: 16, weight: .medium))
+            #warning("Пишется только ошибки для групп, можно сделать одну универсальную вместо 3 похожих")
         }
 //        .glassEffect(.regular , in: .rect(cornerRadius: 20))
         .padding(EdgeInsets(top: 12, leading: 20, bottom: 12, trailing: 20))

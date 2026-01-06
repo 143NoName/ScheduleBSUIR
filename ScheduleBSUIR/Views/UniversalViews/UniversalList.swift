@@ -199,7 +199,7 @@ struct ViewForGroup: View {
     var body: some View {
         VStack(alignment: .leading) {
             Text(group.name)
-                .font(.system(size: 16, weight: .medium))
+                .font(.system(size: 14, weight: .medium))
             HStack {
                 Text(group.facultyAbbrev ?? "")
                 Spacer()
@@ -241,15 +241,16 @@ struct ViewForEmployee: View {
             }
             VStack(alignment: .leading) {
                 Text(employee.fio)
-                    .font(.system(size: 16, weight: .medium))
+                    .font(.system(size: 14, weight: .medium))
                 HStack {
                     ForEach(employee.academicDepartment!.enumerated(), id: \.offset) { index, academicDepartment in
                         if index < 3 { // так не очень хорошо, надо бы отрисовать все, но с переносом
-                        Text("\(academicDepartment)")
+                            Text("\(academicDepartment)")
+                                .font(.system(size: 14, weight: .light))
                         }
                     }
                 }
-                .font(.system(size: 14, weight: .light))
+//                .font(.system(size: 14, weight: .light))
             }
         }
     }
@@ -257,18 +258,74 @@ struct ViewForEmployee: View {
 
 
 // унивесальный вид для списков
-struct UniversalListView<T: EachListsProtocol & Identifiable & Hashable>: View {
+//struct UniversalListView<T: EachListsProtocol & Identifiable & Hashable>: View {
+//    
+//    let items: [T]                              // массив групп или преподавателей
+//    let name: KeyPath<T, String>                // значение для поиска
+//    let naviagtionValue: KeyPath<T, String>     // значение для навигации // пока не используется
+//    let isLoading: Bool                         // значение загрузки
+//    let errorLoading: String                    // значение ошибки
+//    let title: String                           // название страницы (pageName)
+//    
+//    @State private var searchText: String = ""
+//    
+//    var searcable: [T] {
+//        if searchText.isEmpty {
+//            return items
+//        } else {
+//            return items.filter { each in
+//                each[keyPath: name].contains(searchText)
+//            }
+//        }
+//    }
+//    
+//    var pageName: String {
+//        if !isLoading {
+//            "Загрузка..."
+//        } else {
+//            if errorLoading == "" {
+//                title
+//            } else {
+//                "Ошибка"
+//            }
+//        }
+//    }
+//    
+//    var body: some View {
+//        NavigationStack {
+//            List(searcable) { item in // понимает какой тип данных был передан и в зависимости от этого берет view каждого элемента (либо StudentGroups либо EmployeeModel)
+//                NavigationLink(value: item.url) {
+//                    item.makeCell()
+//                }
+//            }
+//            .navigationTitle(pageName)
+//            
+//            .if(isLoading) { view in
+//                view.searchable(text: $searchText, placement: .navigationBarDrawer, prompt: "Поиск преподавателя")
+//            } // было бы хорошо сделать UITextField в UIKit или просто как то кастомизировать через UIViewRepresentable
+//            
+//            .navigationDestination(for: String.self) { url in
+//                UniversalEachSchedule(url: url, isLoading: true, errorLoading: "", title: "щцтщм")                
+//            }
+//        }
+//    }
+//}
+
+struct UniversalListView<Each: Identifiable, Content: View, NavigationView: View, Loading: View>: View {
     
-    let items: [T]                              // массив групп или преподавателей
-    let name: KeyPath<T, String>                // значение для поиска
-    let naviagtionValue: KeyPath<T, String>     // значение для навигации // пока не используется
-    let isLoading: Bool                         // значение загрузки
-    let errorLoading: String                    // значение ошибки
-    let title: String                           // название страницы (pageName)
+    let items: [Each]                                           // массив групп или преподавателей
+    let name: KeyPath<Each, String>                             // значение для поиска (searchable)
+    let naviagtionValue: KeyPath<Each, String>                  // значение для навигации
+    let isLoading: Bool                                         // значение загрузки
+    let errorLoading: String                                    // значение ошибки
+    let title: String                                           // название страницы (pageName)
+    @ViewBuilder let eachView: (Each) -> Content                // view для каждого элемента списка
+    @ViewBuilder let navigation: (String) -> NavigationView     // view для навигации
+    @ViewBuilder let loadigView: () -> Loading                  // загрузочное view
     
     @State private var searchText: String = ""
     
-    var searcable: [T] {
+    var searchable: [Each] {
         if searchText.isEmpty {
             return items
         } else {
@@ -292,19 +349,24 @@ struct UniversalListView<T: EachListsProtocol & Identifiable & Hashable>: View {
     
     var body: some View {
         NavigationStack {
-            List(searcable) { item in // понимает какой тип данных был передан и в зависимости от этого берет view каждого элемента (либо StudentGroups либо EmployeeModel)
-                NavigationLink(value: item.url) {
-                    item.makeCell()
+            Group {
+                if !isLoading {
+                    loadigView()
+                } else {
+                    List(searchable) { item in
+                        NavigationLink(value: item[keyPath: naviagtionValue]) {
+                            eachView(item)
+                        }
+                    }
+                    .searchable(text: $searchText, prompt: "Поиск преподавателя")
                 }
             }
+            
             .navigationTitle(pageName)
             
-            .if(isLoading) { view in
-                view.searchable(text: $searchText, placement: .navigationBarDrawer, prompt: "Поиск преподавателя")
-            } // было бы хорошо сделать UITextField в UIKit или просто как то кастомизировать через UIViewRepresentable
-            
             .navigationDestination(for: String.self) { url in
-                UniversalEachSchedule(url: url, isLoading: true, errorLoading: "", title: "щцтщм")                
+                navigation(url)
+//                UniversalEachSchedule(url: url, isLoading: true, errorLoading: "", title: "щцтщм")
             }
         }
     }
@@ -312,10 +374,9 @@ struct UniversalListView<T: EachListsProtocol & Identifiable & Hashable>: View {
 
 
 
-
 // вид загрузка всего списка
 // для групп
-private struct ViewGroupIsLoading: View {
+struct ViewGroupIsLoading: View {
     var body: some View {
         List {
             ForEach(0..<10) { _ in
@@ -339,11 +400,12 @@ private struct ViewGroupIsLoading: View {
             }
         }
         .scrollContentBackground(.hidden)
+        .disabled(true)
     }
 }
 
 // для преподавателей
-private struct ViewEmployeesEachIsLoading: View {
+struct ViewEmployeesEachIsLoading: View {
     var body: some View {
         List {
             ForEach(0..<10) { _ in
@@ -379,6 +441,6 @@ private struct ViewEmployeesEachIsLoading: View {
             }
         }
         .scrollContentBackground(.hidden)
+        .disabled(true)
     }
 }
-

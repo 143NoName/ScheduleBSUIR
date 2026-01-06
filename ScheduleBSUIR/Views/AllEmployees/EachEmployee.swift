@@ -48,7 +48,7 @@ struct EachEmployee: View {
                             .foregroundStyle(colorScheme == .dark ? .white : .black)
                     ) {
                         ForEach(0..<5, id: \.self) { _ in
-                            EachLessonLoading()
+                            EachGroupLessonLoading()
                         }
                     }
                 } else {
@@ -68,7 +68,7 @@ struct EachEmployee: View {
                                         IfDayLessonIsEmpty()
                                     } else {
                                         ForEach(day.lessons.enumerated(), id: \.offset) { index, lesson in
-                                            EachLesson(lesson: lesson)
+                                            EachGroupLesson(lesson: lesson)
                                         }
 //                                                .backgroundStyle(.NewColor) // хочу сделать одинаковый цвет для листа и для окна выбора дня, недели и подгруппы
                                     }
