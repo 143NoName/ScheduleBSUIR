@@ -9,11 +9,9 @@ import Foundation
 import SwiftUI
 
 protocol EachListsProtocol {
-//    let id: String
-//    var displayName: String { get }
     var url: String { get }
     func makeCell() -> AnyView
-    func makeNav() -> AnyView // скоро будет не нужно
+//    func makeNav() -> AnyView // скоро будет не нужно
 }
 
 
@@ -47,7 +45,7 @@ struct StudentGroups: Decodable, Identifiable, Hashable, EachListsProtocol {
        AnyView(ViewForGroup(group: self))
     }
     
-    func makeNav() -> AnyView { // скоро будет не нужно
-        AnyView(EachGroup(groupName: name))
-    }
+//    func makeNav() -> AnyView { // скоро будет не нужно
+//        AnyView(EachGroup(groupName: name))
+//    }
 }

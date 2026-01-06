@@ -44,6 +44,28 @@ struct UniversalEachSchedule: View {
         }
     }
 
+    // Вариант 1
+    // В универсальном view запрашивать эти функции (получения, очистки)
+    // Сделать протокол, для 2 разных viewModel
+    // Создать 2 viewModel с items: [], isLoaded: Bool и isError: String
+    // Из дочернего view передавать функции (получения, очистки) и элементы проверки
+    
+    
+    // такой протокол, под него подписать обе viewModel и в универсальном view создать такой дженерик и через него передавать все функции и проверки
+//    protocol DataViewModelProtocol: ObservableObject {
+//        associatedtype Item: Identifiable
+//        var items: [Item] { get }
+//        var isLoading: Bool { get }
+//        var error: String? { get }
+//        
+//        func loadData() async
+//        func refreshData() async
+//    }
+    
+    
+    
+    
+    
     var body: some View {
         ZStack(alignment: .bottom) {
             

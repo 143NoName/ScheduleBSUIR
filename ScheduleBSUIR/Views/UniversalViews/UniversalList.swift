@@ -310,6 +310,9 @@ struct UniversalListView<T: EachListsProtocol & Identifiable & Hashable>: View {
     }
 }
 
+
+
+
 // вид загрузка всего списка
 // для групп
 private struct ViewGroupIsLoading: View {

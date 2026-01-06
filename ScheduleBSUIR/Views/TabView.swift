@@ -19,7 +19,7 @@ extension EnvironmentValues {
 }
 
 struct TabBarView: View {
-    
+    #warning("Сделать DI")
     @StateObject private var network = ViewModelForNetwork()
     @StateObject private var viewModelForFilter = ViewModelForFilterService()
                  private var appStorage = AppStorageService() // плохо, что view знает о сервисе, можно сдеать viewModel

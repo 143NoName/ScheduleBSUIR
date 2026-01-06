@@ -37,9 +37,9 @@ struct EmployeeModel: Codable, Identifiable, Hashable, EachListsProtocol {
     }
     
     // передача view для навигации (сразу )
-    func makeNav() -> AnyView {
-        AnyView(EachEmployee(employeeName: urlId))
-    }
+//    func makeNav() -> AnyView {
+//        AnyView(EachEmployee(employeeName: urlId))
+//    }
     
     var fullName: String {
         "\(lastName ?? "") \(firstName ?? "") \(middleName ?? "")"
