@@ -66,13 +66,7 @@ struct EmployeesTab: View {
                         await network.getArrayOfEmployees()
                     }
                 }
-                
-                .ignoresSafeArea(edges: .bottom)
             }
-            
-//            .task {
-//                await network.getArrayOfEmployees()
-//            }
             
             .navigationDestination(for: String.self) { employeeName in
                 EachEmployee(employeeName: employeeName)

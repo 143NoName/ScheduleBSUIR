@@ -53,7 +53,7 @@ struct EachGroupLessonLoading: View {
 
 struct EachGroupLesson: View {
         
-//    let funcs = MoreFunctions() // используется функций закончился ли урок по времени и по дате
+    let funcs = MoreFunctions() // используется функций закончился ли урок по времени и по дате
     
     let lesson: Lesson
     
@@ -97,19 +97,27 @@ struct EachGroupLesson: View {
                 Text("\(lesson.lessonTypeAbbrev) по \(lesson.subject)")
                 Text("\(lesson.auditories.first ?? "")")
                 
-                #warning("Lesson требуется в контексте Widget, но тогда перестает быть виден let funcs = MoreFunctions() (типо он только для приложения, но не для Widget)")
-//                if !funcs.comparisonLessonOverDate(lesson: lesson).isEmpty {
-//                    Text("\(funcs.comparisonLessonOverDate(lesson: lesson))")
-//                        .font(.system(size: 16, weight: .bold))
-//                        .foregroundStyle(Color.red)
-//                }
+                if !funcs.comparisonLessonOverDate(lesson: lesson).isEmpty {
+                    Text("\(funcs.comparisonLessonOverDate(lesson: lesson))")
+                        .font(.system(size: 16, weight: .bold))
+                        .foregroundStyle(Color.red)
+                }
             }
             
             Spacer()
             
             calcImageGroup
-                        
-            AsyncImage(url: URL(string: lesson.employees?[0].photoLink! ?? "")) { phase in // проверка опционального значения
+            
+            
+            AsyncImage(url: {
+                            if let employees = lesson.employees, !employees.isEmpty,
+                               let photoLink = employees[0].photoLink,
+                               let url = URL(string: photoLink) {
+                                return url
+                            }
+                            return nil
+                        }()
+            ) { phase in
                 switch phase {
                 case .empty:
                     ProgressView()

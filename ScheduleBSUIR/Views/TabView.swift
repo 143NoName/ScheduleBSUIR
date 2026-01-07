@@ -40,61 +40,62 @@ struct TabBarView: View {
     var body: some View {
         ZStack {
             TabView(selection: $selectedTab) {
-//                Tab("Все группы", systemImage: "person.3", value: 0) {
-//                    GroupsTab()
-//                }
-                
-                Tab("Группы", systemImage: "person.3", value: 0) {
-                    UniversalListView(items: network.arrayOfGroupsNum,
-                                      name: \.name,
-                                      naviagtionValue: \.name,
-                                      isLoading: network.isLoadingArrayOfGroupsNum,
-                                      errorLoading: network.errorOfScheduleGroup,
-                                      title: "Группы"
-                    ) { each in
-                        ViewForGroup(group: each)
-                    } navigation: { url in
-                        EachGroup(groupName: url)
-                    } loadigView: {
-                        ViewGroupIsLoading()
-                    }
+                Tab("Все группы", systemImage: "person.3", value: 0) {
+                    GroupsTab()
                 }
-                
                 Tab("Преподаватели", systemImage: "calendar.and.person", value: 1) {
-                    UniversalListView(items: network.scheduleForEmployees,
-                                      name: \.fullName,
-                                      naviagtionValue: \.urlId,
-                                      isLoading: network.isLoadingScheduleForEmployees,
-                                      errorLoading: network.errorOfEmployeesArray,
-                                      title: "Преподаватели"
-                    ) { each in
-                        ViewForEmployee(employee: each)
-                    } navigation: { url in
-                        EachEmployee(employeeName: url)
-                    } loadigView: {
-                        ViewEmployeesEachIsLoading()
+                    EmployeesTab()
+                }
+                
+                // попытка сделать универсальный view
+                
+//                Tab("Группы", systemImage: "person.3", value: 0) {
+//                    UniversalListView(items: network.arrayOfGroupsNum,
+//                                      name: \.name,
+//                                      naviagtionValue: \.name,
+//                                      isLoading: network.isLoadingArrayOfGroupsNum,
+//                                      errorLoading: network.errorOfScheduleGroup,
+//                                      title: "Группы"
+//                    ) { each in
+//                        ViewForGroup(group: each)
+//                    } navigation: { url in
+//                        EachGroup(groupName: url)
+//                    } loadigView: {
+//                        ViewGroupIsLoading()
+//                    }
+//                }
+//                
+//                Tab("Преподаватели", systemImage: "calendar.and.person", value: 1) {
+//                    UniversalListView(items: network.scheduleForEmployees,
+//                                      name: \.fullName,
+//                                      naviagtionValue: \.urlId,
+//                                      isLoading: network.isLoadingScheduleForEmployees,
+//                                      errorLoading: network.errorOfEmployeesArray,
+//                                      title: "Преподаватели"
+//                    ) { each in
+//                        ViewForEmployee(employee: each)
+//                    } navigation: { url in
+//                        EachEmployee(employeeName: url)
+//                    } loadigView: {
+//                        ViewEmployeesEachIsLoading()
+//                    }
+//                }
+                    
+                if whoUser == .student && favoriteGroup != "Не выбрано" {
+                    Tab("Моя группа", systemImage: "star", value: 2) {
+                        NavigationStack {
+                            EachGroup(groupName: favoriteGroup)
+                        }
+                    }
+                } else if whoUser == .employee && employeeName != "Не выбрано" {
+                    Tab("Мое расписание", systemImage: "star", value: 2) {
+                        Text("obvoiebwrv")
                     }
                 }
                 
-//                Tab("Преподаватели", systemImage: "calendar.and.person", value: 1) {
-//                    EmployeesTab()
-//                }
-//                
-//                if whoUser == .student && favoriteGroup != "Не выбрано" {
-//                    Tab("Моя группа", systemImage: "star", value: 2) {
-//                        NavigationStack {
-//                            EachGroup(groupName: favoriteGroup)
-//                        }
-//                    }
-//                } else if whoUser == .employee && employeeName != "Не выбрано" {
-//                    Tab("Мое расписание", systemImage: "star", value: 2) {
-//                        Text("obvoiebwrv")
-//                    }
-//                }
-//                
-//                Tab("Личный кабинет", systemImage: "person.circle", value: 3) {
-//                    PersonalAccount(whoUser: $whoUser)
-//                }
+                Tab("Личный кабинет", systemImage: "person.circle", value: 3) {
+                    PersonalAccount(whoUser: $whoUser)
+                }
             }
             
             .task {

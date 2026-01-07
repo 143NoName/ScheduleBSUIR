@@ -48,7 +48,7 @@ struct EachEmployeeLessonLoading: View {
 }
 
 #Preview {
-    EachGroupLessonLoading()
+    EachEmployeeLessonLoading()
 }
 
 struct EachEmployeeLesson: View {
