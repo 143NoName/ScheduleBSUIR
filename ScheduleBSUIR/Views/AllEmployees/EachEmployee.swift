@@ -33,6 +33,7 @@ struct EachEmployee: View {
             }
         }
     }
+    
     #warning("При просмотре расписания отдельного учителя или группы нет фильтрации по неделе")
     var body: some View {
         ZStack(alignment: .bottom) {

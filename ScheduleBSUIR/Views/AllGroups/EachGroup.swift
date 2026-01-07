@@ -62,7 +62,6 @@ struct EachGroup: View {
                 } else {
                     if !network.errorOfScheduleGroup.isEmpty {
                         IfHaveErrorSchedule()
-                        #warning("Сделать ошибку такой же стеклянной")
                     } else {
                         Section(header:
                                     Text("Расписание")

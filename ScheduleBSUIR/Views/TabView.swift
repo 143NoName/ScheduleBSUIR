@@ -38,7 +38,7 @@ struct TabBarView: View {
 
     
     var body: some View {
-        ZStack {
+//        ZStack { // для начального окна
             TabView(selection: $selectedTab) {
                 Tab("Все группы", systemImage: "person.3", value: 0) {
                     GroupsTab()
@@ -133,7 +133,7 @@ struct TabBarView: View {
 //                }
 //            }
             
-        }
+//        }
         .environmentObject(network)
         .environmentObject(viewModelForFilter)
         .environment(\.appStorageKey, appStorage)

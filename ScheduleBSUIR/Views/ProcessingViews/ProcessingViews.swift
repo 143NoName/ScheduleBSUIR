@@ -63,3 +63,22 @@ struct IfErrorGroups: View {
 #Preview {
     IfDayLessonIsEmpty()
 }
+
+
+struct ErrorView: View {
+    
+    let errorInfo: String
+    
+    var body: some View {
+        HStack() {
+            Image(systemName: "multiply")
+                .resizable()
+                .foregroundStyle(.red)
+                .frame(width: 100, height: 100)
+            Spacer()
+            Text(errorInfo)
+                .font(.system(size: 16, weight: .medium))
+        }
+        .padding(EdgeInsets(top: 12, leading: 20, bottom: 12, trailing: 20))
+    }
+}

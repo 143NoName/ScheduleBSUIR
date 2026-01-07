@@ -22,7 +22,7 @@ struct GroupsTab: View {
         }
     }
     
-    var loadedGroup: String {
+    var pageName: String {
         if !network.isLoadingArrayOfGroupsNum {
             return "Загрузка..."
         } else {
@@ -32,46 +32,23 @@ struct GroupsTab: View {
         
     var body: some View {
         NavigationStack {
-            ZStack {
-                if colorScheme == .light {
-                    Color.gray
-                        .opacity(0.15)
-                        .ignoresSafeArea(edges: .all)
+            CostomList(items: searchable,
+                       isLoading: network.isLoadingArrayOfGroupsNum,
+                       loadingView: ViewEachGroupIsLoading(),
+                       errorStr: network.errorOfGroupsNum,
+                       content: { each in
+                NavigationLink(value: each.name) {
+                    ViewEachGroup(group: each)
                 }
-                
-                VStack {
-                    if !network.isLoadingArrayOfGroupsNum {
-                        ViewEachGroupIsLoading()
-                    } else {
-                        List {
-                            if !network.errorOfGroupsNum.isEmpty {
-                                IfErrorGroups()
-                            } else {
-                                ForEach(searchable.enumerated(), id: \.offset ) { index, each in
-                                    NavigationLink(value: each.name) {
-                                        ViewEachGroup(group: each)
-                                    }
-                                }
-                            }
-                        }
-                        .scrollContentBackground(.hidden)
-                    }
-                }
-                
-                .navigationTitle(loadedGroup)
-                
-                .if(network.isLoadingArrayOfGroupsNum) { view in
-                    view.searchable(text: $searchText, placement: .navigationBarDrawer, prompt: "Поиск группы")
-                } // было бы хорошо сделать UITextField в UIKit или просто как то кастомизировать через UIViewRepresentable
-                
-                .refreshable {
-                    Task {
-                        network.groupArrayInNull()
-                        await network.getArrayOfGroupNum()       // получение списка групп
-                    }
+            })
+            .navigationTitle(pageName)
+            .searchable(text: $searchText, placement: .navigationBarDrawer, prompt: "Поиск группы")
+            .refreshable {
+                Task {
+                    network.groupArrayInNull()
+                    await network.getArrayOfGroupNum()       // получение списка групп
                 }
             }
-            
             .navigationDestination(for: String.self) { groupName in
                 EachGroup(groupName: groupName)
             }
@@ -114,7 +91,7 @@ private struct ViewEachGroup: View {
     }
 }
 
-private struct ViewEachGroupIsLoading: View {
+private struct ViewEachGroupIsLoading2: View {
     var body: some View {
         List {
             ForEach(0..<20) { _ in
@@ -138,5 +115,27 @@ private struct ViewEachGroupIsLoading: View {
             }
         }
         .scrollContentBackground(.hidden)
+    }
+}
+
+struct ViewEachGroupIsLoading: View {
+    var body: some View {
+        VStack(alignment: .leading) {
+            RoundedRectangle(cornerRadius: 6)
+                .fill(Color.gray.opacity(0.5))
+                .frame(width: 100, height: 17)
+            HStack {
+                RoundedRectangle(cornerRadius: 6)
+                    .fill(Color.gray.opacity(0.5))
+                    .frame(height: 15)
+                RoundedRectangle(cornerRadius: 6)
+                    .fill(Color.gray.opacity(0.5))
+                    .frame(height: 15)
+                RoundedRectangle(cornerRadius: 6)
+                    .fill(Color.gray.opacity(0.5))
+                    .frame(height: 15)
+            }
+            .frame(width: 200)
+        }
     }
 }

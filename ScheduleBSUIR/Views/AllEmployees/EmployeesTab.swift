@@ -14,7 +14,7 @@ struct EmployeesTab: View {
 
     @State var searchText: String = ""
     
-    var searchble: [EmployeeModel] {
+    var searchable: [EmployeeModel] {
         if searchText.isEmpty {
             return network.scheduleForEmployees
         } else {
@@ -39,20 +39,15 @@ struct EmployeesTab: View {
                         .ignoresSafeArea(edges: .all)
                 }
                 
-                VStack {
-                    if !network.isLoadingScheduleForEmployees {
-                        EmployeesEachIsLoading()
-                    } else {
-                        List {
-                            ForEach(searchble.enumerated(), id: \.offset) { index, employee in
-                                NavigationLink(value: employee.urlId) {
-                                    EmployeesEach(employee: employee)
-                                }
-                            }
-                        }
-                        .scrollContentBackground(.hidden)
+                CostomList(items: searchable,
+                           isLoading: network.isLoadingScheduleForEmployees,
+                           loadingView: ViewEachGroupIsLoading(),
+                           errorStr: network.errorOfEmployeesArray,
+                           content: { each in
+                    NavigationLink(value: each.urlId) {
+                        EmployeesEach(employee: each)
                     }
-                }
+                })
                 
                 .navigationTitle(loadedArrayOfEmployees)
                 

@@ -29,19 +29,40 @@ extension View {
     }
 }
 
-
-struct CostomList<Content: View>: View {
+struct CostomList<Content: View, LoadingContent: View, Items: Identifiable>: View {
     
-    let content: Content
+    @Environment(\.colorScheme) var colorScheme
     
-    init(@ViewBuilder content: () -> Content) {
-        self.content = content()
-    }
+    let items: [Items]                  // элементы (данных)
+    let isLoading: Bool
+    let loadingView: LoadingContent
+    let errorStr: String
+    
+    @ViewBuilder
+    let content: (Items) -> Content     // вьюха для отображения
     
     var body: some View {
-        List {
-            content
+        ZStack {
+            if colorScheme == .light {
+                Color.gray
+                    .opacity(0.15)
+                    .ignoresSafeArea(edges: .all)
+            }
+            List {
+                if isLoading {
+                    if errorStr.isEmpty {
+                        ForEach(items) { each in
+                            content(each)
+                        }
+                    } else {
+                        ErrorView(errorInfo: errorStr)
+                    }
+                } else {
+                    ForEach(0...10, id: \.self) { _ in
+                        loadingView
+                    }
+                }
+            }
         }
-        .scrollContentBackground(.hidden)
     }
 }
