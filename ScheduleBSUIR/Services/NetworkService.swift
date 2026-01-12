@@ -15,7 +15,7 @@ protocol NetworkServiceProtocol {
     func getCurrentWeek() async throws -> Int
     
     func getArrayOfGroupNum() async throws -> [StudentGroups]
-    func getScheduleGroup(_ group: String) async throws -> ScheduleResponse
+    func getScheduleGroup(_ group: String) async throws -> EachGroupResponse
     
     func getArrayOfEmployees() async throws -> [EmployeeModel]
     func getEachEmployeeSchedule(_ id: String) async throws -> EachEmployeeResponse
@@ -56,7 +56,7 @@ class NetworkService: NetworkServiceProtocol {
     }
     
     // получение расписания группы
-    func getScheduleGroup(_ group: String) async throws -> ScheduleResponse { // при частом выполнении, что то ломается
+    func getScheduleGroup(_ group: String) async throws -> EachGroupResponse { // при частом выполнении, что то ломается
         let params: Parameters = ["studentGroup": "\(group)"]
         
         let data = try await AF.request("https://iis.bsuir.by/api/v1/schedule",
@@ -66,7 +66,7 @@ class NetworkService: NetworkServiceProtocol {
             .serializingData()
             .value
         do {
-            return try decoder.decode(ScheduleResponse.self, from: data)
+            return try decoder.decode(EachGroupResponse.self, from: data)
         } catch {
             throw error
         }

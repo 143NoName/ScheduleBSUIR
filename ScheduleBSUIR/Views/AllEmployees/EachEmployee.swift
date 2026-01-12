@@ -69,9 +69,8 @@ struct EachEmployee: View {
                                         IfDayLessonIsEmpty()
                                     } else {
                                         ForEach(day.lessons.enumerated(), id: \.offset) { index, lesson in
-                                            EachGroupLesson(lesson: lesson)
+                                            EachEmployeeLesson(lesson: lesson)
                                         }
-//                                                .backgroundStyle(.NewColor) // хочу сделать одинаковый цвет для листа и для окна выбора дня, недели и подгруппы
                                     }
                                 }
                             }

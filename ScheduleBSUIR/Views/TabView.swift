@@ -105,7 +105,7 @@ struct TabBarView: View {
                     await network.getArrayOfEmployees()      // получение списка преподавателей
                     
                     do {
-                        try await appStorage.saveDataForWidgetToAppStorage(network.arrayOfScheduleGroup.schedules)
+                        try await appStorage.saveDataForWidgetToAppStorage(network.arrayOfScheduleGroup.nextSchedules)
                     } catch {
                         print("Неудачная попытка загрузить расписание в AppStorage: \(error)")
                     }

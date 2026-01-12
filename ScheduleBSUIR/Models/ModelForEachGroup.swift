@@ -8,14 +8,14 @@
 import Foundation
 
 #warning("Изменить имя структуры")
-struct ScheduleResponse: Codable {
+struct EachGroupResponse: Codable {
     let startDate: String?
     let endDate: String?
     let startExamsDate: String?
     let endExamsDate: String?
     let studentGroupDto: StudentGroupDto
     let employeeDto: Employee?
-    let schedules: Schedules
+    let nextSchedules: Schedules     // в течении семестра тут schedules а по окончанию nextSchedules
     let currentTerm: String?
     let currentPeriod: String?
 }

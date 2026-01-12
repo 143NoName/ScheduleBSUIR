@@ -67,14 +67,14 @@ class ViewModelForNetwork: ObservableObject {
         errorOfGroupsNum = ""
     }
     
-    @Published var arrayOfScheduleGroup: ScheduleResponse = ScheduleResponse(
+    @Published var arrayOfScheduleGroup: EachGroupResponse = EachGroupResponse(
         startDate: "",
         endDate: "",
         startExamsDate: nil,
         endExamsDate: nil,
         studentGroupDto: StudentGroupDto(name: "", facultyAbbrev: "", facultyName: "", specialityName: "", specialityAbbrev: "", educationDegree: 0),
         employeeDto: nil,
-        schedules: Schedules(
+        nextSchedules: Schedules(
             monday: [],
             tuesday: [],
             wednesday: [],
@@ -107,14 +107,14 @@ class ViewModelForNetwork: ObservableObject {
     }
     
     func scheduleForEachGroupInNull() {
-        arrayOfScheduleGroup = ScheduleResponse(
+        arrayOfScheduleGroup = EachGroupResponse(
             startDate: "",
             endDate: "",
             startExamsDate: nil,
             endExamsDate: nil,
             studentGroupDto: StudentGroupDto(name: "", facultyAbbrev: "", facultyName: "", specialityName: "", specialityAbbrev: "", educationDegree: 0),
             employeeDto: nil,
-            schedules: Schedules(
+            nextSchedules: Schedules(
                 monday: [],
                 tuesday: [],
                 wednesday: [],
@@ -134,13 +134,13 @@ class ViewModelForNetwork: ObservableObject {
     
     func convertGroupToScheduleDays() { // конвертация в (День: [Занятия])
         let days = [
-            ("Понедельник", arrayOfScheduleGroup.schedules.monday),
-            ("Вторник", arrayOfScheduleGroup.schedules.tuesday),
-            ("Среда", arrayOfScheduleGroup.schedules.wednesday),
-            ("Четверг", arrayOfScheduleGroup.schedules.thursday),
-            ("Пятница", arrayOfScheduleGroup.schedules.friday),
-            ("Суббота", arrayOfScheduleGroup.schedules.saturday),
-            ("Воскресенье", arrayOfScheduleGroup.schedules.sunday)
+            ("Понедельник", arrayOfScheduleGroup.nextSchedules.monday),
+            ("Вторник", arrayOfScheduleGroup.nextSchedules.tuesday),
+            ("Среда", arrayOfScheduleGroup.nextSchedules.wednesday),
+            ("Четверг", arrayOfScheduleGroup.nextSchedules.thursday),
+            ("Пятница", arrayOfScheduleGroup.nextSchedules.friday),
+            ("Суббота", arrayOfScheduleGroup.nextSchedules.saturday),
+            ("Воскресенье", arrayOfScheduleGroup.nextSchedules.sunday)
         ]
         
         scheduleGroupByDays = days.compactMap { dayName, optionalLessons in
