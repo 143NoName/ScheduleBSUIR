@@ -11,6 +11,7 @@ struct AppStorageServiceKey: EnvironmentKey {
     static let defaultValue: AppStorageService? = nil  // Может быть optional
 }
 
+
 extension EnvironmentValues {
     var appStorageKey: AppStorageService? {
         get { self[AppStorageServiceKey.self] }
@@ -22,20 +23,16 @@ struct TabBarView: View {
     #warning("Сделать DI")
     @StateObject private var network = ViewModelForNetwork()
     @StateObject private var viewModelForFilter = ViewModelForFilterService()
+    @StateObject private var appStorageSave = AppStorageSave()
                  private var appStorage = AppStorageService() // плохо, что view знает о сервисе, можно сдеать viewModel
+     // хранилище всех AppStorage
     
     @State private var selectedTab: Int = 1
-    @State private var splashScreen: Bool = true
-    
-    @State var whoUser: WhoUser = .none
+    @State private var splashScreen: Bool = true    
     
     @State private var isPresentedSplashScreen: Bool = true
     @State var scale: CGFloat = 1
     @State var opacity: Double = 1
-    
-    @AppStorage("favoriteGroup", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var favoriteGroup: String = "Не выбрано"
-    @AppStorage("employeeName", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var employeeName: String = "Не выбрано"
-
     
     var body: some View {
 //        ZStack { // для начального окна
@@ -47,54 +44,22 @@ struct TabBarView: View {
                     EmployeesTab()
                 }
                 
-                // попытка сделать универсальный view
-                
-//                Tab("Группы", systemImage: "person.3", value: 0) {
-//                    UniversalListView(items: network.arrayOfGroupsNum,
-//                                      name: \.name,
-//                                      naviagtionValue: \.name,
-//                                      isLoading: network.isLoadingArrayOfGroupsNum,
-//                                      errorLoading: network.errorOfScheduleGroup,
-//                                      title: "Группы"
-//                    ) { each in
-//                        ViewForGroup(group: each)
-//                    } navigation: { url in
-//                        EachGroup(groupName: url)
-//                    } loadigView: {
-//                        ViewGroupIsLoading()
-//                    }
-//                }
-//                
-//                Tab("Преподаватели", systemImage: "calendar.and.person", value: 1) {
-//                    UniversalListView(items: network.scheduleForEmployees,
-//                                      name: \.fullName,
-//                                      naviagtionValue: \.urlId,
-//                                      isLoading: network.isLoadingScheduleForEmployees,
-//                                      errorLoading: network.errorOfEmployeesArray,
-//                                      title: "Преподаватели"
-//                    ) { each in
-//                        ViewForEmployee(employee: each)
-//                    } navigation: { url in
-//                        EachEmployee(employeeName: url)
-//                    } loadigView: {
-//                        ViewEmployeesEachIsLoading()
-//                    }
-//                }
-                    
-                if whoUser == .student && favoriteGroup != "Не выбрано" {
+                if appStorageSave.whoUser == .student && appStorageSave.favoriteGroup != "Не выбрано" {
                     Tab("Моя группа", systemImage: "star", value: 2) {
                         NavigationStack {
-                            EachGroup(groupName: favoriteGroup)
+                            EachGroup(groupName: appStorageSave.favoriteGroup)
                         }
                     }
-                } else if whoUser == .employee && employeeName != "Не выбрано" {
+                } else if appStorageSave.whoUser == .employee && appStorageSave.employeeName != "Не выбрано" {
                     Tab("Мое расписание", systemImage: "star", value: 2) {
-                        Text("obvoiebwrv")
+                        NavigationStack {
+                            EachEmployee(employeeName: appStorageSave.employeeName)
+                        }
                     }
                 }
                 
                 Tab("Личный кабинет", systemImage: "person.circle", value: 3) {
-                    PersonalAccount(whoUser: $whoUser)
+                    PersonalAccount()
                 }
             }
             
@@ -137,6 +102,7 @@ struct TabBarView: View {
         .environmentObject(network)
         .environmentObject(viewModelForFilter)
         .environment(\.appStorageKey, appStorage)
+        .environmentObject(appStorageSave)
     }
 }
 

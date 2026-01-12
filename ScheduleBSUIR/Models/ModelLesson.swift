@@ -53,27 +53,6 @@ struct Schedules: Codable, Sendable {
     }
 }
 
-extension Schedules { // получение расписания на сегодня по дню недели (в итоге не нужно будет)
-    func atDay(_ weekday: Int) -> [Lesson]? {
-        switch weekday {
-        case 2: return monday      // Понедельник
-        case 3: return tuesday     // Вторник
-        case 4: return wednesday   // Среда
-        case 5: return thursday    // Четверг
-        case 6: return friday      // Пятница
-        case 7: return saturday    // Суббота
-        case 1: return sunday      // Воскресенье
-        default: return nil
-        }
-    }
-}
-
-
-
-protocol EachScheduleProtocol {
-    func makeSchedule() -> AnyView
-}
-
 // модель для виджета (загрузка в него данных и их фильтрация)
 struct FormatedSchedules: Codable {
     let day: String
@@ -82,7 +61,6 @@ struct FormatedSchedules: Codable {
 
 // расписание уроков по отдельности
 struct Lesson: Codable {
-//    let id = UUID()
     let auditories: [String]
     let endLessonTime: String
     let lessonTypeAbbrev: String

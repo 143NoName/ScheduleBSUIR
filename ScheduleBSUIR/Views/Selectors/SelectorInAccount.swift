@@ -9,21 +9,20 @@ import SwiftUI
 import WidgetKit
 
 struct SelectorViewForPersonalAccount: View {
-    @Environment(\.appStorageKey) var appStorageKey
+    @EnvironmentObject var appStorageSaveKey: AppStorageSave
     @EnvironmentObject var network: ViewModelForNetwork
     
     @State var showAll: Bool = true
-    @Binding var whoUser: WhoUser
-    
+        
     var body: some View {
         NavigationStack {
             VStack {
                 ButtonShowMaxOrMin(showAll: $showAll)
                 VStack {
                     if showAll {
-                        if whoUser == .student {
+                        if appStorageSaveKey.whoUser == .student {
                             MaxViewGroupInSelector()                 // полный вид для группы
-                        } else if whoUser == .employee {
+                        } else if appStorageSaveKey.whoUser == .employee {
                             MaxViewEmployeeInSelector()             // полный вид для преподавателей
                         }
                         VStack {
@@ -31,31 +30,27 @@ struct SelectorViewForPersonalAccount: View {
                                 Text("Пользователь")
                                     .font(.system(size: 16, weight: .semibold))
                                     .padding(.leading)
-                                Picker("", selection: $whoUser) {
+                                Picker("", selection: $appStorageSaveKey.whoUser) {
                                     Text("Ученик").tag(WhoUser.student)
                                     Text("Преподаватель").tag(WhoUser.employee)
                                     Text("Другое").tag(WhoUser.none)
                                 }
                                 .pickerStyle(.segmented)
-                                
-//                                .onChange(of: whoUser) {
-//                                    
-//                                }
                             }
                             .padding(10)
                         }
                     } else {
-                        if whoUser == .student {
-                            MinViewGroupInSelector(whoUser: whoUser, showAll: $showAll)                       // уменьшенный вид для группы
-                        } else if whoUser == .employee {
-                            MimViewEmployeeInSelector(whoUser: whoUser, showAll: $showAll)  // уменьшенный вид для преподавателей
+                        if appStorageSaveKey.whoUser == .student {
+                            MinViewGroupInSelector(subGroup: appStorageSaveKey.subGroup.inString, favoriteGroup: appStorageSaveKey.favoriteGroup, whoUser: appStorageSaveKey.whoUser.rawValue, showAll: $showAll)                       // уменьшенный вид для группы
+                        } else if appStorageSaveKey.whoUser == .employee {
+                            MimViewEmployeeInSelector(employeeName: appStorageSaveKey.employeeName, whoUser: appStorageSaveKey.whoUser.rawValue, showAll: $showAll)  // уменьшенный вид для преподавателей
                         } else {
-                            MimViewNoneInSelector(whoUser: whoUser, showAll: $showAll)
+                            MinViewNoneInSelector(whoUser: appStorageSaveKey.whoUser.rawValue, showAll: $showAll)
                         }
                     }
                 }
                 .glassEffect(.regular , in: .rect(cornerRadius: 20))
-                .animation(.easeOut, value: whoUser)
+                .animation(.easeOut, value: appStorageSaveKey.whoUser)
             }
             .padding()
         }
@@ -64,10 +59,10 @@ struct SelectorViewForPersonalAccount: View {
 
 
 #Preview {
-    @Previewable @State var whoUser: WhoUser = .student
-    
-    return SelectorViewForPersonalAccount(whoUser: $whoUser)
+    return SelectorViewForPersonalAccount()
         .environmentObject(ViewModelForNetwork())
+        .environmentObject(AppStorageSave())
+
 }
 
 // кнопка для переключения вида
@@ -100,17 +95,15 @@ struct ButtonShowMaxOrMin: View {
 struct MaxViewGroupInSelector: View {
     
     @EnvironmentObject var network: ViewModelForNetwork
-    
-    @AppStorage("subGroup", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var subGroup: SubGroupInPicker = .all
-    @AppStorage("favoriteGroup", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var favoriteGroup: String = "Не выбрано"
-    
+    @EnvironmentObject var appStorageSaveKey: AppStorageSave
+        
     var body: some View {
         HStack {
             VStack(alignment: .leading) {
                 Text("Подгруппа")
                     .font(.system(size: 16, weight: .semibold))
                     .padding(.leading)
-                Picker("", selection: $subGroup) {
+                Picker("", selection: $appStorageSaveKey.subGroup) {
                     Text("Все").tag(SubGroupInPicker.all)
                     Text("1").tag(SubGroupInPicker.first)
                     Text("2").tag(SubGroupInPicker.second)
@@ -122,7 +115,7 @@ struct MaxViewGroupInSelector: View {
                     .font(.system(size: 16, weight: .semibold))
                 HStack {
                     NavigationLink(value: "choice") {
-                        Text("\(favoriteGroup)")
+                        Text(appStorageSaveKey.favoriteGroup)
                             .tint(Color.primary)
                             .padding(EdgeInsets(top: 6, leading: 16, bottom: 6, trailing: 16))
                             .background(Color.gray.opacity(0.15))
@@ -147,7 +140,7 @@ struct MaxViewGroupInSelector: View {
 //            }
             // тут при изменении номера группы надо изменять номер группы и ее расписание (номер группы изменяется реактивно, а для изменения группы надо вызывать функцию получения и сохранения расписания)
             
-            .onChange(of: subGroup) {
+            .onChange(of: appStorageSaveKey.subGroup) {
                 WidgetCenter.shared.reloadAllTimelines()
                 // надо будет тут опять вызывать обновление данных в виджете так как надо отфильтровать по подгруппе
             }
@@ -155,7 +148,7 @@ struct MaxViewGroupInSelector: View {
         .padding(EdgeInsets(top: 10, leading: 10, bottom: 0, trailing: 10))
         
         .navigationDestination(for: String.self) { _ in
-            UniversalPicker(selected: $favoriteGroup, title: "Преподаватели", items: network.arrayOfGroupsNum, value: \.name, secondValue: \.name)
+            UniversalPicker(selected: $appStorageSaveKey.favoriteGroup, title: "Преподаватели", items: network.arrayOfGroupsNum, value: \.name, secondValue: \.name)
         }
     }
 }
@@ -164,13 +157,12 @@ struct MaxViewGroupInSelector: View {
 // преподаватель
 struct MaxViewEmployeeInSelector: View {
     
+    @EnvironmentObject var appStorageSaveKey: AppStorageSave
     @EnvironmentObject var network: ViewModelForNetwork
-    
-    @AppStorage("employeeName", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var employeeName: String = "Не выбрано"
-    
+        
     var employeeNameToFio: String {
-        if employeeName != "Не выбрано" {
-            let words = employeeName.split(separator: " ")
+        if appStorageSaveKey.employeeName != "Не выбрано" {
+            let words = appStorageSaveKey.employeeName.split(separator: " ")
                 .enumerated()
                 .map { index, word in
                     index < 1 ? word : "\(word.first!)."
@@ -178,7 +170,7 @@ struct MaxViewEmployeeInSelector: View {
                 .joined(separator: " ")
             return words
         } else {
-            return employeeName
+            return appStorageSaveKey.employeeName
         }
     }
     #warning("В AppStorage сохраняется urlId, а не фио")
@@ -204,7 +196,7 @@ struct MaxViewEmployeeInSelector: View {
         .padding(EdgeInsets(top: 10, leading: 10, bottom: 0, trailing: 10))
         
         .navigationDestination(for: String.self) { _ in
-            UniversalPicker(selected: $employeeName, title: "Преподаватели", items: network.scheduleForEmployees, value: \.fio, secondValue: \.urlId)
+            UniversalPicker(selected: $appStorageSaveKey.employeeName, title: "Преподаватели", items: network.scheduleForEmployees, value: \.fio, secondValue: \.urlId)
         }
     }
 }
@@ -216,11 +208,10 @@ struct MaxViewEmployeeInSelector: View {
 
 // ученик
 struct MinViewGroupInSelector: View {
-    #warning("subGroup это число или enum")
-    @AppStorage("subGroup", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var subGroup: SubGroupInPicker = .all
-    @AppStorage("favoriteGroup", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var favoriteGroup: String = "Не выбрано"
-    #warning("Вместо appStorage лучше просто передавать это знаяения (из главного вида в мелкие)")
-    let whoUser: WhoUser
+    
+    let subGroup: String
+    let favoriteGroup: String
+    let whoUser: String
     
     @Binding var showAll: Bool
     
@@ -229,19 +220,19 @@ struct MinViewGroupInSelector: View {
             VStack(alignment: .leading) {
                 Text("Подгруппа:")
                     .font(.system(size: 16, weight: .semibold))
-                Text("\(subGroup.inString)")
+                Text(subGroup)
             }
             Spacer()
             VStack(alignment: .leading) {
                 Text("Группа:")
                     .font(.system(size: 16, weight: .semibold))
-                Text("\(favoriteGroup)")
+                Text(favoriteGroup)
             }
             Spacer()
             VStack(alignment: .leading) {
                 Text("Пользователь:")
                     .font(.system(size: 16, weight: .semibold))
-                Text("\(whoUser.rawValue)")
+                Text(whoUser)
             }
         }
         .padding(10)
@@ -257,9 +248,9 @@ struct MinViewGroupInSelector: View {
 // преподаватель
 struct MimViewEmployeeInSelector: View {
     
-    let whoUser: WhoUser
+    let employeeName: String
+    let whoUser: String
     @Binding var showAll: Bool
-    @AppStorage("employeeName", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var employeeName: String = "Не выбрано"
     
     var employeeNameToFio: String {
         if employeeName != "Не выбрано" {
@@ -286,7 +277,7 @@ struct MimViewEmployeeInSelector: View {
             VStack(alignment: .leading) {
                 Text("Пользователь:")
                     .font(.system(size: 16, weight: .semibold))
-                Text("\(whoUser.rawValue)")
+                Text(whoUser)
             }
         }
         .padding(10)
@@ -300,9 +291,9 @@ struct MimViewEmployeeInSelector: View {
 // преподаватель
 
 // никто
-struct MimViewNoneInSelector: View {
+struct MinViewNoneInSelector: View {
     
-    let whoUser: WhoUser
+    let whoUser: String
     @Binding var showAll: Bool
     
     var body: some View {
@@ -310,7 +301,7 @@ struct MimViewNoneInSelector: View {
             VStack(alignment: .leading) {
                 Text("Пользователь:")
                     .font(.system(size: 16, weight: .semibold))
-                Text("\(whoUser.rawValue)")
+                Text(whoUser)
             }
             Spacer()
         }
@@ -330,9 +321,11 @@ struct MimViewNoneInSelector: View {
 // универсальный пикер
 struct UniversalPicker<T: Identifiable>: View {
     
+    @Binding var selected: String
     @Environment(\.dismiss) var dismiss
     @Environment(\.colorScheme) var colorScheme
-    @Binding var selected: String           // название хранилища в AppStorage
+    
+//    let selected: KeyPath<T, String>           // название хранилища в AppStorage
     
     let title: String                       // pageName
     let items: [T]                          // массив элементов для отображения
@@ -348,20 +341,28 @@ struct UniversalPicker<T: Identifiable>: View {
             }
             List {
                 Button {
-                    selected = "Не выбрано"
+                    selected = "Не выбрано" // тут должно быть значение в которое будет записываться имя
                     dismiss()
                 } label: {
-                    Text("Не выбрано")
-                        .tint(Color.primary)
+                    HStack {
+                        Text("Не выбрано")
+                            .tint(Color.primary)
+                        Spacer()
+                        selected == "Не выбрано" ? Image(systemName: "checkmark") : nil
+                    }
                 }
                 
                 ForEach(items) { each in
                     Button {
-                        selected = each[keyPath: secondValue]
+                        selected = each[keyPath: secondValue] // тут должно быть значение в которое будет записываться имя
                         dismiss()
                     } label: {
-                        Text(each[keyPath: value])
-                            .tint(Color.primary)
+                        HStack {
+                            Text(each[keyPath: value])
+                                .tint(Color.primary)
+                            Spacer()
+                            selected == each[keyPath: value] ? Image(systemName: "checkmark") : nil
+                        }
                     }
                 }
             }

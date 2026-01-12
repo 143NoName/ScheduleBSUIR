@@ -168,8 +168,6 @@ struct MoreFunctions {
     
      // РАБОТА С APPSTORAGE
     
-    
-    
     @AppStorage("groupSchedule", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var groupSchedule: Data?
     @AppStorage("groupName", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var groupName: String = ""
     

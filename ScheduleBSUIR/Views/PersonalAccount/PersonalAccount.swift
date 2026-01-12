@@ -11,13 +11,12 @@ import PhotosUI
 struct PersonalAccount: View {
     
     @EnvironmentObject var network: ViewModelForNetwork
+    @EnvironmentObject var appStorageSaveKey: AppStorageSave // ключи AppStorage
     
     @Environment(\.colorScheme) var colorScheme
     
     var appStorage = AppStorageService()
-    
-    @Binding var whoUser: WhoUser
-    
+        
     @State private var isShowPhotosPicker: Bool = false
     @State private var selectedItem: PhotosPickerItem?       // для photosPicker
     #warning("Надо бы сохранять изображение в приложении")
@@ -36,9 +35,9 @@ struct PersonalAccount: View {
     
     func getListStudentOrEmployees() {
         Task {
-            if whoUser == .student {
+            if appStorageSaveKey.whoUser == .student {
                 await network.getArrayOfGroupNum()
-            } else if whoUser == .employee {
+            } else if appStorageSaveKey.whoUser == .employee {
                 await network.getArrayOfEmployees()
                 if employeeName != "Не выбрано" {
                     await network.getEachEmployeeSchedule(employeeName)
@@ -115,7 +114,7 @@ struct PersonalAccount: View {
                                         .tint(Color.primary.opacity(0.8))
                                 }
                             }
-                            if whoUser == .employee {
+                            if appStorageSaveKey.whoUser == .employee {
                                 Section {
                                     if !network.isLoadingScheduleForEmployees {
                                         ProgressView()
@@ -132,7 +131,7 @@ struct PersonalAccount: View {
                         .frame(maxWidth: .infinity)
                         
                         
-                        if whoUser == .student {
+                        if appStorageSaveKey.whoUser == .student {
                             Section(header: Text("ФИО")) {
                                 TextField("Твое имя", text: $studentName)
                                 TextField("Твоя фамилия", text: $studentSurname)
@@ -148,7 +147,7 @@ struct PersonalAccount: View {
                     #warning("Пикер работает, но загружается одно фото на все приложение")
                 }
                 
-                SelectorViewForPersonalAccount(whoUser: $whoUser)
+                SelectorViewForPersonalAccount()
                 
                 .navigationBarTitle("Личный кабинет")
                 
@@ -159,7 +158,7 @@ struct PersonalAccount: View {
 //                }
             }
             
-            .onChange(of: whoUser) {
+            .onChange(of: appStorageSaveKey.whoUser) {
                 getListStudentOrEmployees()
             }
             
@@ -179,7 +178,7 @@ struct PersonalAccount: View {
     viewModelForNetwork.arrayOfGroupsNum = []
     
     return NavigationView {
-        PersonalAccount(whoUser: $whoUser)
+        PersonalAccount()
             .environmentObject(viewModelForNetwork)
     }
 }
