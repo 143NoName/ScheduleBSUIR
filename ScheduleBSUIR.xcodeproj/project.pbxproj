@@ -69,9 +69,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		496AE8992F0EECA90091E9DE /* ScheduleBSUIRTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = ScheduleBSUIRTests.xctest; path = "/Library/Моя прога/SwiftUI/ScheduleBSUIR/build/Debug-iphoneos/ScheduleBSUIR.app/PlugIns/ScheduleBSUIRTests.xctest"; sourceTree = "<absolute>"; };
-		496AE89A2F0EECA90091E9DE /* ScheduleBSUIRUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = ScheduleBSUIRUITests.xctest; path = "/Library/Моя прога/SwiftUI/ScheduleBSUIR/build/Debug-iphoneos/ScheduleBSUIRUITests-Runner.app/PlugIns/ScheduleBSUIRUITests.xctest"; sourceTree = "<absolute>"; };
 		498676EB2ED8560500892C4B /* ScheduleCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ScheduleCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4987F55E2F14CE3700E190D5 /* ScheduleBSUIRTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = ScheduleBSUIRTests.xctest; path = "/Library/Моя прога/SwiftUI/ScheduleBSUIR/build/Debug-iphoneos/ScheduleBSUIR.app/PlugIns/ScheduleBSUIRTests.xctest"; sourceTree = "<absolute>"; };
+		4987F55F2F14CE3700E190D5 /* ScheduleBSUIRUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = ScheduleBSUIRUITests.xctest; path = "/Library/Моя прога/SwiftUI/ScheduleBSUIR/build/Debug-iphoneos/ScheduleBSUIRUITests-Runner.app/PlugIns/ScheduleBSUIRUITests.xctest"; sourceTree = "<absolute>"; };
 		49B688132EF29F550012B3BB /* ScheduleBSUIRWidgetExtensionDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ScheduleBSUIRWidgetExtensionDebug.entitlements; sourceTree = "<group>"; };
 		49F20D672EE0C9A1005F184A /* ScheduleBSUIR.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ScheduleBSUIR.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AF5B118F2EB4DD7800EBC825 /* ScheduleBSUIRWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ScheduleBSUIRWidgetExtension.entitlements; sourceTree = "<group>"; };
@@ -290,7 +290,7 @@
 			packageProductDependencies = (
 			);
 			productName = ScheduleBSUIRTests;
-			productReference = 496AE8992F0EECA90091E9DE /* ScheduleBSUIRTests.xctest */;
+			productReference = 4987F55E2F14CE3700E190D5 /* ScheduleBSUIRTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		AFA213082EAE29F30010C9F6 /* ScheduleBSUIRUITests */ = {
@@ -310,7 +310,7 @@
 			packageProductDependencies = (
 			);
 			productName = ScheduleBSUIRUITests;
-			productReference = 496AE89A2F0EECA90091E9DE /* ScheduleBSUIRUITests.xctest */;
+			productReference = 4987F55F2F14CE3700E190D5 /* ScheduleBSUIRUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 		AFF20D852EB365B100383B2B /* ScheduleBSUIRWidgetExtension */ = {

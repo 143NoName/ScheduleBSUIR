@@ -1,14 +1,14 @@
 //
-//  EachEmployeeLesson.swift
+//  EachLesson.swift
 //  ScheduleBSUIR
 //
-//  Created by andrew on 6.01.26.
+//  Created by user on 31.10.25.
 //
 
 import SwiftUI
 
-struct EachEmployeeLessonLoading: View {
-    
+
+struct EachGroupLessonLoading: View {
     var body: some View {
         HStack {
             VStack {
@@ -19,18 +19,22 @@ struct EachEmployeeLessonLoading: View {
                     .fill(Color.gray.opacity(0.5))
                     .frame(width: 60, height: 14)
             }
+            
             RoundedRectangle(cornerRadius: 10)
                 .fill(Color.gray.opacity(0.5))
                 .frame(width: 7, height: 40)
-            VStack {
+            
+            VStack(alignment: .leading) {
                 RoundedRectangle(cornerRadius: 10)
                     .fill(Color.gray.opacity(0.5))
-                    .frame(width: 60, height: 14)
+                    .frame(width: 90, height: 14)
                 RoundedRectangle(cornerRadius: 10)
                     .fill(Color.gray.opacity(0.5))
                     .frame(width: 60, height: 14)
             }
+            
             Spacer()
+            
             RoundedRectangle(cornerRadius: 10)
                 .fill(Color.gray.opacity(0.5))
                 .frame(width: 20, height: 20)
@@ -44,10 +48,10 @@ struct EachEmployeeLessonLoading: View {
 }
 
 #Preview {
-    EachEmployeeLessonLoading()
+    EachGroupLessonLoading()
 }
 
-struct EachEmployeeLesson: View {
+struct EachGroupLesson: View {
         
     let funcs = MoreFunctions() // используется функций закончился ли урок по времени и по дате
     
@@ -93,7 +97,6 @@ struct EachEmployeeLesson: View {
                 Text("\(lesson.lessonTypeAbbrev) по \(lesson.subject)")
                 Text("\(lesson.auditories.first ?? "")")
                 
-                #warning("Lesson требуется в контексте Widget, но тогда перестает быть виден let funcs = MoreFunctions() (типо он только для приложения, но не для Widget)")
                 if !funcs.comparisonLessonOverDate(lesson: lesson).isEmpty {
                     Text("\(funcs.comparisonLessonOverDate(lesson: lesson))")
                         .font(.system(size: 16, weight: .bold))
@@ -103,35 +106,40 @@ struct EachEmployeeLesson: View {
             
             Spacer()
             
-            HStack(spacing: -10) {
-                ForEach(lesson.studentGroups.enumerated(), id: \.offset) { index, group in
-                    CircleViewGroups(group: group.name)
+            calcImageGroup
+            
+            
+            AsyncImage(url: {
+                            if let employees = lesson.employees, !employees.isEmpty,
+                               let photoLink = employees[0].photoLink,
+                               let url = URL(string: photoLink) {
+                                return url
+                            }
+                            return nil
+                        }()
+            ) { phase in
+                switch phase {
+                case .empty:
+                    ProgressView()
+                        .frame(width: 35, height: 35)
+                case .success(let image):
+                    image
+                        .resizable()
+                        .frame(width: 35, height: 35)
+                        .clipShape(RoundedRectangle(cornerRadius: 15))
+                case .failure:
+                    Image("PlainPhoto")
+                        .resizable()
+                        .frame(width: 35, height: 35)
+                        .clipShape(RoundedRectangle(cornerRadius: 15))
+                @unknown default:
+                    EmptyView()
                 }
             }
+            .padding(.leading, 10)
         }
 
         .font(.system(size: 14))
 //        .opacity(funcs.comparisonLessonOverTime(lesson: lesson) || !funcs.comparisonLessonOverDate(lesson: lesson).isEmpty ? 0.5 : 1)
-    }
-}
-
-struct CircleViewGroups: View {
-    
-    let group: String
-    
-    var body: some View {
-        ZStack {
-            Circle()
-                .fill(Color.clear)
-                .frame(width: 35, height: 35)
-            VStack {
-                Text(group.prefix(3))
-                Text(group.suffix(3))
-            }
-            .font(.caption)
-            
-        }
-        .padding(1)
-        .glassEffect(.regular, in: Circle())
     }
 }

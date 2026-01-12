@@ -109,7 +109,8 @@ struct EachEmployee: View {
 
 #Preview {
     NavigationStack {
-        EachEmployee(employeeName: "e-andros")
+        EachEmployee(employeeName: "i-abramov")
             .environmentObject(ViewModelForNetwork())
+            
     }
 }
