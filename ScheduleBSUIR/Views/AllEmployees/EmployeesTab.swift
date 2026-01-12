@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Marquee
 
 struct EmployeesTab: View {
     
@@ -102,19 +103,27 @@ private struct EmployeesEach: View {
             }
             
             VStack(alignment: .leading) {
-                Text("\(employee.fullName)")
-                    .font(.system(size: 16, weight: .medium))
-                HStack {
-                    if let academicDepartment = employee.academicDepartment {
-                        ForEach(academicDepartment.enumerated(), id: \.offset) { index, academicDepartment in
-                            if index < 3 { // так не очень хорошо, надо бы отрисовать все, но с переносом
-                            Text("\(academicDepartment)")
-                            }
-                        }
-                        
-                    }
+                Marquee {
+                    Text("\(employee.fullName)")
+                        .font(.system(size: 16, weight: .medium))
                 }
-                .font(.system(size: 14, weight: .light))
+                .marqueeWhenNotFit(true)
+                .marqueeDuration(5)
+                .frame(height: 20)
+                
+                if let departments = employee.academicDepartment {
+                    let departmentsSrting = departments
+                        .map { $0 }
+                        .joined(separator: ", ")
+                   
+                    Marquee {
+                        Text(departmentsSrting)
+                               .font(.system(size: 14))
+                    }
+                    .marqueeWhenNotFit(true)
+                    .marqueeDuration(7)
+                    .frame(height: 20)
+                }
             }
         }
     }
@@ -153,6 +162,10 @@ private struct EmployeesEachIsLoading: View {
                         }
                     }
                 }
+                Spacer()
+                RoundedRectangle(cornerRadius: 15)
+                    .fill(Color.gray.opacity(0.5))
+                    .frame(width: 10, height: 10)
             }
         }
         .scrollContentBackground(.hidden)

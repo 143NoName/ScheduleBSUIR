@@ -1,5 +1,5 @@
 {
-  "originHash" : "11b78eba97192d19796cff581fdf69b3e65b441188b1448a1b67e5d7b825a354",
+  "originHash" : "1706b3e435fd2ecbf6e3dbeb58e5135bfbf2782f94ac0c4c8ec8ccc597ec08b7",
   "pins" : [
     {
       "identity" : "alamofire",
@@ -8,6 +8,15 @@
       "state" : {
         "revision" : "513364f870f6bfc468f9d2ff0a95caccc10044c5",
         "version" : "5.10.2"
+      }
+    },
+    {
+      "identity" : "marquee",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SwiftUIKit/Marquee",
+      "state" : {
+        "revision" : "69d7b7c6c34ed41d9299cfa8406f91f529c4fef3",
+        "version" : "0.3.0"
       }
     }
   ],

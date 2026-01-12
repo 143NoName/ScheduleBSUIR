@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		495E0A642ECE5B8400D08640 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 495E0A632ECE5B8400D08640 /* Alamofire */; };
+		4987F5D12F14DDD600E190D5 /* Marquee in Frameworks */ = {isa = PBXBuildFile; productRef = 4987F5D02F14DDD600E190D5 /* Marquee */; };
 		AFF20D892EB365B100383B2B /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AFF20D882EB365B100383B2B /* WidgetKit.framework */; };
 		AFF20D8B2EB365B100383B2B /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AFF20D8A2EB365B100383B2B /* SwiftUI.framework */; };
 		AFF20D9A2EB365B200383B2B /* ScheduleBSUIRWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AFF20D862EB365B100383B2B /* ScheduleBSUIRWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -160,6 +161,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				495E0A642ECE5B8400D08640 /* Alamofire in Frameworks */,
+				4987F5D12F14DDD600E190D5 /* Marquee in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -268,6 +270,7 @@
 			name = ScheduleBSUIR;
 			packageProductDependencies = (
 				495E0A632ECE5B8400D08640 /* Alamofire */,
+				4987F5D02F14DDD600E190D5 /* Marquee */,
 			);
 			productName = ScheduleBSUIR;
 			productReference = 49F20D672EE0C9A1005F184A /* ScheduleBSUIR.app */;
@@ -372,6 +375,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				495E0A622ECE5B8400D08640 /* XCRemoteSwiftPackageReference "Alamofire" */,
+				4987F5CF2F14DDD600E190D5 /* XCRemoteSwiftPackageReference "Marquee" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = AFA212E92EAE29F20010C9F6;
@@ -984,6 +988,14 @@
 				minimumVersion = 5.10.2;
 			};
 		};
+		4987F5CF2F14DDD600E190D5 /* XCRemoteSwiftPackageReference "Marquee" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SwiftUIKit/Marquee";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.3.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -991,6 +1003,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 495E0A622ECE5B8400D08640 /* XCRemoteSwiftPackageReference "Alamofire" */;
 			productName = Alamofire;
+		};
+		4987F5D02F14DDD600E190D5 /* Marquee */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4987F5CF2F14DDD600E190D5 /* XCRemoteSwiftPackageReference "Marquee" */;
+			productName = Marquee;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
