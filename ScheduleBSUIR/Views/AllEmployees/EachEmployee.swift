@@ -92,8 +92,7 @@ struct EachEmployee: View {
             await network.getEachEmployeeSchedule(employeeName)
             
             // фильтрация по неделе и по подгруппе
-            network.filterGroupSchedule(currentWeek: weekNumber, subGroup: subGroup)
-            #warning("Фильтруется один массив (не тот что надо)")
+            network.filterByWeekEmployeeSchedule(currentWeek: weekNumber)
             
             if let updateWeekNum = WeeksInPicker(rawValue: network.currentWeek) {
                 weekNumber = updateWeekNum

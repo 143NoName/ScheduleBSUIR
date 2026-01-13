@@ -27,12 +27,12 @@ struct TabBarView: View {
                  private var appStorage = AppStorageService() // плохо, что view знает о сервисе, можно сдеать viewModel
      // хранилище всех AppStorage
     
-    @State private var selectedTab: Int = 1
+    @State private var selectedTab: Int = 2
     @State private var splashScreen: Bool = true    
     
-    @State private var isPresentedSplashScreen: Bool = true
-    @State var scale: CGFloat = 1
-    @State var opacity: Double = 1
+//    @State private var isPresentedSplashScreen: Bool = true
+//    @State var scale: CGFloat = 1
+//    @State var opacity: Double = 1
     
     var body: some View {
 //        ZStack { // для начального окна

@@ -31,14 +31,9 @@ struct EachEmployeeLessonLoading: View {
                     .frame(width: 60, height: 14)
             }
             Spacer()
-            HStack(spacing: -5) {
-                Circle()
-                    .fill(Color.gray.opacity(0.5))
-                    .frame(width: 35)
-                Circle()
-                    .fill(Color.gray.opacity(0.5))
-                    .frame(width: 35)
-            }
+            Circle()
+                .fill(Color.gray.opacity(0.5))
+                .frame(width: 35)
         }
     }
 }

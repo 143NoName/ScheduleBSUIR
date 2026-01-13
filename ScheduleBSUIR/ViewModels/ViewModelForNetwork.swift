@@ -93,7 +93,7 @@ class ViewModelForNetwork: ObservableObject {
     func getScheduleGroup(group: String) async {
         do {
             arrayOfScheduleGroup = try await networkService.getScheduleGroup(group)
-            convertGroupToScheduleDays() // сразу преобразовать в (День: [Занятия])
+            convertToScheduleDaysGroup() // сразу преобразовать в (День: [Занятия])
             withAnimation(.easeIn) {
                 isLoadingArrayOfScheduleGroup = true
             }
@@ -132,7 +132,7 @@ class ViewModelForNetwork: ObservableObject {
     
     @Published var scheduleGroupByDays: [(dayName: String, lessons: [Lesson])] = []
     
-    func convertGroupToScheduleDays() { // конвертация в (День: [Занятия])
+    func convertToScheduleDaysGroup() { // конвертация в (День: [Занятия])
         let days = [
             ("Понедельник", arrayOfScheduleGroup.nextSchedules.monday),
             ("Вторник", arrayOfScheduleGroup.nextSchedules.tuesday),
@@ -153,7 +153,7 @@ class ViewModelForNetwork: ObservableObject {
     
     // используется в .onChange при изменении подгруппы и недели
     func filterGroupSchedule(currentWeek: WeeksInPicker, subGroup: SubGroupInPicker) {
-        convertGroupToScheduleDays() // для того чтобы перед фильтрацией вернуть все пары, которые были отфильтрованы раньше
+        convertToScheduleDaysGroup() // для того чтобы перед фильтрацией вернуть все пары, которые были отфильтрованы раньше
         let filteredArray = scheduleGroupByDays.map { (dayName, lessons) in
             let filteredLessons = lessons.filter { lesson in
                 lesson.weekNumber.contains(currentWeek.rawValue) &&
@@ -200,7 +200,6 @@ class ViewModelForNetwork: ObservableObject {
         errorOfEmployeesArray = ""
     }
     
-    
     @Published var scheduleForEachEmployee: EachEmployeeResponse = EachEmployeeResponse(startDate: "", endDate: "", startExamsDate: "", endExamsDate: "", employeeDto: EmployeeDto(id: 0, firstName: "", middleName: "", lastName: "", photoLink: "", email: "", urlId: "", calendarId: "", chief: false), schedules: Schedules(monday: [], tuesday: [], wednesday: [], thursday: [], friday: [], saturday: [], sunday: []), currentPeriod: "")
     @Published var isLoadingScheduleForEachEmployee: Bool = false
     @Published var errorOfEachEmployee: String = ""
@@ -223,7 +222,7 @@ class ViewModelForNetwork: ObservableObject {
         }
     }
     
-    // очистка расписания преподавателей
+    // очистка расписания преподавателя
     func scheduleForEachEmployeeInNull() {
         scheduleForEachEmployee = EachEmployeeResponse(startDate: "", endDate: "", startExamsDate: "", endExamsDate: "", employeeDto: EmployeeDto(id: 0, firstName: "", middleName: "", lastName: "", photoLink: "", email: "", urlId: "", calendarId: "", chief: false), schedules: Schedules(monday: [], tuesday: [], wednesday: [], thursday: [], friday: [], saturday: [], sunday: []), currentPeriod: "")
         isLoadingScheduleForEachEmployee = false
@@ -252,7 +251,8 @@ class ViewModelForNetwork: ObservableObject {
         }
     }
     
-    func filterByWeekGroupSchedule(currentWeek: WeeksInPicker) {
+    // фильтрация по неделе (при выборе недели)
+    func filterByWeekEmployeeSchedule(currentWeek: WeeksInPicker) {
         convertToScheduleDaysEmployee() // вернуть все перед новой фильтрацией (надо как то выбирать для групп и для преподавателей)
         let filteredArray = scheduleEmployeeByDays.map { (dayName, lessons) in
             let filteredLessons = lessons.filter { lesson in
