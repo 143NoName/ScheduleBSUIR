@@ -7,7 +7,6 @@
 
 import Foundation
 
-#warning("Изменить имя структуры")
 struct EachGroupResponse: Codable {
     let startDate: String?
     let endDate: String?

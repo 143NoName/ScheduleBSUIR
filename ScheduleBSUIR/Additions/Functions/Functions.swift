@@ -130,7 +130,6 @@ struct MoreFunctions {
         return ""
     }
     
-    #warning("На день позже")
     // переход к сегодняшнему дню
     func findToday(todayWeek: Int, weekNumber: inout WeeksInPicker, weekDay: inout DaysInPicker) {
         if let updateWeekNum = WeeksInPicker(rawValue: todayWeek) {

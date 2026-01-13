@@ -34,7 +34,6 @@ struct EachEmployee: View {
         }
     }
     
-    #warning("При просмотре расписания отдельного учителя или группы нет фильтрации по неделе")
     var body: some View {
         ZStack(alignment: .bottom) {
             if colorScheme == .light {
@@ -49,7 +48,7 @@ struct EachEmployee: View {
                             .foregroundStyle(colorScheme == .dark ? .white : .black)
                     ) {
                         ForEach(0..<5, id: \.self) { _ in
-                            EachGroupLessonLoading()
+                            EachEmployeeLessonLoading()
                         }
                     }
                 } else {
@@ -94,6 +93,7 @@ struct EachEmployee: View {
             
             // фильтрация по неделе и по подгруппе
             network.filterGroupSchedule(currentWeek: weekNumber, subGroup: subGroup)
+            #warning("Фильтруется один массив (не тот что надо)")
             
             if let updateWeekNum = WeeksInPicker(rawValue: network.currentWeek) {
                 weekNumber = updateWeekNum
@@ -111,6 +111,5 @@ struct EachEmployee: View {
     NavigationStack {
         EachEmployee(employeeName: "i-abramov")
             .environmentObject(ViewModelForNetwork())
-            
     }
 }

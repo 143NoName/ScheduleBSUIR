@@ -341,7 +341,7 @@ struct UniversalPicker<T: Identifiable>: View {
             }
             List {
                 Button {
-                    selected = "Не выбрано" // тут должно быть значение в которое будет записываться имя
+                    selected = "Не выбрано"
                     dismiss()
                 } label: {
                     HStack {
@@ -354,7 +354,7 @@ struct UniversalPicker<T: Identifiable>: View {
                 
                 ForEach(items) { each in
                     Button {
-                        selected = each[keyPath: secondValue] // тут должно быть значение в которое будет записываться имя
+                        selected = each[keyPath: secondValue]
                         dismiss()
                     } label: {
                         HStack {
