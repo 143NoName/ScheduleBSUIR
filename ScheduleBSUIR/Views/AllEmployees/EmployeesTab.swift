@@ -10,21 +10,21 @@ import Marquee
 
 struct EmployeesTab: View {
     
-    @EnvironmentObject var network: ViewModelForNetwork
+    @EnvironmentObject var employeeListViewModel: NetworkViewModelForListEmployees
     @Environment(\.colorScheme) var colorScheme
 
     @State var searchText: String = ""
     
     var searchable: [EmployeeModel] {
         if searchText.isEmpty {
-            return network.scheduleForEmployees
+            return employeeListViewModel.scheduleForEmployees
         } else {
-            return network.scheduleForEmployees.filter { $0.fullName.localizedCaseInsensitiveContains(searchText) }
+            return employeeListViewModel.scheduleForEmployees.filter { $0.fullName.localizedCaseInsensitiveContains(searchText) }
         }
     }
     
     var loadedArrayOfEmployees: String {
-        if !network.isLoadingScheduleForEmployees {
+        if !employeeListViewModel.isLoadingScheduleForEmployees {
             return "Загрузка..."
         } else {
             return "Преподаватели"
@@ -39,31 +39,26 @@ struct EmployeesTab: View {
                         .opacity(0.15)
                         .ignoresSafeArea(edges: .all)
                 }
-                
                 CostomList(items: searchable,
-                           isLoading: network.isLoadingScheduleForEmployees,
+                           isLoading: employeeListViewModel.isLoadingScheduleForEmployees,
                            loadingView: ViewEachGroupIsLoading(),
-                           errorStr: network.errorOfEmployeesArray,
+                           errorStr: employeeListViewModel.errorOfEmployeesArray,
                            content: { each in
                     NavigationLink(value: each.urlId) {
                         EmployeesEach(employee: each)
                     }
                 })
-                
                 .navigationTitle(loadedArrayOfEmployees)
-                
-                .if(network.isLoadingScheduleForEmployees) { view in
+                .if(employeeListViewModel.isLoadingScheduleForEmployees) { view in
                     view.searchable(text: $searchText, placement: .navigationBarDrawer, prompt: "Поиск преподавателя")
-                } // было бы хорошо сделать UITextField в UIKit или просто как то кастомизировать через UIViewRepresentable
-
+                }
                 .refreshable {
                     Task {
-                        network.employeesArrayInNull()
-                        await network.getArrayOfEmployees()
+                        employeeListViewModel.employeesArrayInNull()
+                        await employeeListViewModel.getArrayOfEmployees()
                     }
                 }
             }
-            
             .navigationDestination(for: String.self) { employeeName in
                 EachEmployee(employeeName: employeeName)
             }

@@ -20,15 +20,22 @@ extension EnvironmentValues {
 }
 
 struct TabBarView: View {
+    
+    @StateObject private var weekViewModel = NetworkViewModelForWeek()
+    @StateObject private var groupListViewModel = NetworkViewModelForListGroups()
+    @StateObject private var groupScheduleViewModel = NetworkViewModelForScheduleGroups()
+    @StateObject private var employeeListViewModel = NetworkViewModelForListEmployees()
+    @StateObject private var employeeScheduleViewModel = NetworkViewModelForScheduleEmployees()
+    
+    
+    
     #warning("Сделать DI")
     @StateObject private var network = ViewModelForNetwork()
-    @StateObject private var viewModelForFilter = ViewModelForFilterService()
-    @StateObject private var appStorageSave = AppStorageSave()
+    @StateObject private var appStorageSave = AppStorageSave() // хранилище всех AppStorage
                  private var appStorage = AppStorageService() // плохо, что view знает о сервисе, можно сдеать viewModel
-     // хранилище всех AppStorage
     
     @State private var selectedTab: Int = 2
-    @State private var splashScreen: Bool = true    
+//    @State private var splashScreen: Bool = true    
     
 //    @State private var isPresentedSplashScreen: Bool = true
 //    @State var scale: CGFloat = 1
@@ -65,9 +72,9 @@ struct TabBarView: View {
             
             .task {
                 await Task.detached {
-                    await network.getCurrentWeek()           // получение текущей недели
-                    await network.getArrayOfGroupNum()       // получение списка групп
-                    await network.getArrayOfEmployees()      // получение списка преподавателей
+                    await weekViewModel.getCurrentWeek()           // получение текущей недели
+                    await groupListViewModel.getArrayOfGroupNum()       // получение списка групп
+                    await employeeListViewModel.getArrayOfEmployees()      // получение списка преподавателей
                     
                     do {
                         try await appStorage.saveDataForWidgetToAppStorage(network.arrayOfScheduleGroup.nextSchedules)
@@ -99,8 +106,15 @@ struct TabBarView: View {
 //            }
             
 //        }
+        
+        .environmentObject(weekViewModel)
+        .environmentObject(groupListViewModel)
+        .environmentObject(groupScheduleViewModel)
+        .environmentObject(employeeListViewModel)
+        .environmentObject(employeeScheduleViewModel)
+        
+        
         .environmentObject(network)
-        .environmentObject(viewModelForFilter)
         .environment(\.appStorageKey, appStorage)
         .environmentObject(appStorageSave)
     }

@@ -9,7 +9,8 @@ import SwiftUI
 
 struct EachEmployee: View {
     
-    @EnvironmentObject var network: ViewModelForNetwork
+    @EnvironmentObject var weekViewModel: NetworkViewModelForWeek
+    @EnvironmentObject var employeeScheduleViewModel: NetworkViewModelForScheduleEmployees
     @Environment(\.dismiss) var dismiss
     @Environment(\.colorScheme) var colorScheme
     
@@ -23,11 +24,11 @@ struct EachEmployee: View {
 
     
     var pageName: String {
-        if !network.isLoadingScheduleForEachEmployee {
+        if !employeeScheduleViewModel.isLoadingScheduleForEachEmployee {
             "Загрузка..."
         } else {
-            if network.errorOfEachEmployee.isEmpty {
-                network.scheduleForEachEmployee.employeeDto.fio
+            if employeeScheduleViewModel.errorOfEachEmployee.isEmpty {
+                employeeScheduleViewModel.scheduleForEachEmployee.employeeDto.fio
             } else {
                 "Ошибка"
             }
@@ -42,7 +43,7 @@ struct EachEmployee: View {
                     .ignoresSafeArea(edges: .all)
             }
             List {
-                if !network.isLoadingScheduleForEachEmployee {
+                if !employeeScheduleViewModel.isLoadingScheduleForEachEmployee {
                     Section(header:
                         Text("Загрузка...")
                             .foregroundStyle(colorScheme == .dark ? .white : .black)
@@ -52,7 +53,7 @@ struct EachEmployee: View {
                         }
                     }
                 } else {
-                    if !network.errorOfEachEmployee.isEmpty {
+                    if !employeeScheduleViewModel.errorOfEachEmployee.isEmpty {
                         IfHaveErrorSchedule()
                     } else {
                         Section(header:
@@ -62,7 +63,7 @@ struct EachEmployee: View {
                                     Color.clear
                                         .frame(height: 300)
                         ) {
-                            ForEach(network.scheduleEmployeeByDays.enumerated(), id: \.offset) { index, day in
+                            ForEach(employeeScheduleViewModel.scheduleEmployeeByDays.enumerated(), id: \.offset) { index, day in
                                 if funcs.comparisonDay(weekDay, lessonDay: day.dayName) { // фильтрация по дню недели
                                     if day.lessons.isEmpty {
                                         IfDayLessonIsEmpty()
@@ -79,29 +80,29 @@ struct EachEmployee: View {
             }
             .scrollContentBackground(.hidden)
             
-            SelectorViewForEmployee(todayWeek: network.currentWeek, weekNumber: $weekNumber, weekDay: $weekDay)
+            SelectorViewForEmployee(todayWeek: weekViewModel.currentWeek, weekNumber: $weekNumber, weekDay: $weekDay)
         }
         .navigationTitle(pageName)
         
         .refreshable {
-            await network.getEachEmployeeSchedule(employeeName)
+            await employeeScheduleViewModel.getEachEmployeeSchedule(employeeName)
         }
         
         .task {
             // получение расписания преподавателя
-            await network.getEachEmployeeSchedule(employeeName)
+            await employeeScheduleViewModel.getEachEmployeeSchedule(employeeName)
             
             // фильтрация по неделе и по подгруппе
-            network.filterByWeekEmployeeSchedule(currentWeek: weekNumber)
+            employeeScheduleViewModel.filterByWeekEmployeeSchedule(currentWeek: weekNumber)
             
-            if let updateWeekNum = WeeksInPicker(rawValue: network.currentWeek) {
+            if let updateWeekNum = WeeksInPicker(rawValue: weekViewModel.currentWeek) {
                 weekNumber = updateWeekNum
             }
         }
         
         .onDisappear {
             dismiss() // при переходе в другой tab чтобы выходило к списку
-            network.scheduleForEachEmployeeInNull() // очистить при выходе (ошибки убрать и т.д.)
+            employeeScheduleViewModel.scheduleForEachEmployeeInNull() // очистить при выходе (ошибки убрать и т.д.)
         }
     }
 }

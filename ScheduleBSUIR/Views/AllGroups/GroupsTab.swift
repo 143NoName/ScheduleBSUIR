@@ -9,21 +9,21 @@ import SwiftUI
 
 struct GroupsTab: View {
     
-    @EnvironmentObject var network: ViewModelForNetwork
+    @EnvironmentObject var groupListViewModel: NetworkViewModelForListGroups
     @Environment(\.colorScheme) var colorScheme
     
     @State var searchText: String = ""
     
     var searchable: [StudentGroups] {
         if searchText.isEmpty {
-            return network.arrayOfGroupsNum
+            return groupListViewModel.arrayOfGroupsNum
         } else {
-            return network.arrayOfGroupsNum.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
+            return groupListViewModel.arrayOfGroupsNum.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
         }
     }
     
     var pageName: String {
-        if !network.isLoadingArrayOfGroupsNum {
+        if !groupListViewModel.isLoadingArrayOfGroupsNum {
             return "Загрузка..."
         } else {
             return "Все группы"
@@ -32,25 +32,34 @@ struct GroupsTab: View {
         
     var body: some View {
         NavigationStack {
-            CostomList(items: searchable,
-                       isLoading: network.isLoadingArrayOfGroupsNum,
-                       loadingView: ViewEachGroupIsLoading(),
-                       errorStr: network.errorOfGroupsNum,
-                       content: { each in
-                NavigationLink(value: each.name) {
-                    ViewEachGroup(group: each)
+            ZStack {
+                if colorScheme == .light {
+                    Color.gray
+                        .opacity(0.15)
+                        .ignoresSafeArea(edges: .all)
                 }
-            })
-            .navigationTitle(pageName)
-            .searchable(text: $searchText, placement: .navigationBarDrawer, prompt: "Поиск группы")
-            .refreshable {
-                Task {
-                    network.groupArrayInNull()
-                    await network.getArrayOfGroupNum()       // получение списка групп
+                CostomList(items: searchable,
+                           isLoading: groupListViewModel.isLoadingArrayOfGroupsNum,
+                           loadingView: ViewEachGroupIsLoading(),
+                           errorStr: groupListViewModel.errorOfGroupsNum,
+                           content: { each in
+                    NavigationLink(value: each.name) {
+                        ViewEachGroup(group: each)
+                    }
+                })
+                .navigationTitle(pageName)
+                .if(groupListViewModel.isLoadingArrayOfGroupsNum) { view in
+                        view.searchable(text: $searchText, placement: .navigationBarDrawer, prompt: "Поиск группы")
                 }
-            }
-            .navigationDestination(for: String.self) { groupName in
-                EachGroup(groupName: groupName)
+                .refreshable {
+                    Task {
+                        groupListViewModel.groupArrayInNull()                // очистка списка групп
+                        await groupListViewModel.getArrayOfGroupNum()        // получение списка групп
+                    }
+                }
+                .navigationDestination(for: String.self) { groupName in
+                    EachGroup(groupName: groupName)
+                }
             }
         }
     }
@@ -61,7 +70,6 @@ struct GroupsTab: View {
         .environmentObject(ViewModelForNetwork())
 }
 
- 
 private struct ViewEachGroup: View {
     
     let group: StudentGroups

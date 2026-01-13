@@ -12,7 +12,8 @@ struct EachGroup: View {
     
     #warning("Надо ограничить уроки по началу и концу сесиии")
     
-    @EnvironmentObject var network: ViewModelForNetwork
+    @EnvironmentObject var weekViewModel: NetworkViewModelForWeek
+    @EnvironmentObject var groupScheduleViewModel: NetworkViewModelForScheduleGroups
     @Environment(\.dismiss) var dismiss
     @Environment(\.colorScheme) var colorScheme
     
@@ -29,11 +30,11 @@ struct EachGroup: View {
     #warning("При просмотре расписания отдельного учителя или группы нет фильтрации по неделе")
 
     var pageName: String {
-        if !network.isLoadingArrayOfScheduleGroup {
+        if !groupScheduleViewModel.isLoadingArrayOfScheduleGroup {
             "Загрузка..."
         } else {
-            if network.errorOfScheduleGroup.isEmpty {
-                network.arrayOfScheduleGroup.studentGroupDto.name
+            if groupScheduleViewModel.errorOfScheduleGroup.isEmpty {
+                groupScheduleViewModel.arrayOfScheduleGroup.studentGroupDto.name
             } else {
                 "Ошибка"
             }
@@ -50,7 +51,7 @@ struct EachGroup: View {
             }
             
             List {
-                if !network.isLoadingArrayOfScheduleGroup {
+                if !groupScheduleViewModel.isLoadingArrayOfScheduleGroup {
                     Section(header:
                         Text("Загрузка...")
                             .foregroundStyle(colorScheme == .dark ? .white : .black)
@@ -60,7 +61,7 @@ struct EachGroup: View {
                         }
                     }
                 } else {
-                    if !network.errorOfScheduleGroup.isEmpty {
+                    if !groupScheduleViewModel.errorOfScheduleGroup.isEmpty {
                         IfHaveErrorSchedule()
                     } else {
                         Section(header:
@@ -70,7 +71,7 @@ struct EachGroup: View {
                                     Color.clear
                                         .frame(height: 300)
                         ) {
-                            ForEach(network.scheduleGroupByDays.enumerated(), id: \.offset) { index, day in
+                            ForEach(groupScheduleViewModel.scheduleGroupByDays.enumerated(), id: \.offset) { index, day in
                                 if funcs.comparisonDay(weekDay, lessonDay: day.dayName) {
                                     if day.lessons.isEmpty {
                                         IfDayLessonIsEmpty()
@@ -87,15 +88,16 @@ struct EachGroup: View {
             }
             .scrollContentBackground(.hidden)
             
-            SelectorViewForGroup(todayWeek: network.currentWeek, subGroup: $subGroup, weekNumber: $weekNumber, weekDay: $weekDay)
+            SelectorViewForGroup(todayWeek: weekViewModel.currentWeek, subGroup: $subGroup, weekNumber: $weekNumber, weekDay: $weekDay)
+            #warning("Тут можно использовать недели из appStorage")
         }
         .navigationTitle(pageName)
 //        .navigationBarTitleDisplayMode(.inline)
         
         .refreshable {
-            network.scheduleForEachGroupInNull()
-            await network.getScheduleGroup(group: groupName)
-            network.filterGroupSchedule(currentWeek: weekNumber, subGroup: subGroup)
+            groupScheduleViewModel.scheduleForEachGroupInNull()
+            await groupScheduleViewModel.getScheduleGroup(group: groupName)
+            groupScheduleViewModel.filterGroupSchedule(currentWeek: weekNumber, subGroup: subGroup)
         }
 
         .toolbar {
@@ -111,18 +113,19 @@ struct EachGroup: View {
         
         .task {
             // получение расписания группы
-            await network.getScheduleGroup(group: groupName)
+            await groupScheduleViewModel.getScheduleGroup(group: groupName)
             
             // фильтрация по неделе и по подгруппе
-            network.filterGroupSchedule(currentWeek: weekNumber, subGroup: subGroup)
+            groupScheduleViewModel.filterGroupSchedule(currentWeek: weekNumber, subGroup: subGroup)
             
             // нахождение сегодняшнего дня (недели и дня недели)
-            funcs.findToday(todayWeek: network.currentWeek, weekNumber: &weekNumber, weekDay: &weekDay)
+            funcs.findToday(todayWeek: weekViewModel.currentWeek, weekNumber: &weekNumber, weekDay: &weekDay)
+            #warning("Тут можно использовать недели из appStorage")
         }
         
         .onDisappear {
             dismiss() // при переходе в другой tab чтобы выходило к списку
-            network.scheduleForEachGroupInNull() // очистить при выходе (ошибки убрать и т.д.)
+            groupScheduleViewModel.scheduleForEachGroupInNull() // очистить при выходе (ошибки убрать и т.д.)
             
         }
     }
