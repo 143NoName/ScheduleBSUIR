@@ -9,11 +9,7 @@ import SwiftUI
 
 struct SelectorViewForEmployee: View {
     let funcs = MoreFunctions()
-    
-    let calendar = Calendar.current
-    let date = Date()
-    #warning("Надо бы создать один экземпляр календаря и даты на все приложение и передавать его через Envaronment")
-    
+
     let todayWeek: Int
     
     @State var showAll: Bool = true

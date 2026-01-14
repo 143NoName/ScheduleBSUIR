@@ -101,6 +101,7 @@ struct EachEmployee: View {
             employeeScheduleViewModel.scheduleForEachEmployeeInNull()
             await employeeScheduleViewModel.getEachEmployeeSchedule(employeeName)
             employeeScheduleViewModel.filterByWeekEmployeeSchedule(currentWeek: weekNumber)
+            funcs.findToday(selectedWeekNumber: &weekNumber, weekDay: &weekDay) // для отображения сегодняшей даты
         }
         
         .task {
@@ -110,9 +111,7 @@ struct EachEmployee: View {
             // фильтрация по неделе и по подгруппе
             employeeScheduleViewModel.filterByWeekEmployeeSchedule(currentWeek: weekNumber)
             
-//            if let updateWeekNum = WeeksInPicker(rawValue: weekViewModel.currentWeek) {
-//                weekNumber = updateWeekNum
-//            }
+            funcs.findToday(selectedWeekNumber: &weekNumber, weekDay: &weekDay) // для отображения сегодняшей даты
         }
         
         .onDisappear {

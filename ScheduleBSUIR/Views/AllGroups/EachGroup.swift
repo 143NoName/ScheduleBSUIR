@@ -106,9 +106,10 @@ struct EachGroup: View {
 //        }
         
         .refreshable {
-            groupScheduleViewModel.scheduleForEachGroupInNull()
-            await groupScheduleViewModel.getScheduleGroup(group: groupName)
-            groupScheduleViewModel.filterGroupSchedule(currentWeek: weekNumber, subGroup: subGroup)
+            groupScheduleViewModel.scheduleForEachGroupInNull()                                         // очистка данных
+            await groupScheduleViewModel.getScheduleGroup(group: groupName)                             // получение новых данных
+            groupScheduleViewModel.filterGroupSchedule(currentWeek: weekNumber, subGroup: subGroup)     // фильтрация полученных данных
+            funcs.findToday(selectedWeekNumber: &weekNumber, weekDay: &weekDay)                         // для отображения сегодняшей даты
         }
 
         .toolbar {

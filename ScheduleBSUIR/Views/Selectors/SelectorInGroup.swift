@@ -10,9 +10,7 @@ import SwiftUI
 struct SelectorViewForGroup: View {
     let funcs = MoreFunctions()
     
-//    let calendar = Calendar.current
-//    let date = Date()
-    
+    #warning("Как будто не нужен")
     let todayWeek: Int
     
     @State var showAll: Bool = true
@@ -24,7 +22,6 @@ struct SelectorViewForGroup: View {
     var body: some View {
         VStack(spacing: 0) {
             HStack {
-                #warning("Кнопку тоже надо вынести")
                 Button {
                     funcs.findToday(selectedWeekNumber: &weekNumber, weekDay: &weekDay)
                 } label: {
