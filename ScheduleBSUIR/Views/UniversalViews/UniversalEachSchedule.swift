@@ -147,7 +147,7 @@ struct UniversalEachSchedule<Each: Identifiable, EachLesson: View>: View {
             network.filterGroupSchedule(currentWeek: weekNumber, subGroup: subGroup)
             
             // нахождение сегодняшнего дня (недели и дня недели)
-            funcs.findToday(todayWeek: network.currentWeek, weekNumber: &weekNumber, weekDay: &weekDay)
+            funcs.findToday(selectedWeekNumber: &weekNumber, weekDay: &weekDay)
         }
         
         .onDisappear {

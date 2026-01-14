@@ -132,7 +132,7 @@ struct EachGroup: View {
             groupScheduleViewModel.filterGroupSchedule(currentWeek: weekNumber, subGroup: subGroup)
             
             // нахождение сегодняшнего дня (недели и дня недели)
-            funcs.findToday(todayWeek: weekViewModel.currentWeek, weekNumber: &weekNumber, weekDay: &weekDay)
+            funcs.findToday(selectedWeekNumber: &weekNumber, weekDay: &weekDay)
             #warning("Тут можно использовать недели из appStorage")
         }
         

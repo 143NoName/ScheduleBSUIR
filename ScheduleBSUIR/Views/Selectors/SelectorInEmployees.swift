@@ -8,8 +8,6 @@
 import SwiftUI
 
 struct SelectorViewForEmployee: View {
-    @EnvironmentObject var network: ViewModelForNetwork
-    
     let funcs = MoreFunctions()
     
     let calendar = Calendar.current
@@ -27,7 +25,7 @@ struct SelectorViewForEmployee: View {
         VStack(spacing: 0) {
             HStack {
                 Button {
-                    funcs.findToday(todayWeek: todayWeek, weekNumber: &weekNumber, weekDay: &weekDay)
+                    funcs.findToday(selectedWeekNumber: &weekNumber, weekDay: &weekDay)
                 } label: {
                     Text("К сегодняшнему дню")
                         .padding(EdgeInsets(top: 2, leading: 8, bottom: 2, trailing: 8))
@@ -51,7 +49,7 @@ struct SelectorViewForEmployee: View {
                 if showAll {
                     MaxViewSelector(weekNumber: $weekNumber, weekDay: $weekDay)
                 } else {
-                    MinViewSelector(weekNumber: weekNumber, weekDay: weekDay)
+                    MinViewSelector(weekDay: weekDay.filterByDay, weekNumber: weekNumber.inString)
                 }
             }
             .glassEffect(.regular , in: .rect(cornerRadius: 20))
@@ -64,14 +62,13 @@ struct SelectorViewForEmployee: View {
     @Previewable @State var weekNumber: WeeksInPicker = .first
     @Previewable @State var weekDay: DaysInPicker = .monday
     
-    return SelectorViewForEmployee(todayWeek: 1, weekNumber: $weekNumber, weekDay: $weekDay)
-        .environmentObject(ViewModelForNetwork())
+     return SelectorViewForEmployee(todayWeek: 1, weekNumber: $weekNumber, weekDay: $weekDay)
+    
 }
 
 private struct MaxViewSelector: View {
     
-    @EnvironmentObject var network: ViewModelForNetwork
-    
+    @EnvironmentObject var employeeScheduleViewModel: NetworkViewModelForScheduleEmployees
     @Binding var weekNumber: WeeksInPicker
     @Binding var weekDay: DaysInPicker
     
@@ -111,7 +108,7 @@ private struct MaxViewSelector: View {
             .padding(10)
             
             .onChange(of: weekNumber) {
-                network.filterByWeekEmployeeSchedule(currentWeek: weekNumber)
+                employeeScheduleViewModel.filterByWeekEmployeeSchedule(currentWeek: weekNumber)
 //                // при изменении недели фильтрация расписания
             }
         }
@@ -120,21 +117,21 @@ private struct MaxViewSelector: View {
 
 private struct MinViewSelector: View {
     
-    let weekNumber: WeeksInPicker
-    let weekDay: DaysInPicker
-    
+    let weekDay: String
+    let weekNumber: String
+
     var body: some View {
         HStack {
             VStack(alignment: .leading) {
                 Text("День недели:")
                     .font(.system(size: 16, weight: .semibold))
-                Text("\(weekDay.filterByDay)")
+                Text(weekDay)
             }
             Spacer()
             VStack(alignment: .leading) {
                 Text("Неделя:")
                     .font(.system(size: 16, weight: .semibold))
-                Text("\(weekNumber.inString)")
+                Text(weekNumber)
             }
         }
         .padding(10)

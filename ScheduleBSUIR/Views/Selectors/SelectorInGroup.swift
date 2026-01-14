@@ -8,8 +8,6 @@
 import SwiftUI
 
 struct SelectorViewForGroup: View {
-    @EnvironmentObject var network: ViewModelForNetwork
-    
     let funcs = MoreFunctions()
     
 //    let calendar = Calendar.current
@@ -28,7 +26,7 @@ struct SelectorViewForGroup: View {
             HStack {
                 #warning("Кнопку тоже надо вынести")
                 Button {
-                    funcs.findToday(todayWeek: todayWeek, weekNumber: &weekNumber, weekDay: &weekDay)
+                    funcs.findToday(selectedWeekNumber: &weekNumber, weekDay: &weekDay)
                 } label: {
                     Text("К сегодняшнему дню")
                         .padding(EdgeInsets(top: 2, leading: 8, bottom: 2, trailing: 8))
@@ -52,7 +50,7 @@ struct SelectorViewForGroup: View {
                 if showAll {
                     MaxViewSelector(subGroup: $subGroup, weekNumber: $weekNumber, weekDay: $weekDay)
                 } else {
-                    MinViewSelector(subGroup: subGroup, weekNumber: weekNumber, weekDay: weekDay)
+                    MinViewSelector(weekDay: weekDay.filterByDay, subGroup: subGroup.inString, weekNumber: weekNumber.inString)
                 }
                 
             }
@@ -69,15 +67,12 @@ struct SelectorViewForGroup: View {
     @Previewable @State var weekDay: DaysInPicker = .monday
     
     SelectorViewForGroup(todayWeek: 1, subGroup: $subGroup, weekNumber: $weekNumber, weekDay: $weekDay)
-        .environmentObject(ViewModelForNetwork())
 }
 
 
 private struct MaxViewSelector: View {
     
-    @EnvironmentObject var network: ViewModelForNetwork
-    
-    
+    @EnvironmentObject var groupScheduleViewModel: NetworkViewModelForScheduleGroups
     @Binding var subGroup: SubGroupInPicker
     @Binding var weekNumber: WeeksInPicker
     @Binding var weekDay: DaysInPicker
@@ -129,12 +124,12 @@ private struct MaxViewSelector: View {
             }
             .padding(10)
             .onChange(of: subGroup) {
-                network.filterGroupSchedule(currentWeek: weekNumber, subGroup: subGroup)
+                groupScheduleViewModel.filterGroupSchedule(currentWeek: weekNumber, subGroup: subGroup)
 //                // при изменении подгруппы фильтрация расписания
             }
 //            
             .onChange(of: weekNumber) {
-                network.filterGroupSchedule(currentWeek: weekNumber, subGroup: subGroup)
+                groupScheduleViewModel.filterGroupSchedule(currentWeek: weekNumber, subGroup: subGroup)
 //                // при изменении недели фильтрация расписания
             }
         }
@@ -143,28 +138,28 @@ private struct MaxViewSelector: View {
 
 private struct MinViewSelector: View {
     
-    let subGroup: SubGroupInPicker
-    let weekNumber: WeeksInPicker
-    let weekDay: DaysInPicker
+    let weekDay: String
+    let subGroup: String
+    let weekNumber: String
     
     var body: some View {
         HStack {
             VStack(alignment: .leading) {
                 Text("День недели:")
                     .font(.system(size: 16, weight: .semibold))
-                Text("\(weekDay.filterByDay)")
+                Text(weekDay)
             }
             Spacer()
             VStack(alignment: .leading) {
                 Text("Подгруппа:")
                     .font(.system(size: 16, weight: .semibold))
-                Text("\(subGroup.inString)")
+                Text(subGroup)
             }
             Spacer()
             VStack(alignment: .leading) {
                 Text("Неделя:")
                     .font(.system(size: 16, weight: .semibold))
-                Text("\(weekNumber.inString)")
+                Text(weekNumber)
             }
         }
         .padding(10)

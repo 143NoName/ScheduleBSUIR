@@ -130,12 +130,13 @@ struct MoreFunctions {
         return ""
     }
 
-    @AppStorage("сurrentweekNumber", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var сurrentweekNumber: Int = 0
+    @AppStorage("weekNumber", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var weekNumber: Int = 0
     
     // переход к сегодняшнему дню
-    func findToday(todayWeek: Int, weekNumber: inout WeeksInPicker, weekDay: inout DaysInPicker) {
-        if let updateWeekNum = WeeksInPicker(rawValue: сurrentweekNumber) {
-            weekNumber = updateWeekNum
+    func findToday(selectedWeekNumber: inout WeeksInPicker, weekDay: inout DaysInPicker) {
+        print(weekNumber)
+        if let updateWeekNum = WeeksInPicker(rawValue: weekNumber) {
+            selectedWeekNumber = updateWeekNum
         }
         
         if let currentDay = DaysInPicker(rawValue: getWeekDay())  {

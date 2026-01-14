@@ -85,7 +85,7 @@ struct TabBarView: View {
                     
                 }.value
                 
-                appStorage.saveWeekNumberToAppStorage(network.currentWeek)
+                appStorage.saveWeekNumberToAppStorage(weekViewModel.currentWeek)
             }
             
 //            #warning("Создание большого количество потоков")
