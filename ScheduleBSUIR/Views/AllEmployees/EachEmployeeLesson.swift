@@ -86,12 +86,14 @@ struct EachEmployeeLesson: View {
             
             VStack(alignment: .leading) {
                 Text("\(lesson.lessonTypeAbbrev) по \(lesson.subject)")
-                Text("\(lesson.auditories.first ?? "")")
                 
-                #warning("Lesson требуется в контексте Widget, но тогда перестает быть виден let funcs = MoreFunctions() (типо он только для приложения, но не для Widget)")
+                if let auditories = lesson.auditories.first {
+                    Text(auditories)
+                }
+                
                 if !funcs.comparisonLessonOverDate(lesson: lesson).isEmpty {
                     Text("\(funcs.comparisonLessonOverDate(lesson: lesson))")
-                        .font(.system(size: 16, weight: .bold))
+                        .font(.system(size: 14, weight: .bold))
                         .foregroundStyle(Color.red)
                 }
             }

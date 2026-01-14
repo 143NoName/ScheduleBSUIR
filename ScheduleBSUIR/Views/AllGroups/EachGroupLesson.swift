@@ -95,11 +95,14 @@ struct EachGroupLesson: View {
             
             VStack(alignment: .leading) {
                 Text("\(lesson.lessonTypeAbbrev) по \(lesson.subject)")
-                Text("\(lesson.auditories.first ?? "")")
+                
+                if let auditories = lesson.auditories.first {
+                    Text(auditories)
+                }
                 
                 if !funcs.comparisonLessonOverDate(lesson: lesson).isEmpty {
                     Text("\(funcs.comparisonLessonOverDate(lesson: lesson))")
-                        .font(.system(size: 16, weight: .bold))
+                        .font(.system(size: 14, weight: .bold))
                         .foregroundStyle(Color.red)
                 }
             }
@@ -107,7 +110,6 @@ struct EachGroupLesson: View {
             Spacer()
             
             calcImageGroup
-            
             
             AsyncImage(url: {
                             if let employees = lesson.employees, !employees.isEmpty,
@@ -119,21 +121,16 @@ struct EachGroupLesson: View {
                         }()
             ) { phase in
                 switch phase {
-                case .empty:
-                    ProgressView()
-                        .frame(width: 35, height: 35)
                 case .success(let image):
                     image
                         .resizable()
                         .frame(width: 35, height: 35)
                         .clipShape(RoundedRectangle(cornerRadius: 15))
-                case .failure:
+                default:
                     Image("PlainPhoto")
                         .resizable()
                         .frame(width: 35, height: 35)
                         .clipShape(RoundedRectangle(cornerRadius: 15))
-                @unknown default:
-                    EmptyView()
                 }
             }
             .padding(.leading, 10)

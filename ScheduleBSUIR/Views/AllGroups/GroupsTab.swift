@@ -67,7 +67,7 @@ struct GroupsTab: View {
 
 #Preview {
     GroupsTab()
-        .environmentObject(ViewModelForNetwork())
+        .environmentObject(NetworkViewModelForListGroups())
 }
 
 private struct ViewEachGroup: View {
@@ -78,22 +78,19 @@ private struct ViewEachGroup: View {
         VStack(alignment: .leading) {
             Text(group.name)
                 .font(.system(size: 16, weight: .medium))
-            HStack {
+            HStack(spacing: 10) {
                 if let facultyAbbrev = group.facultyAbbrev {
                     Text(facultyAbbrev)
                 } else {
                     Text("Не известно")
                 }
-                Spacer()
                 if let specialityAbbrev = group.specialityAbbrev {
                     Text(specialityAbbrev)
                 }
-                Spacer()
                 if let course = group.course {
                     Text("\(course) курс")
                 }
             }
-            .frame(width: 200)
             .font(.system(size: 14, weight: .light))
         }
     }

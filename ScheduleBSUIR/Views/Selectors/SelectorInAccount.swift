@@ -10,8 +10,6 @@ import WidgetKit
 
 struct SelectorViewForPersonalAccount: View {
     @EnvironmentObject var appStorageSaveKey: AppStorageSave
-    @EnvironmentObject var network: ViewModelForNetwork
-    
     @State var showAll: Bool = true
         
     var body: some View {
@@ -94,8 +92,8 @@ struct ButtonShowMaxOrMin: View {
 // ученик
 struct MaxViewGroupInSelector: View {
     
-    @EnvironmentObject var network: ViewModelForNetwork
     @EnvironmentObject var appStorageSaveKey: AppStorageSave
+    @EnvironmentObject var groupListViewModel: NetworkViewModelForListGroups
         
     var body: some View {
         HStack {
@@ -148,7 +146,7 @@ struct MaxViewGroupInSelector: View {
         .padding(EdgeInsets(top: 10, leading: 10, bottom: 0, trailing: 10))
         
         .navigationDestination(for: String.self) { _ in
-            UniversalPicker(selected: $appStorageSaveKey.favoriteGroup, title: "Преподаватели", items: network.arrayOfGroupsNum, value: \.name, secondValue: \.name)
+            UniversalPicker(selected: $appStorageSaveKey.favoriteGroup, title: "Преподаватели", items: groupListViewModel.arrayOfGroupsNum, value: \.name, secondValue: \.name)
         }
     }
 }
@@ -158,7 +156,7 @@ struct MaxViewGroupInSelector: View {
 struct MaxViewEmployeeInSelector: View {
     
     @EnvironmentObject var appStorageSaveKey: AppStorageSave
-    @EnvironmentObject var network: ViewModelForNetwork
+    @EnvironmentObject var employeeListViewModel: NetworkViewModelForListEmployees
         
     var employeeNameToFio: String {
         if appStorageSaveKey.employeeName != "Не выбрано" {
@@ -189,14 +187,14 @@ struct MaxViewEmployeeInSelector: View {
                         .clipShape(RoundedRectangle(cornerRadius: 22))
                 }
                 Spacer()
-                Text("\(employeeNameToFio)")
+                Text(employeeNameToFio)
                 Spacer()
             }
         }
         .padding(EdgeInsets(top: 10, leading: 10, bottom: 0, trailing: 10))
         
         .navigationDestination(for: String.self) { _ in
-            UniversalPicker(selected: $appStorageSaveKey.employeeName, title: "Преподаватели", items: network.scheduleForEmployees, value: \.fio, secondValue: \.urlId)
+            UniversalPicker(selected: $appStorageSaveKey.employeeName, title: "Преподаватели", items: employeeListViewModel.scheduleForEmployees, value: \.fio, secondValue: \.urlId)
         }
     }
 }

@@ -92,7 +92,20 @@ struct EachGroup: View {
             #warning("Тут можно использовать недели из appStorage")
         }
         .navigationTitle(pageName)
-//        .navigationBarTitleDisplayMode(.inline)
+
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button {
+                    dismiss()
+                } label: {
+                    HStack {
+                        Image(systemName: "chevron.left")
+                        Text("Группы")
+                    }
+                }
+            }
+        }
         
         .refreshable {
             groupScheduleViewModel.scheduleForEachGroupInNull()

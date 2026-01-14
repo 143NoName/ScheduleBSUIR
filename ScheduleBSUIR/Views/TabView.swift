@@ -35,7 +35,7 @@ struct TabBarView: View {
                  private var appStorage = AppStorageService() // плохо, что view знает о сервисе, можно сдеать viewModel
     
     @State private var selectedTab: Int = 2
-//    @State private var splashScreen: Bool = true    
+//    @State private var splashScreen: Bool = true
     
 //    @State private var isPresentedSplashScreen: Bool = true
 //    @State var scale: CGFloat = 1
