@@ -11,15 +11,25 @@ struct AppStorageServiceKey: EnvironmentKey {
     static let defaultValue: AppStorageService? = nil  // Может быть optional
 }
 
+//struct IsPortraitOniPhone: EnvironmentKey {
+//    static let defaultValue: Bool = false
+//}
 
 extension EnvironmentValues {
     var appStorageKey: AppStorageService? {
         get { self[AppStorageServiceKey.self] }
         set { self[AppStorageServiceKey.self] = newValue }
     }
+//    var isPortraitOniPhone: Bool {
+//        get { self[IsPortraitOniPhone.self] }
+//        set { self[IsPortraitOniPhone.self] = newValue }
+//    }
 }
 
 struct TabBarView: View {
+    
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass
+    @Environment(\.verticalSizeClass) var verticalSizeClass
     
     @StateObject private var weekViewModel = NetworkViewModelForWeek()
     @StateObject private var groupListViewModel = NetworkViewModelForListGroups()
@@ -40,6 +50,17 @@ struct TabBarView: View {
 //    @State private var isPresentedSplashScreen: Bool = true
 //    @State var scale: CGFloat = 1
 //    @State var opacity: Double = 1
+    
+    
+//    var isPortraitOniPhone: Bool { // проверка ориентации iPhone
+//        if horizontalSizeClass == .compact && verticalSizeClass == .regular {
+//            return true
+//        } else if (horizontalSizeClass == .compact && verticalSizeClass == .compact) || (horizontalSizeClass == .regular && verticalSizeClass == .compact) {
+//            return false
+//        } else {
+//            return true
+//        }
+//    }
     
     var body: some View {
 //        ZStack { // для начального окна
@@ -84,7 +105,6 @@ struct TabBarView: View {
                     
                     
                 }.value
-                
                 appStorage.saveWeekNumberToAppStorage(weekViewModel.currentWeek)
             }
             
@@ -116,6 +136,7 @@ struct TabBarView: View {
         
         .environmentObject(network)
         .environment(\.appStorageKey, appStorage)
+//        .environment(\.isPortraitOniPhone, isPortraitOniPhone)
         .environmentObject(appStorageSave)
     }
 }

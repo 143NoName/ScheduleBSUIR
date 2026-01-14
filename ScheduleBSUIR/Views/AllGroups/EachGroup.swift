@@ -27,8 +27,7 @@ struct EachGroup: View {
     let groupName: String
         
     @State var isShowMore: Bool = false
-    #warning("При просмотре расписания отдельного учителя или группы нет фильтрации по неделе")
-
+    
     var pageName: String {
         if !groupScheduleViewModel.isLoadingArrayOfScheduleGroup {
             "Загрузка..."
@@ -93,19 +92,18 @@ struct EachGroup: View {
         }
         .navigationTitle(pageName)
 
-        .navigationBarBackButtonHidden(true)
-        .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
-                Button {
-                    dismiss()
-                } label: {
-                    HStack {
-                        Image(systemName: "chevron.left")
-                        Text("Группы")
-                    }
-                }
-            }
-        }
+//        .navigationBarBackButtonHidden(true)
+//        .toolbar {
+//            ToolbarItem(placement: .topBarLeading) {
+//                Button {
+//                    dismiss()
+//                } label: {
+//                    HStack {
+//                        Image(systemName: "chevron.left")
+//                    }
+//                }
+//            }
+//        }
         
         .refreshable {
             groupScheduleViewModel.scheduleForEachGroupInNull()

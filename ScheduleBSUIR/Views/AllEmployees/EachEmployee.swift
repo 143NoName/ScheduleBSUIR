@@ -84,22 +84,23 @@ struct EachEmployee: View {
         }
         .navigationTitle(pageName)
         
-        .navigationBarBackButtonHidden(true)
-        .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
-                Button {
-                    dismiss()
-                } label: {
-                    HStack {
-                        Image(systemName: "chevron.left")
-                        Text("Преподаватели")
-                    }
-                }
-            }
-        }
+//        .navigationBarBackButtonHidden(true)
+//        .toolbar {
+//            ToolbarItem(placement: .topBarLeading) {
+//                Button {
+//                    dismiss()
+//                } label: {
+//                    HStack {
+//                        Image(systemName: "chevron.left")
+//                    }
+//                }
+//            }
+//        }
         
         .refreshable {
+            employeeScheduleViewModel.scheduleForEachEmployeeInNull()
             await employeeScheduleViewModel.getEachEmployeeSchedule(employeeName)
+            employeeScheduleViewModel.filterByWeekEmployeeSchedule(currentWeek: weekNumber)
         }
         
         .task {
@@ -109,9 +110,9 @@ struct EachEmployee: View {
             // фильтрация по неделе и по подгруппе
             employeeScheduleViewModel.filterByWeekEmployeeSchedule(currentWeek: weekNumber)
             
-            if let updateWeekNum = WeeksInPicker(rawValue: weekViewModel.currentWeek) {
-                weekNumber = updateWeekNum
-            }
+//            if let updateWeekNum = WeeksInPicker(rawValue: weekViewModel.currentWeek) {
+//                weekNumber = updateWeekNum
+//            }
         }
         
         .onDisappear {
@@ -127,3 +128,5 @@ struct EachEmployee: View {
             .environmentObject(ViewModelForNetwork())
     }
 }
+
+#warning("При обновлении на не текущей неделе остается на ней, а расписание показывает текущую")

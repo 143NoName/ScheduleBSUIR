@@ -134,7 +134,6 @@ struct MoreFunctions {
     
     // переход к сегодняшнему дню
     func findToday(selectedWeekNumber: inout WeeksInPicker, weekDay: inout DaysInPicker) {
-        print(weekNumber)
         if let updateWeekNum = WeeksInPicker(rawValue: weekNumber) {
             selectedWeekNumber = updateWeekNum
         }
