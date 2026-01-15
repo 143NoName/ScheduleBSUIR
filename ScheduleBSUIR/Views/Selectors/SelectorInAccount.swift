@@ -124,7 +124,8 @@ struct MaxViewGroupInSelector: View {
             .padding(.leading, 10)
             
             // обновление виджета
-//            .onChange(of: favoriteGroup) {
+            .onChange(of: appStorageSaveKey.favoriteGroup) {
+                print(appStorageSaveKey.favoriteGroup)
 //                Task {
 //                    do {
 //                        await network.getScheduleGroup(group: favoriteGroup) // получение расписания
@@ -135,7 +136,7 @@ struct MaxViewGroupInSelector: View {
 //                    
 //                    WidgetCenter.shared.reloadAllTimelines()
 //                }
-//            }
+            }
             // тут при изменении номера группы надо изменять номер группы и ее расписание (номер группы изменяется реактивно, а для изменения группы надо вызывать функцию получения и сохранения расписания)
             
             .onChange(of: appStorageSaveKey.subGroup) {
@@ -179,6 +180,9 @@ struct MaxViewEmployeeInSelector: View {
                 .font(.system(size: 16, weight: .semibold))
                 .padding(.leading)
             HStack {
+                Spacer()
+                Text(employeeNameToFio)
+                Spacer()
                 NavigationLink(value: "choice") {
                     Text("Выбор")
                         .tint(Color.primary)
@@ -186,9 +190,6 @@ struct MaxViewEmployeeInSelector: View {
                         .background(Color.gray.opacity(0.15))
                         .clipShape(RoundedRectangle(cornerRadius: 22))
                 }
-                Spacer()
-                Text(employeeNameToFio)
-                Spacer()
             }
         }
         .padding(EdgeInsets(top: 10, leading: 10, bottom: 0, trailing: 10))
@@ -322,13 +323,11 @@ struct UniversalPicker<T: Identifiable>: View {
     @Binding var selected: String
     @Environment(\.dismiss) var dismiss
     @Environment(\.colorScheme) var colorScheme
-    
-//    let selected: KeyPath<T, String>           // название хранилища в AppStorage
-    
+        
     let title: String                       // pageName
     let items: [T]                          // массив элементов для отображения
     let value: KeyPath<T, String>           // название ключа для получения либо ФИО либо ГРУППА
-    let secondValue: KeyPath<T, String>   // необязательный ключ для urlID преподавателя
+    let secondValue: KeyPath<T, String>     // необязательный ключ для urlID преподавателя
     
     var body: some View {
         ZStack {
@@ -360,6 +359,7 @@ struct UniversalPicker<T: Identifiable>: View {
                                 .tint(Color.primary)
                             Spacer()
                             selected == each[keyPath: value] ? Image(systemName: "checkmark") : nil
+                            #warning("Для преподавателей: при проверке смотрется fio и полное значение (вроде как)")
                         }
                     }
                 }

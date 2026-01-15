@@ -40,7 +40,6 @@ struct TabBarView: View {
     
     
     #warning("Сделать DI")
-    @StateObject private var network = ViewModelForNetwork()
     @StateObject private var appStorageSave = AppStorageSave() // хранилище всех AppStorage
                  private var appStorage = AppStorageService() // плохо, что view знает о сервисе, можно сдеать viewModel
     
@@ -71,7 +70,6 @@ struct TabBarView: View {
                 Tab("Преподаватели", systemImage: "calendar.and.person", value: 1) {
                     EmployeesTab()
                 }
-                
                 if appStorageSave.whoUser == .student && appStorageSave.favoriteGroup != "Не выбрано" {
                     Tab("Моя группа", systemImage: "star", value: 2) {
                         NavigationStack {
@@ -85,7 +83,6 @@ struct TabBarView: View {
                         }
                     }
                 }
-                
                 Tab("Личный кабинет", systemImage: "person.circle", value: 3) {
                     PersonalAccount()
                 }
@@ -98,14 +95,14 @@ struct TabBarView: View {
                     await employeeListViewModel.getArrayOfEmployees()      // получение списка преподавателей
                     
                     do {
-                        try await appStorage.saveDataForWidgetToAppStorage(network.arrayOfScheduleGroup.nextSchedules)
+                        try await appStorage.saveDataForWidgetToAppStorage(groupScheduleViewModel.arrayOfScheduleGroup.nextSchedules)
                     } catch {
                         print("Неудачная попытка загрузить расписание в AppStorage: \(error)")
                     }
-                    
-                    
                 }.value
+                
                 appStorage.saveWeekNumberToAppStorage(weekViewModel.currentWeek)
+                // запись номера недели в appStorage
             }
             
 //            #warning("Создание большого количество потоков")
@@ -134,7 +131,6 @@ struct TabBarView: View {
         .environmentObject(employeeScheduleViewModel)
         
         
-        .environmentObject(network)
         .environment(\.appStorageKey, appStorage)
 //        .environment(\.isPortraitOniPhone, isPortraitOniPhone)
         .environmentObject(appStorageSave)

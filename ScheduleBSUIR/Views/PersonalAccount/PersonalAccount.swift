@@ -10,7 +10,9 @@ import PhotosUI
 
 struct PersonalAccount: View {
     
-    @EnvironmentObject var network: ViewModelForNetwork
+    @EnvironmentObject var groupListViewModel: NetworkViewModelForListGroups
+    @EnvironmentObject var employeeListViewModel: NetworkViewModelForListEmployees
+    @EnvironmentObject var employeeScheduleViewModel: NetworkViewModelForScheduleEmployees
     @EnvironmentObject var appStorageSaveKey: AppStorageSave // ключи AppStorage
     
     @Environment(\.colorScheme) var colorScheme
@@ -36,11 +38,11 @@ struct PersonalAccount: View {
     func getListStudentOrEmployees() {
         Task {
             if appStorageSaveKey.whoUser == .student {
-                await network.getArrayOfGroupNum()
+                await groupListViewModel.getArrayOfGroupNum()
             } else if appStorageSaveKey.whoUser == .employee {
-                await network.getArrayOfEmployees()
+                await employeeListViewModel.getArrayOfEmployees()
                 if employeeName != "Не выбрано" {
-                    await network.getEachEmployeeSchedule(employeeName)
+                    await employeeScheduleViewModel.getEachEmployeeSchedule(employeeName)
                 }
             }
         }
@@ -116,13 +118,13 @@ struct PersonalAccount: View {
                             }
                             if appStorageSaveKey.whoUser == .employee {
                                 Section {
-                                    if !network.isLoadingScheduleForEmployees {
+                                    if employeeListViewModel.isLoadingScheduleForEmployees {
                                         ProgressView()
                                     } else {
                                         VStack {
-                                            Text("\(network.scheduleForEachEmployee.employeeDto.fullName)")
-                                            Text("\(network.scheduleForEachEmployee.employeeDto.email ?? "")")
-                                            Text("\(network.scheduleForEachEmployee.employeeDto.fullName)")
+                                            Text("\(employeeScheduleViewModel.scheduleForEachEmployee.employeeDto.fullName)")
+                                            Text("\(employeeScheduleViewModel.scheduleForEachEmployee.employeeDto.email ?? "")")
+                                            Text("\(employeeScheduleViewModel.scheduleForEachEmployee.employeeDto.fullName)")
                                         }
                                     }
                                 }
@@ -174,11 +176,13 @@ struct PersonalAccount: View {
 
 #Preview() {
     @Previewable @State var whoUser: WhoUser = .employee
-    let viewModelForNetwork = ViewModelForNetwork()
-    viewModelForNetwork.arrayOfGroupsNum = []
+    
     
     return NavigationView {
         PersonalAccount()
-            .environmentObject(viewModelForNetwork)
+            .environmentObject(NetworkViewModelForListGroups())
+            .environmentObject(NetworkViewModelForListEmployees())
+            .environmentObject(NetworkViewModelForScheduleEmployees())
+            .environmentObject(AppStorageSave())
     }
 }

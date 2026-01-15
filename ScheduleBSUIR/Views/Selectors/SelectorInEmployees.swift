@@ -8,9 +8,8 @@
 import SwiftUI
 
 struct SelectorViewForEmployee: View {
+        
     let funcs = MoreFunctions()
-
-    let todayWeek: Int
     
     @State var showAll: Bool = true
     
@@ -58,7 +57,7 @@ struct SelectorViewForEmployee: View {
     @Previewable @State var weekNumber: WeeksInPicker = .first
     @Previewable @State var weekDay: DaysInPicker = .monday
     
-     return SelectorViewForEmployee(todayWeek: 1, weekNumber: $weekNumber, weekDay: $weekDay)
+     return SelectorViewForEmployee(weekNumber: $weekNumber, weekDay: $weekDay)
     
 }
 

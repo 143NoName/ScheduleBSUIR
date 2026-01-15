@@ -341,6 +341,28 @@ class NetworkViewModelForScheduleEmployees: ObservableObject, NetworkViewModelFo
     }
 }
 
+//// MARK: - Универсальная загрузка расписания для пользователя
+//
+//protocol NetworkViewModelForUniversalScheduleProtocol {
+//    
+//}
+//
+//class NetworkViewModelForUniversalSchedule<T: Identifiable>: ObservableObject, NetworkViewModelForUniversalScheduleProtocol {
+//    
+//    private let appStorageService: AppStorageServiceProtocol
+//    private let networkService: NetworkServiceProtocol
+//    
+//    init(appStorageService: AppStorageServiceProtocol = AppStorageService(), networkService: NetworkServiceProtocol = NetworkService()) {
+//        self.appStorageService = appStorageService
+//        self.networkService = networkService
+//    }
+//    
+//    @Published var arraySchedule: [T] = []
+//    @Published var
+//    @Published var errorOfSchedule: String = ""
+//    
+//}
+
 
 
 

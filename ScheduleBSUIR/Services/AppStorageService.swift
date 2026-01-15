@@ -14,15 +14,9 @@ protocol AppStorageServiceProtocol {
 
 class AppStorageService: AppStorageServiceProtocol {
     
-    // для загрузки
     @AppStorage("groupSchedule", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var groupSchedule: Data?
-//    @AppStorage("favoriteGroup", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var favoriteGroup: String = "Не выбрано"
-    // для загрузки
-    
-    // для загрузки и фильтрации
     @AppStorage("weekNumber", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var weekNumber: Int = 0
     @AppStorage("subGroup", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var subGroup: Int = 0
-    // для загрузки и фильтрации
     
     let encoder = JSONEncoder()
     

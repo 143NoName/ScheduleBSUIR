@@ -10,9 +10,6 @@ import SwiftUI
 struct SelectorViewForGroup: View {
     let funcs = MoreFunctions()
     
-    #warning("Как будто не нужен")
-    let todayWeek: Int
-    
     @State var showAll: Bool = true
     
     @Binding var subGroup: SubGroupInPicker
@@ -63,7 +60,7 @@ struct SelectorViewForGroup: View {
     @Previewable @State var weekNumber: WeeksInPicker = .first
     @Previewable @State var weekDay: DaysInPicker = .monday
     
-    SelectorViewForGroup(todayWeek: 1, subGroup: $subGroup, weekNumber: $weekNumber, weekDay: $weekDay)
+    SelectorViewForGroup(subGroup: $subGroup, weekNumber: $weekNumber, weekDay: $weekDay)
 }
 
 

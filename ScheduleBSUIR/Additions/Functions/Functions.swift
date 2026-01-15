@@ -12,11 +12,13 @@ struct MoreFunctions {
     
     static let shared = MoreFunctions()
 
+
     // фильтрация по дню недели используя enum DaysInPicker
     func comparisonDay(_ selectedDay: DaysInPicker, lessonDay: String) -> Bool {
         return selectedDay.filterByDay == lessonDay
     }
     
+        #warning("Тут пизда")
     func saveInUserDefaults(_ data: Schedules, weekDay: DaysInPicker, weenNumber: Int, subGroupe: SubGroupInPicker, favoriteGroup: String) {
         let userDefaultSave = UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")!
         
@@ -129,7 +131,7 @@ struct MoreFunctions {
         }
         return ""
     }
-
+    
     @AppStorage("weekNumber", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var weekNumber: Int = 0
     
     // переход к сегодняшнему дню
@@ -137,20 +139,19 @@ struct MoreFunctions {
         if let updateWeekNum = WeeksInPicker(rawValue: weekNumber) {
             selectedWeekNumber = updateWeekNum
         }
-        
         if let currentDay = DaysInPicker(rawValue: getWeekDay())  {
             weekDay = currentDay
         }
     }
     
-    // получение сегодняшнего дня недели правильно
+    // получение сегодняшнего дня недели
     func getWeekDay() -> Int {
         let calendar = Calendar.current
         
         let day = calendar.component(.weekday, from: Date())
                 
         let index: Int
-        
+       
         switch day {
         case 1: index = 0
         case 2: index = 1
@@ -169,18 +170,18 @@ struct MoreFunctions {
     
      // РАБОТА С APPSTORAGE
     
-    @AppStorage("groupSchedule", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var groupSchedule: Data?
-    @AppStorage("groupName", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var groupName: String = ""
-    
-    let encoder = JSONEncoder()
-    
-    // сохранение данных в AppStorage
-    func saveDataForWidgetToAppStorage(_ data: Schedules) throws {
-        do {
-            let rawData = try encoder.encode(data)
-            groupSchedule = rawData
-        } catch {
-            throw error
-        }
-    }
+//    @AppStorage("groupSchedule", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var groupSchedule: Data?
+//    @AppStorage("groupName", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var groupName: String = ""
+//    
+//    let encoder = JSONEncoder()
+//    
+//    // сохранение данных в AppStorage
+//    func saveDataForWidgetToAppStorage(_ data: Schedules) throws {
+//        do {
+//            let rawData = try encoder.encode(data)
+//            groupSchedule = rawData
+//        } catch {
+//            throw error
+//        }
+//    }
 }

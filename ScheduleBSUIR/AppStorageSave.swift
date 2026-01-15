@@ -15,6 +15,7 @@ class AppStorageSave: ObservableObject {
         static let favoriteGroup = "favoriteGroup"
         static let employeeName = "employeeName"
         static let weekNumber = "weekNumber"
+        static let weekNumberInEnum = "weekNumberInEnum"
         static let subGroup = "subGroup"
         static let whoUser = "whoUser"
     }
@@ -32,6 +33,12 @@ class AppStorageSave: ObservableObject {
     @AppStorage(KeysAppStorage.weekNumber, store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var weekNumber: Int = 0 {                           // число номера текущей недели (в маленьком и срднем только для фильтрации, в большой + будет отображаться)
         didSet { objectWillChange.send() }
     }
+    
+    @AppStorage(KeysAppStorage.weekNumber, store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var weekNumberInEnum: Int = 0 {                           // число номера текущей недели (в маленьком и срднем только для фильтрации, в большой + будет отображаться)
+        didSet { objectWillChange.send() }
+    }
+    
+    // только для виджета
     @AppStorage(KeysAppStorage.subGroup, store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var subGroup: SubGroupInPicker = .all {               // число номер выбранной подгруппы (в маленьком и срднем только для фильтрации, в большой + будет отображаться)
         didSet { objectWillChange.send() }
     }

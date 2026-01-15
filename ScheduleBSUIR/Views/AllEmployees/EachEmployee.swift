@@ -18,10 +18,8 @@ struct EachEmployee: View {
     
     let employeeName: String
     
-    @AppStorage("weekDay") var weekDay: DaysInPicker = .monday
-    @AppStorage("subGroupe") var subGroup: SubGroupInPicker = .all
-    @AppStorage("weekNumber") var weekNumber: WeeksInPicker = .first
-
+    @State var weekDay: DaysInPicker = .monday
+    @State var weekNumber: WeeksInPicker = .first
     
     var pageName: String {
         if !employeeScheduleViewModel.isLoadingScheduleForEachEmployee {
@@ -80,7 +78,7 @@ struct EachEmployee: View {
             }
             .scrollContentBackground(.hidden)
             
-            SelectorViewForEmployee(todayWeek: weekViewModel.currentWeek, weekNumber: $weekNumber, weekDay: $weekDay)
+            SelectorViewForEmployee(weekNumber: $weekNumber, weekDay: $weekDay)
         }
         .navigationTitle(pageName)
         
@@ -98,25 +96,21 @@ struct EachEmployee: View {
 //        }
         
         .refreshable {
-            employeeScheduleViewModel.scheduleForEachEmployeeInNull()
-            await employeeScheduleViewModel.getEachEmployeeSchedule(employeeName)
-            employeeScheduleViewModel.filterByWeekEmployeeSchedule(currentWeek: weekNumber)
-            funcs.findToday(selectedWeekNumber: &weekNumber, weekDay: &weekDay) // для отображения сегодняшей даты
+            employeeScheduleViewModel.scheduleForEachEmployeeInNull()                           // очистка расписания
+            await employeeScheduleViewModel.getEachEmployeeSchedule(employeeName)               // получение расписания преподавателя
+            employeeScheduleViewModel.filterByWeekEmployeeSchedule(currentWeek: weekNumber)     // фильтрация по неделе и по подгруппе
+            funcs.findToday(selectedWeekNumber: &weekNumber, weekDay: &weekDay)                 // для отображения сегодняшей даты
         }
         
         .task {
-            // получение расписания преподавателя
-            await employeeScheduleViewModel.getEachEmployeeSchedule(employeeName)
-            
-            // фильтрация по неделе и по подгруппе
-            employeeScheduleViewModel.filterByWeekEmployeeSchedule(currentWeek: weekNumber)
-            
-            funcs.findToday(selectedWeekNumber: &weekNumber, weekDay: &weekDay) // для отображения сегодняшей даты
+            await employeeScheduleViewModel.getEachEmployeeSchedule(employeeName)               // получение расписания преподавателя
+            employeeScheduleViewModel.filterByWeekEmployeeSchedule(currentWeek: weekNumber)     // фильтрация по неделе и по подгруппе
+            funcs.findToday(selectedWeekNumber: &weekNumber, weekDay: &weekDay)                 // для отображения сегодняшей даты
         }
         
         .onDisappear {
-            dismiss() // при переходе в другой tab чтобы выходило к списку
-            employeeScheduleViewModel.scheduleForEachEmployeeInNull() // очистить при выходе (ошибки убрать и т.д.)
+            dismiss()                                                                           // при переходе в другой tab чтобы выходило к списку
+            employeeScheduleViewModel.scheduleForEachEmployeeInNull()                           // очистить при выходе (ошибки убрать и т.д.)
         }
     }
 }
@@ -124,8 +118,7 @@ struct EachEmployee: View {
 #Preview {
     NavigationStack {
         EachEmployee(employeeName: "i-abramov")
-            .environmentObject(ViewModelForNetwork())
+            .environmentObject(NetworkViewModelForWeek())
+            .environmentObject(NetworkViewModelForScheduleEmployees())
     }
 }
-
-#warning("При обновлении на не текущей неделе остается на ней, а расписание показывает текущую")

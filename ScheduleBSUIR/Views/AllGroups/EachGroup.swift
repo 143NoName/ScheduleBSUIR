@@ -19,9 +19,9 @@ struct EachGroup: View {
     
     let funcs = MoreFunctions() // так не правильно
     
-    @AppStorage("weekDay") var weekDay: DaysInPicker = .monday
-    @AppStorage("subGroupe") var subGroup: SubGroupInPicker = .all
-    @AppStorage("weekNumber") var weekNumber: WeeksInPicker = .first
+    @State var weekDay: DaysInPicker = .monday
+    @State var weekNumber: WeeksInPicker = .first
+    @State var subGroup: SubGroupInPicker = .all
             
     let calendar = Calendar.current
     let groupName: String
@@ -87,8 +87,7 @@ struct EachGroup: View {
             }
             .scrollContentBackground(.hidden)
             
-            SelectorViewForGroup(todayWeek: weekViewModel.currentWeek, subGroup: $subGroup, weekNumber: $weekNumber, weekDay: $weekDay)
-            #warning("Тут можно использовать недели из appStorage")
+            SelectorViewForGroup(subGroup: $subGroup, weekNumber: $weekNumber, weekDay: $weekDay)
         }
         .navigationTitle(pageName)
 
@@ -124,21 +123,14 @@ struct EachGroup: View {
         }
         
         .task {
-            // получение расписания группы
-            await groupScheduleViewModel.getScheduleGroup(group: groupName)
-            
-            // фильтрация по неделе и по подгруппе
-            groupScheduleViewModel.filterGroupSchedule(currentWeek: weekNumber, subGroup: subGroup)
-            
-            // нахождение сегодняшнего дня (недели и дня недели)
-            funcs.findToday(selectedWeekNumber: &weekNumber, weekDay: &weekDay)
-            #warning("Тут можно использовать недели из appStorage")
+            await groupScheduleViewModel.getScheduleGroup(group: groupName)                             // получение расписания группы
+            groupScheduleViewModel.filterGroupSchedule(currentWeek: weekNumber, subGroup: subGroup)     // фильтрация по неделе и по подгруппе
+            funcs.findToday(selectedWeekNumber: &weekNumber, weekDay: &weekDay)                         // нахождение сегодняшнего дня (недели и дня недели)
         }
         
         .onDisappear {
             dismiss() // при переходе в другой tab чтобы выходило к списку
             groupScheduleViewModel.scheduleForEachGroupInNull() // очистить при выходе (ошибки убрать и т.д.)
-            
         }
     }
 }
@@ -147,7 +139,7 @@ struct EachGroup: View {
     NavigationStack {
         EachGroup(groupName: "261402")
             .environmentObject(ViewModelForNetwork())
-
+            .environmentObject(NetworkViewModelForWeek())
+            .environmentObject(NetworkViewModelForScheduleGroups())
     }
-    
 }
