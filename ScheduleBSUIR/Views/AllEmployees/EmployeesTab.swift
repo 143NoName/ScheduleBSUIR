@@ -68,7 +68,6 @@ struct EmployeesTab: View {
 
 #Preview {
     EmployeesTab()
-        .environmentObject(ViewModelForNetwork())
 }
 
 private struct EmployeesEach: View {

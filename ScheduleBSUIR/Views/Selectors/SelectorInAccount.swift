@@ -92,6 +92,10 @@ struct MaxViewGroupInSelector: View {
     @EnvironmentObject var appStorageSaveKey: AppStorageSave
     @EnvironmentObject var groupListViewModel: NetworkViewModelForListGroups
     
+    let networkService = NetworkViewModelForGetScheduleGroup() // эксперимент
+    
+    @StateObject private var viewModelForAppStorage = ViewModelForAppStorage()
+    
     @AppStorage("scheduleForWidget", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var scheduleForWidget: Data?
         
     var body: some View {
@@ -122,9 +126,16 @@ struct MaxViewGroupInSelector: View {
             }
             .padding(.leading, 10)
             
-            // обновление виджета
-            .onChange(of: groupListViewModel.arrayOfGroupsNum) {
-                print("onrbwr")
+            .onChange(of: appStorageSaveKey.favoriteGroup) {
+                Task {
+                    print("Начало")
+                    let data = await networkService.getSchedule(appStorageSaveKey.favoriteGroup)
+                    if let data {
+                        viewModelForAppStorage.saveFavoriteGroupScheduleToAppStorage(data)
+                    }
+                }
+                
+                
                 // тут надо загружать расписание в AppStorage groupSchedule
                 
 //                Task {
@@ -160,6 +171,7 @@ struct MaxViewEmployeeInSelector: View {
     @EnvironmentObject var appStorageSaveKey: AppStorageSave
     @EnvironmentObject var employeeListViewModel: NetworkViewModelForListEmployees
     
+    let networkService = NetworkViewModelForGetScheduleGroup()
     
     @StateObject private var viewModelForAppStorage = ViewModelForAppStorage()
     
@@ -200,11 +212,11 @@ struct MaxViewEmployeeInSelector: View {
         }
         .padding(EdgeInsets(top: 10, leading: 10, bottom: 0, trailing: 10))
         
-        .onChange(of: employeeListViewModel.scheduleForEmployees) {
-            print(employeeListViewModel.scheduleForEmployees)
+        .onChange(of: appStorageSaveKey.employeeName) {
+            print(appStorageSaveKey.employeeName)
             
-//            viewModelForAppStorage.saveFavoriteEmployeeScheduleToAppStorage(<#T##EachEmployeeResponse#>)
-            #error("Надо создать сетевой запрос, который будет просто возвращять значение,а не записывать его в переменную. Тут надо вызвать функцию из viewModelForAppStorage для загрузки тех данных, которые придут от сетевого запроса. Или записать данные в локальную тут переменную и потом эту переменую передавать в запись в AppStorage")
+//            viewModelForAppStorage.saveFavoriteEmployeeScheduleToAppStorage(networkService.getSchedule(appStorageSaveKey.employeeName))
+//            #error("Надо создать сетевой запрос, который будет просто возвращять значение,а не записывать его в переменную. Тут надо вызвать функцию из viewModelForAppStorage для загрузки тех данных, которые придут от сетевого запроса. Или записать данные в локальную тут переменную и потом эту переменую передавать в запись в AppStorage")
         }
         
         .navigationDestination(for: String.self) { _ in

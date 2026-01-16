@@ -72,12 +72,23 @@ struct TabBarView: View {
                 }
                 if appStorageSave.whoUser == .student && appStorageSave.favoriteGroup != "Не выбрано" {
                     Tab("Моя группа", systemImage: "star", value: 2) {
-                        NavigationStack {
-                            EachGroup(groupName: appStorageSave.favoriteGroup)
+                        Group {
+                            Text("\(viewModelForAppStorage.scheduleGroupFromAppStorage)")
                         }
+                        .task {
+                            viewModelForAppStorage.getFavoriteGroupScheduleFromAppStorage()
+                        }
+                        
+                        
+//                        NavigationStack {
+//                            EachGroup(groupName: appStorageSave.favoriteGroup)
+//                        }
                     }
                 } else if appStorageSave.whoUser == .employee && appStorageSave.employeeName != "Не выбрано" {
                     Tab("Мое расписание", systemImage: "star", value: 2) {
+                        
+                        
+                        
                         NavigationStack {
                             EachEmployee(employeeName: appStorageSave.employeeName)
                         }

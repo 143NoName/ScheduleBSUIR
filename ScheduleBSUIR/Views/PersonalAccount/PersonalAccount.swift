@@ -17,7 +17,7 @@ struct PersonalAccount: View {
     
     @Environment(\.colorScheme) var colorScheme
     
-    var appStorage = AppStorageService()
+    var appStorage = SaveForWidgetService()
         
     @State private var isShowPhotosPicker: Bool = false
     @State private var selectedItem: PhotosPickerItem?       // для photosPicker

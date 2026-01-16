@@ -137,8 +137,7 @@ struct EachGroup: View {
 
 #Preview {
     NavigationStack {
-        EachGroup(groupName: "261402")
-            .environmentObject(ViewModelForNetwork())
+        EachGroup(groupName: "310101")
             .environmentObject(NetworkViewModelForWeek())
             .environmentObject(NetworkViewModelForScheduleGroups())
     }
