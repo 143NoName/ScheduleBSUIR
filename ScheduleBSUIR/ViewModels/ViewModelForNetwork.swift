@@ -378,11 +378,11 @@ class NetworkViewModelForScheduleEmployees: ObservableObject, NetworkViewModelFo
 
 class ViewModelForNetwork: ObservableObject {
     
-    private let appStorageService: AppStorageServiceProtocol
+    private let saveForWidget: AppStorageServiceProtocol
     private let networkService: NetworkServiceProtocol
     
-    init(appStorageService: AppStorageServiceProtocol = AppStorageService(), networkService: NetworkServiceProtocol = NetworkService()) {
-        self.appStorageService = appStorageService
+    init(saveForWidget: AppStorageServiceProtocol = SaveForWidget(), networkService: NetworkServiceProtocol = NetworkService()) {
+        self.saveForWidget = saveForWidget
         self.networkService = networkService
     }
         

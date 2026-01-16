@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-struct AppStorageServiceKey: EnvironmentKey {
-    static let defaultValue: AppStorageService? = nil  // Может быть optional
+struct SaveForWidgetServiceKey: EnvironmentKey {
+    static let defaultValue: SaveForWidgetService? = nil  // Может быть optional
 }
 
 //struct IsPortraitOniPhone: EnvironmentKey {
@@ -16,9 +16,9 @@ struct AppStorageServiceKey: EnvironmentKey {
 //}
 
 extension EnvironmentValues {
-    var appStorageKey: AppStorageService? {
-        get { self[AppStorageServiceKey.self] }
-        set { self[AppStorageServiceKey.self] = newValue }
+    var saveForWidgetService: SaveForWidgetService? {
+        get { self[SaveForWidgetServiceKey.self] }
+        set { self[SaveForWidgetServiceKey.self] = newValue }
     }
 //    var isPortraitOniPhone: Bool {
 //        get { self[IsPortraitOniPhone.self] }
@@ -37,11 +37,11 @@ struct TabBarView: View {
     @StateObject private var employeeListViewModel = NetworkViewModelForListEmployees()
     @StateObject private var employeeScheduleViewModel = NetworkViewModelForScheduleEmployees()
     
-    
+    @StateObject private var viewModelForAppStorage = ViewModelForAppStorage()
     
     #warning("Сделать DI")
     @StateObject private var appStorageSave = AppStorageSave() // хранилище всех AppStorage
-                 private var appStorage = AppStorageService() // плохо, что view знает о сервисе, можно сдеать viewModel
+                 private var saveForWidgetService = SaveForWidgetService() // плохо, что view знает о сервисе, можно сдеать viewModel
     
     @State private var selectedTab: Int = 2
 //    @State private var splashScreen: Bool = true
@@ -95,13 +95,13 @@ struct TabBarView: View {
                     await employeeListViewModel.getArrayOfEmployees()      // получение списка преподавателей
                     
                     do {
-                        try await appStorage.saveDataForWidgetToAppStorage(groupScheduleViewModel.arrayOfScheduleGroup.nextSchedules)
+                        try await saveForWidgetService.saveDataForWidgetToAppStorage(groupScheduleViewModel.arrayOfScheduleGroup.nextSchedules)
                     } catch {
                         print("Неудачная попытка загрузить расписание в AppStorage: \(error)")
                     }
                 }.value
                 
-                appStorage.saveWeekNumberToAppStorage(weekViewModel.currentWeek)
+                saveForWidgetService.saveWeekNumberToAppStorage(weekViewModel.currentWeek)
                 // запись номера недели в appStorage
             }
             
@@ -131,8 +131,7 @@ struct TabBarView: View {
         .environmentObject(employeeScheduleViewModel)
         
         
-        .environment(\.appStorageKey, appStorage)
-//        .environment(\.isPortraitOniPhone, isPortraitOniPhone)
+        .environment(\.saveForWidgetService, saveForWidgetService)
         .environmentObject(appStorageSave)
     }
 }

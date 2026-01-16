@@ -8,19 +8,19 @@
 import SwiftUI
 
 protocol AppStorageServiceProtocol {
+    func filtredDataForWidget(_ data: [FormatedSchedules], weekNumber: Int, subgroup: Int) -> [FormatedSchedules]
     func saveDataForWidgetToAppStorage(_ data: Schedules) throws
-//    func getDataFromAppStorage() throws -> Schedules?
 }
 
-class AppStorageService: AppStorageServiceProtocol {
+class SaveForWidgetService: AppStorageServiceProtocol {
     
-    @AppStorage("groupSchedule", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var groupSchedule: Data?
+    @AppStorage("scheduleForWidget", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var scheduleForWidget: Data?     // само расписание для отображения в виджете
     @AppStorage("weekNumber", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var weekNumber: Int = 0
     @AppStorage("subGroup", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var subGroup: Int = 0
     
     let encoder = JSONEncoder()
     
-    func filrerDataForWidget(_ data: [FormatedSchedules], weekNumber: Int, subgroup: Int) -> [FormatedSchedules] {
+    func filtredDataForWidget(_ data: [FormatedSchedules], weekNumber: Int, subgroup: Int) -> [FormatedSchedules] {
         let formatedData = data.map { schedule in
             let filteredLessons = schedule.lesson.filter { lesson in
                 lesson.weekNumber.contains(weekNumber) &&
@@ -29,32 +29,127 @@ class AppStorageService: AppStorageServiceProtocol {
             }
             return FormatedSchedules(day: schedule.day, lesson: filteredLessons)
         }
-        
         return formatedData
     }
     
-    
-    // загрузка расписания группы а AppStorage
+    // загрузка расписания группы или преподавателя а AppStorage для виджета
     func saveDataForWidgetToAppStorage(_ data: Schedules) throws {
         do {
             let newFormat = data.getFormatedSchedules()
-            let filteredData = filrerDataForWidget(newFormat, weekNumber: weekNumber, subgroup: subGroup)
-            // тут все работает исправно
+            let filteredData = filtredDataForWidget(newFormat, weekNumber: weekNumber, subgroup: subGroup)
             
-            let rawData = try encoder.encode(filteredData) // filteredData
-
-            groupSchedule = rawData
+            let rawData = try encoder.encode(filteredData)
+            
+            scheduleForWidget = rawData
         } catch {
             throw error
         }
     }
     
-    
+    #warning("Сомнительно")
     // загрузка номера недели
     func saveWeekNumberToAppStorage(_ weekNum: Int) {
         weekNumber = weekNum
     }
+}
+
+protocol AppStorageServiceForAppProtocol {
+    func saveFavoriteGroupScheduleToAppStorage(_ data: EachGroupResponse) throws
+    func saveFavoriteEmployeeScheduleToAppStorage(_ data: EachEmployeeResponse) throws
+    func getFavoriteGroupScheduleFromAppStorage() throws -> EachGroupResponse
+    func getFavoriteEmployeeScheduleFromAppStorage() throws -> EachEmployeeResponse
+}
+
+
+struct AppStorageServiceForApp: AppStorageServiceForAppProtocol {
+        
+    @AppStorage("favoriteSchedule") var favoriteSchedule: Data?                                 // все данные расписания для отображения в "Мое расписание"
     
-    // загрузка favoriteGroup и subGroup в AppStorage автоматическое при их изменении
+    let decoder = JSONDecoder()
+    let encoder = JSONEncoder()
     
+    // MARK: - Для приложения. Данные для отображения расписания выбранной группы или преподавателя
+    
+    // функция загрузки расписания в AppStorage
+//    func saveFavoriteScheduleToAppStorage(_ data: T) throws { // или EachEmployeeResponse или EachGroupResponse
+//        do {
+//            let rawData = try encoder.encode(data)
+//            favoriteSchedule = rawData
+//        } catch {
+//            print(error.localizedDescription)
+//        }
+//    }
+    
+    // функция получения расписания из AppStorage
+//    func getFavoriteScheduleFromAppStorage() throws -> T {
+//        guard let rawData = favoriteSchedule else {
+//            throw NSError(domain: "AppStorageError",
+//                          code: 1,
+//                          userInfo: [NSLocalizedDescriptionKey: "No data found in AppStorage"]
+//            )
+//        }
+//        
+//        do {
+//            let data = try decoder.decode(T.self, from: rawData)
+//            return data
+//        } catch {
+//            print("Ошибка при попытке декодировать: \(error.localizedDescription)")
+//            throw error
+//        }
+//    }
+    
+    func saveFavoriteGroupScheduleToAppStorage(_ data: EachGroupResponse) throws {
+        do {
+            let rawData = try encoder.encode(data)
+            favoriteSchedule = rawData
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    
+    func saveFavoriteEmployeeScheduleToAppStorage(_ data: EachEmployeeResponse) throws {
+        do {
+            let rawData = try encoder.encode(data)
+            favoriteSchedule = rawData
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    
+    
+    
+    func getFavoriteGroupScheduleFromAppStorage() throws -> EachGroupResponse {
+        guard let rawData = favoriteSchedule else {
+            throw NSError(domain: "AppStorageError",
+                          code: 1,
+                          userInfo: [NSLocalizedDescriptionKey: "No data found in AppStorage"]
+            )
+        }
+        
+        do {
+            let data = try decoder.decode(EachGroupResponse.self, from: rawData)
+            return data
+        } catch {
+            print("Ошибка при попытке декодировать: \(error.localizedDescription)")
+            throw error
+        }
+    }
+    
+    func getFavoriteEmployeeScheduleFromAppStorage() throws -> EachEmployeeResponse {
+        guard let rawData = favoriteSchedule else {
+            throw NSError(domain: "AppStorageError",
+                          code: 1,
+                          userInfo: [NSLocalizedDescriptionKey: "No data found in AppStorage"]
+            )
+        }
+        
+        do {
+            let data = try decoder.decode(EachEmployeeResponse.self, from: rawData)
+            return data
+        } catch {
+            print("Ошибка при попытке декодировать: \(error.localizedDescription)")
+            throw error
+        }
+    }
+
 }

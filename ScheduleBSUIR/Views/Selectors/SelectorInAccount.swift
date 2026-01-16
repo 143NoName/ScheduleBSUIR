@@ -55,13 +55,10 @@ struct SelectorViewForPersonalAccount: View {
     }
 }
 
-
-#Preview {
-    return SelectorViewForPersonalAccount()
-        .environmentObject(ViewModelForNetwork())
-        .environmentObject(AppStorageSave())
-
-}
+//#Preview {
+//    return SelectorViewForPersonalAccount()
+//        .environmentObject(AppStorageSave())
+//}
 
 // кнопка для переключения вида
 struct ButtonShowMaxOrMin: View {
@@ -94,6 +91,8 @@ struct MaxViewGroupInSelector: View {
     
     @EnvironmentObject var appStorageSaveKey: AppStorageSave
     @EnvironmentObject var groupListViewModel: NetworkViewModelForListGroups
+    
+    @AppStorage("scheduleForWidget", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var scheduleForWidget: Data?
         
     var body: some View {
         HStack {
@@ -124,8 +123,10 @@ struct MaxViewGroupInSelector: View {
             .padding(.leading, 10)
             
             // обновление виджета
-            .onChange(of: appStorageSaveKey.favoriteGroup) {
-                print(appStorageSaveKey.favoriteGroup)
+            .onChange(of: groupListViewModel.arrayOfGroupsNum) {
+                print("onrbwr")
+                // тут надо загружать расписание в AppStorage groupSchedule
+                
 //                Task {
 //                    do {
 //                        await network.getScheduleGroup(group: favoriteGroup) // получение расписания
@@ -158,6 +159,11 @@ struct MaxViewEmployeeInSelector: View {
     
     @EnvironmentObject var appStorageSaveKey: AppStorageSave
     @EnvironmentObject var employeeListViewModel: NetworkViewModelForListEmployees
+    
+    
+    @StateObject private var viewModelForAppStorage = ViewModelForAppStorage()
+    
+    @AppStorage("employeeSchedule", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var employeeSchedule: Data?
         
     var employeeNameToFio: String {
         if appStorageSaveKey.employeeName != "Не выбрано" {
@@ -193,6 +199,13 @@ struct MaxViewEmployeeInSelector: View {
             }
         }
         .padding(EdgeInsets(top: 10, leading: 10, bottom: 0, trailing: 10))
+        
+        .onChange(of: employeeListViewModel.scheduleForEmployees) {
+            print(employeeListViewModel.scheduleForEmployees)
+            
+//            viewModelForAppStorage.saveFavoriteEmployeeScheduleToAppStorage(<#T##EachEmployeeResponse#>)
+            #error("Надо создать сетевой запрос, который будет просто возвращять значение,а не записывать его в переменную. Тут надо вызвать функцию из viewModelForAppStorage для загрузки тех данных, которые придут от сетевого запроса. Или записать данные в локальную тут переменную и потом эту переменую передавать в запись в AppStorage")
+        }
         
         .navigationDestination(for: String.self) { _ in
             UniversalPicker(selected: $appStorageSaveKey.employeeName, title: "Преподаватели", items: employeeListViewModel.scheduleForEmployees, value: \.fio, secondValue: \.urlId)

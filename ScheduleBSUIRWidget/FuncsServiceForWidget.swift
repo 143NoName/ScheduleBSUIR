@@ -11,14 +11,15 @@ class FuncsServiceForWidget {
     
     let decoder = JSONDecoder()
 
-    @AppStorage("groupSchedule", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var groupSchedule: Data?
+    @AppStorage("scheduleForWidget", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var scheduleForWidget: Data?
+    @AppStorage("employeeSchedule", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var employeeSchedule: Data?
     @AppStorage("favoriteGroup", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var favoriteGroup: String = "Не выбрано"
     @AppStorage("weekNumber", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var weekNumber: Int = 0
     @AppStorage("subGroup", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var subGroup: Int = 0
     
     func getDataFromUserDefaults() throws -> [FormatedSchedules]? {
         do {
-            guard let rawData = groupSchedule else { return nil }
+            guard let rawData = scheduleForWidget else { return nil }
             let data = try decoder.decode([FormatedSchedules].self, from: rawData)
             return data
         } catch {
@@ -27,6 +28,7 @@ class FuncsServiceForWidget {
         }
     }
     
+    #warning("Как будто хуйня")
     func findTodayLessons(lessons: [FormatedSchedules]?) -> [Lesson] {
         let calendar = Calendar.current
         let date = Date()
