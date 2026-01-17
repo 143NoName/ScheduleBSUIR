@@ -41,22 +41,30 @@ class ViewModelForAppStorage: ObservableObject {
         }
     }
     
+    //func getScheduleGroup(_ group: String) async throws -> EachGroupResponse
+    //func getEachEmployeeSchedule(_ urlId: String) async throws -> EachEmployeeResponse
+
     
     
-    func getFavoriteGroupScheduleFromAppStorage() {
+    func getFavoriteGroupScheduleFromAppStorage() async {
         do {
-            scheduleGroupFromAppStorage = try appStorageService.getFavoriteGroupScheduleFromAppStorage()
+            scheduleGroupFromAppStorage = try await appStorageService.getScheduleGroup("")
         } catch {
             print("Ошибка получения данных: \(error)")
         }
     }
     
-    func getFavoriteEmployeeScheduleFromAppStorage() {
+    func getFavoriteEmployeeScheduleFromAppStorage() async {
         do {
-            scheduleEmployeeFromAppStorage = try appStorageService.getFavoriteEmployeeScheduleFromAppStorage()
+            scheduleEmployeeFromAppStorage = try await appStorageService.getEachEmployeeSchedule("")
 
         } catch {
             print("Ошибка получения данных: \(error)")
         }
     }
 }
+
+
+
+//func getScheduleGroup(_ group: String) async throws -> EachGroupResponse
+//func getEachEmployeeSchedule(_ urlId: String) async throws -> EachEmployeeResponse

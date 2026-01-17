@@ -56,12 +56,12 @@ class SaveForWidgetService: AppStorageServiceProtocol {
 protocol AppStorageServiceForAppProtocol {
     func saveFavoriteGroupScheduleToAppStorage(_ data: EachGroupResponse) throws
     func saveFavoriteEmployeeScheduleToAppStorage(_ data: EachEmployeeResponse) throws
-    func getFavoriteGroupScheduleFromAppStorage() throws -> EachGroupResponse
-    func getFavoriteEmployeeScheduleFromAppStorage() throws -> EachEmployeeResponse
+    func getScheduleGroup(_ group: String) async throws -> EachGroupResponse
+    func getEachEmployeeSchedule(_ urlId: String) async throws -> EachEmployeeResponse
 }
 
 
-struct AppStorageServiceForApp: AppStorageServiceForAppProtocol {
+struct AppStorageServiceForApp: AppStorageServiceForAppProtocol, SourceData {
         
     @AppStorage("favoriteSchedule") var favoriteSchedule: Data?                                 // все данные расписания для отображения в "Мое расписание"
     
@@ -118,7 +118,7 @@ struct AppStorageServiceForApp: AppStorageServiceForAppProtocol {
     
     
     
-    func getFavoriteGroupScheduleFromAppStorage() throws -> EachGroupResponse {
+    func getScheduleGroup(_ group: String) async throws -> EachGroupResponse {
         guard let rawData = favoriteSchedule else {
             throw NSError(domain: "AppStorageError",
                           code: 1,
@@ -135,7 +135,7 @@ struct AppStorageServiceForApp: AppStorageServiceForAppProtocol {
         }
     }
     
-    func getFavoriteEmployeeScheduleFromAppStorage() throws -> EachEmployeeResponse {
+    func getEachEmployeeSchedule(_ urlId: String) async throws -> EachEmployeeResponse {
         guard let rawData = favoriteSchedule else {
             throw NSError(domain: "AppStorageError",
                           code: 1,

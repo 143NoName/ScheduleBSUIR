@@ -13,10 +13,13 @@ struct EachGroup: View {
     #warning("Надо ограничить уроки по началу и концу сесиии")
     
     @EnvironmentObject var weekViewModel: NetworkViewModelForWeek
-    @EnvironmentObject var groupScheduleViewModel: NetworkViewModelForScheduleGroups
+    @EnvironmentObject var groupScheduleViewModel: NetworkViewModelForScheduleGroups  // получение расписания группы (тут только один экземпляр с сетевым менеджером)
+    
+//    @StateObject var sourceService = NetworkViewModelForScheduleGroups(sourceData: AppStorageServiceForApp())
+    
     @Environment(\.dismiss) var dismiss
     @Environment(\.colorScheme) var colorScheme
-    
+        
     let funcs = MoreFunctions() // так не правильно
     
     @State var weekDay: DaysInPicker = .monday

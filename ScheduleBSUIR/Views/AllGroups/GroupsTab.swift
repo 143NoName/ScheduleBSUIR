@@ -9,27 +9,30 @@ import SwiftUI
 
 struct GroupsTab: View {
     
-    @EnvironmentObject var groupListViewModel: NetworkViewModelForListGroups
+    @EnvironmentObject var groupListViewModel: NetworkViewModelForListGroups            // viewModel для получения списка групп
     @Environment(\.colorScheme) var colorScheme
     
     @State var searchText: String = ""
     
-    var searchable: [StudentGroups] {
+    var searchable: [StudentGroups] {                                                   // вычисляемое свойство для получения искомой группы
         if searchText.isEmpty {
             return groupListViewModel.arrayOfGroupsNum
         } else {
-            return groupListViewModel.arrayOfGroupsNum.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
+            return groupListViewModel.arrayOfGroupsNum.filter {
+                $0.name.localizedCaseInsensitiveContains(searchText)
+            }
         }
     }
     
-    var pageName: String {
+    var pageName: String {                                                              // вычисляемое свойство для названия страницы
         if !groupListViewModel.isLoadingArrayOfGroupsNum {
             return "Загрузка..."
         } else {
             return "Все группы"
         }
     }
-        
+    
+    #warning("Теперь знаю как можно сделать универсальное view (в универсальное view нужно передать view для каждого урока и передать в инит нужный viewModel)")
     var body: some View {
         NavigationStack {
             ZStack {

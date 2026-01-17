@@ -70,8 +70,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		49571B8A2F19070300D4AC1A /* ScheduleBSUIRTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ScheduleBSUIRTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		49571B8B2F19070300D4AC1A /* ScheduleBSUIRUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ScheduleBSUIRUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		49571B8A2F19070300D4AC1A /* ScheduleBSUIRTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = ScheduleBSUIRTests.xctest; path = "/Library/Моя прога/SwiftUI/ScheduleBSUIR/build/Debug-iphoneos/ScheduleBSUIR.app/PlugIns/ScheduleBSUIRTests.xctest"; sourceTree = "<absolute>"; };
+		49571B8B2F19070300D4AC1A /* ScheduleBSUIRUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = ScheduleBSUIRUITests.xctest; path = "/Library/Моя прога/SwiftUI/ScheduleBSUIR/build/Debug-iphoneos/ScheduleBSUIRUITests-Runner.app/PlugIns/ScheduleBSUIRUITests.xctest"; sourceTree = "<absolute>"; };
+		49571C632F1B932800D4AC1A /* ScheduleBSUIR.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = ScheduleBSUIR.xcodeproj; sourceTree = SOURCE_ROOT; };
 		498676EB2ED8560500892C4B /* ScheduleCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ScheduleCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		49B688132EF29F550012B3BB /* ScheduleBSUIRWidgetExtensionDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ScheduleBSUIRWidgetExtensionDebug.entitlements; sourceTree = "<group>"; };
 		49F20D672EE0C9A1005F184A /* ScheduleBSUIR.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ScheduleBSUIR.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -196,6 +197,7 @@
 		AFA212E92EAE29F20010C9F6 = {
 			isa = PBXGroup;
 			children = (
+				49571C632F1B932800D4AC1A /* ScheduleBSUIR.xcodeproj */,
 				49B688132EF29F550012B3BB /* ScheduleBSUIRWidgetExtensionDebug.entitlements */,
 				AF5B118F2EB4DD7800EBC825 /* ScheduleBSUIRWidgetExtension.entitlements */,
 				AF5B117A2EB4B1F700EBC825 /* ScheduleBSUIRWidget */,
@@ -204,8 +206,6 @@
 				AFF20D862EB365B100383B2B /* ScheduleBSUIRWidgetExtension.appex */,
 				498676EB2ED8560500892C4B /* ScheduleCore.framework */,
 				49F20D672EE0C9A1005F184A /* ScheduleBSUIR.app */,
-				49571B8A2F19070300D4AC1A /* ScheduleBSUIRTests.xctest */,
-				49571B8B2F19070300D4AC1A /* ScheduleBSUIRUITests.xctest */,
 			);
 			sourceTree = "<group>";
 		};

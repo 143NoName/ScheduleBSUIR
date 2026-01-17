@@ -92,7 +92,7 @@ struct MaxViewGroupInSelector: View {
     @EnvironmentObject var appStorageSaveKey: AppStorageSave
     @EnvironmentObject var groupListViewModel: NetworkViewModelForListGroups
     
-    let networkService = NetworkViewModelForGetScheduleGroup() // эксперимент
+    let networkService = NetworkViewModelForScheduleGroups() // эксперимент // используется обычный сетевой сервис, для получения данных из сети
     
     @StateObject private var viewModelForAppStorage = ViewModelForAppStorage()
     
@@ -129,10 +129,8 @@ struct MaxViewGroupInSelector: View {
             .onChange(of: appStorageSaveKey.favoriteGroup) {
                 Task {
                     print("Начало")
-                    let data = await networkService.getSchedule(appStorageSaveKey.favoriteGroup)
-                    if let data {
-                        viewModelForAppStorage.saveFavoriteGroupScheduleToAppStorage(data)
-                    }
+                    await networkService.getScheduleGroup(group: appStorageSaveKey.favoriteGroup) // загрузка данных для дальнейшей загрузки в AppStorage (тут используется )
+                    viewModelForAppStorage.saveFavoriteGroupScheduleToAppStorage(networkService.arrayOfScheduleGroup)
                 }
                 
                 
@@ -171,7 +169,7 @@ struct MaxViewEmployeeInSelector: View {
     @EnvironmentObject var appStorageSaveKey: AppStorageSave
     @EnvironmentObject var employeeListViewModel: NetworkViewModelForListEmployees
     
-    let networkService = NetworkViewModelForGetScheduleGroup()
+    let networkService = NetworkViewModelForScheduleGroups()  // эксперимент
     
     @StateObject private var viewModelForAppStorage = ViewModelForAppStorage()
     

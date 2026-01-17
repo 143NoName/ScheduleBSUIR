@@ -9,6 +9,7 @@ import SwiftUI
 import Alamofire
 
 import os.log
+
 #warning("Замерять длительность выполнения функции")
 
 protocol NetworkServiceProtocol {
@@ -21,7 +22,7 @@ protocol NetworkServiceProtocol {
     func getEachEmployeeSchedule(_ id: String) async throws -> EachEmployeeResponse
 }
 
-class NetworkService: NetworkServiceProtocol {
+class NetworkService: NetworkServiceProtocol, SourceData {
     let decoder = JSONDecoder()
     
     // НЕДЕЛЯ
@@ -56,7 +57,7 @@ class NetworkService: NetworkServiceProtocol {
     }
     
     // получение расписания группы
-    func getScheduleGroup(_ group: String) async throws -> EachGroupResponse { // при частом выполнении, что то ломается
+    func getScheduleGroup(_ group: String) async throws -> EachGroupResponse {
         let params: Parameters = ["studentGroup": "\(group)"]
         
         let data = try await AF.request("https://iis.bsuir.by/api/v1/schedule",
@@ -108,33 +109,33 @@ class NetworkService: NetworkServiceProtocol {
 
 
 // универсальный сервис получения данных
-class Network {
-    
-    let decoder = JSONDecoder()
-    
-    func getArray<ArrayOf: Decodable>(_ who: GroupOrEmployee) async throws -> [ArrayOf] {
-        let data = try await AF.request(who.urlForArray)
-            .validate()
-            .serializingData()
-            .value
-        do {
-            print(who.urlForArray)
-            let response = try decoder.decode([ArrayOf].self, from: data)
-            return response
-        } catch {
-            throw error
-        }
-    }
-    
-    func getEacSchedule<ScheduleOf: Decodable>(_ who: GroupOrEmployee, component: String) async throws -> ScheduleOf {
-        let data = try await AF.request(who.urlForSchedule + component)
-            .validate()
-            .serializingData()
-            .value
-        do {
-            return try decoder.decode(ScheduleOf.self, from: data)
-        } catch {
-            throw error
-        }
-    }
-}
+//class Network {
+//    
+//    let decoder = JSONDecoder()
+//    
+//    func getArray<ArrayOf: Decodable>(_ who: GroupOrEmployee) async throws -> [ArrayOf] {
+//        let data = try await AF.request(who.urlForArray)
+//            .validate()
+//            .serializingData()
+//            .value
+//        do {
+//            print(who.urlForArray)
+//            let response = try decoder.decode([ArrayOf].self, from: data)
+//            return response
+//        } catch {
+//            throw error
+//        }
+//    }
+//    
+//    func getEacSchedule<ScheduleOf: Decodable>(_ who: GroupOrEmployee, component: String) async throws -> ScheduleOf {
+//        let data = try await AF.request(who.urlForSchedule + component)
+//            .validate()
+//            .serializingData()
+//            .value
+//        do {
+//            return try decoder.decode(ScheduleOf.self, from: data)
+//        } catch {
+//            throw error
+//        }
+//    }
+//}

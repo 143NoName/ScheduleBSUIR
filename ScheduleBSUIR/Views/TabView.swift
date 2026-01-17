@@ -31,11 +31,12 @@ struct TabBarView: View {
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(\.verticalSizeClass) var verticalSizeClass
     
-    @StateObject private var weekViewModel = NetworkViewModelForWeek()
-    @StateObject private var groupListViewModel = NetworkViewModelForListGroups()
-    @StateObject private var groupScheduleViewModel = NetworkViewModelForScheduleGroups()
-    @StateObject private var employeeListViewModel = NetworkViewModelForListEmployees()
-    @StateObject private var employeeScheduleViewModel = NetworkViewModelForScheduleEmployees()
+    @StateObject private var weekViewModel = NetworkViewModelForWeek()                              // получение текущей недели
+    @StateObject private var groupListViewModel = NetworkViewModelForListGroups()                   // получение списка групп
+    @StateObject private var groupScheduleViewModel = NetworkViewModelForScheduleGroups()           // получение расписания группы (тут только один экземпляр с сетевым менеджером)
+//    @StateObject private var
+    @StateObject private var employeeListViewModel = NetworkViewModelForListEmployees()             // получение списка преподавателей
+    @StateObject private var employeeScheduleViewModel = NetworkViewModelForScheduleEmployees()     // получение расписания преподавателя
     
     @StateObject private var viewModelForAppStorage = ViewModelForAppStorage()
     
@@ -66,31 +67,26 @@ struct TabBarView: View {
             TabView(selection: $selectedTab) {
                 Tab("Все группы", systemImage: "person.3", value: 0) {
                     GroupsTab()
+                        .environmentObject(groupListViewModel)
+                        .environmentObject(NetworkViewModelForScheduleGroups(sourceData: NetworkService()))
                 }
                 Tab("Преподаватели", systemImage: "calendar.and.person", value: 1) {
                     EmployeesTab()
+                        .environmentObject(employeeListViewModel)
+                        .environmentObject(employeeScheduleViewModel)
                 }
                 if appStorageSave.whoUser == .student && appStorageSave.favoriteGroup != "Не выбрано" {
                     Tab("Моя группа", systemImage: "star", value: 2) {
-                        Group {
-                            Text("\(viewModelForAppStorage.scheduleGroupFromAppStorage)")
+                        NavigationStack {
+                            EachGroup(groupName: appStorageSave.favoriteGroup)
+                                .environmentObject(NetworkViewModelForScheduleGroups(sourceData: AppStorageServiceForApp()))
                         }
-                        .task {
-                            viewModelForAppStorage.getFavoriteGroupScheduleFromAppStorage()
-                        }
-                        
-                        
-//                        NavigationStack {
-//                            EachGroup(groupName: appStorageSave.favoriteGroup)
-//                        }
                     }
                 } else if appStorageSave.whoUser == .employee && appStorageSave.employeeName != "Не выбрано" {
                     Tab("Мое расписание", systemImage: "star", value: 2) {
-                        
-                        
-                        
                         NavigationStack {
                             EachEmployee(employeeName: appStorageSave.employeeName)
+                                .environmentObject(employeeScheduleViewModel)
                         }
                     }
                 }
@@ -112,8 +108,8 @@ struct TabBarView: View {
                     }
                 }.value
                 
-                saveForWidgetService.saveWeekNumberToAppStorage(weekViewModel.currentWeek)
-                // запись номера недели в appStorage
+                saveForWidgetService.saveWeekNumberToAppStorage(weekViewModel.currentWeek) // запись номера недели в appStorage
+                
             }
             
 //            #warning("Создание большого количество потоков")
@@ -135,11 +131,9 @@ struct TabBarView: View {
             
 //        }
         
-        .environmentObject(weekViewModel)
-        .environmentObject(groupListViewModel)
-        .environmentObject(groupScheduleViewModel)
-        .environmentObject(employeeListViewModel)
-        .environmentObject(employeeScheduleViewModel)
+        .environmentObject(weekViewModel) // много ли где нужно?
+        
+        
         
         
         .environment(\.saveForWidgetService, saveForWidgetService)

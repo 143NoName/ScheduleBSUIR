@@ -11,6 +11,14 @@ import SwiftUI
 import OSLog
 
 
+// под это протокол пописаны AppStorageServiceForApp и NetworkService (это сервисы, которые используются в viewModel)
+// этим протоколом надо заменить сетевой сервис
+protocol SourceData {
+    func getScheduleGroup(_ group: String) async throws -> EachGroupResponse
+    func getEachEmployeeSchedule(_ urlId: String) async throws -> EachEmployeeResponse
+}
+
+
 // MARK: - Для номера недели
 protocol NetworkViewModelForWeekProtocol {
     var currentWeek: Int { get }
@@ -99,10 +107,15 @@ protocol NetworkViewModelForScheduleGroupsProtocol {
 
 class NetworkViewModelForScheduleGroups: ObservableObject, NetworkViewModelForScheduleGroupsProtocol {
     
-    private let networkService: NetworkServiceProtocol
+//    private let networkService: NetworkServiceProtocol
     
-    init(networkService: NetworkServiceProtocol = NetworkService()) {
-        self.networkService = networkService
+    private let sourceData: SourceData // сервис получения расписания (по умолчанию NetworkService, но может быть и AppStorageServiceForApp)
+    
+    init(
+//        networkService: NetworkServiceProtocol = NetworkService(),
+        sourceData: SourceData = NetworkService()) {
+//        self.networkService = networkService
+        self.sourceData = sourceData
     }
     let logger = Logger()
     
@@ -131,7 +144,7 @@ class NetworkViewModelForScheduleGroups: ObservableObject, NetworkViewModelForSc
     // получение расписания группы от API
     func getScheduleGroup(group: String) async {
         do {
-            arrayOfScheduleGroup = try await networkService.getScheduleGroup(group)
+            arrayOfScheduleGroup = try await sourceData.getScheduleGroup(group)
             convertToScheduleDaysGroup() // сразу преобразовать в (День: [Занятия])
             withAnimation(.easeIn) {
                 isLoadingArrayOfScheduleGroup = true
@@ -269,10 +282,15 @@ protocol NetworkViewModelForScheduleEmployeesProtocol {
 
 class NetworkViewModelForScheduleEmployees: ObservableObject, NetworkViewModelForScheduleEmployeesProtocol {
     
-    private let networkService: NetworkServiceProtocol
+//    private let networkService: NetworkServiceProtocol
+    private let sourceData: SourceData
     
-    init(networkService: NetworkServiceProtocol = NetworkService()) {
-        self.networkService = networkService
+    init(
+//        networkService: NetworkServiceProtocol = NetworkService()
+        sourceData: SourceData = NetworkService()
+    ) {
+//        self.networkService = networkService
+        self.sourceData = sourceData
     }
     let logger = Logger()
     
@@ -284,7 +302,7 @@ class NetworkViewModelForScheduleEmployees: ObservableObject, NetworkViewModelFo
     func getEachEmployeeSchedule(_ urlId: String) async {
         scheduleForEachEmployeeInNull()
         do {
-            scheduleForEachEmployee = try await networkService.getEachEmployeeSchedule(urlId)
+            scheduleForEachEmployee = try await sourceData.getEachEmployeeSchedule(urlId)
             convertToScheduleDaysEmployee()
             withAnimation(.easeIn) {
                 isLoadingScheduleForEachEmployee = true
@@ -344,42 +362,40 @@ class NetworkViewModelForScheduleEmployees: ObservableObject, NetworkViewModelFo
 
 // новые
 
+#warning("Изменить названия функций")
 
-struct NetworkViewModelForGetScheduleGroup {
-    
-    private let networkService: NetworkServiceProtocol
-    
-    init(networkService: NetworkServiceProtocol = NetworkService()) {
-        self.networkService = networkService
-    }
-    let logger = Logger()
-    
-    func getListGroups() async -> [StudentGroups]? {
-        do {
-            let data = try await networkService.getArrayOfGroupNum()
-            return data
-        } catch {
-            logger.error("\(error.localizedDescription)")
-            return nil
-        }
-    }
-    
-    func getSchedule(_ groupName: String) async -> EachGroupResponse? {
-        do {
-            let data = try await networkService.getScheduleGroup(groupName)
-            return data
-        } catch {
-            logger.error("\(error.localizedDescription)")
-            return nil
-        }
-    }
-}
-
-
-struct NetworkViewModelForGetScheduleEmployees {
-    
-}
-
+//struct NetworkViewModelForGetScheduleGroup {
+//    
+//    private let networkService: NetworkServiceProtocol                  // тогда это не нужно
+//    
+//    private let sourceData: SourceData                                  // тут будет нужный сервис для получения расписания
+//    
+//    init(networkService: NetworkServiceProtocol = NetworkService(), sourceData: SourceData = NetworkService()) {
+//        self.networkService = networkService
+//        self.sourceData = sourceData
+//    }
+//    let logger = Logger()
+//    
+//    func getListGroups() async -> [StudentGroups]? {
+//        do {
+//            let data = try await networkService.getArrayOfGroupNum()
+//            return data
+//        } catch {
+//            logger.error("\(error.localizedDescription)")
+//            return nil
+//        }
+//    }
+//    
+//    func getSchedule(_ groupName: String) async -> EachGroupResponse? {
+//        do {
+//            let data = try await networkService.getScheduleGroup(groupName)
+//            return data
+//        } catch {
+//            logger.error("\(error.localizedDescription)")
+//            return nil
+//        }
+//    }
+//}
 
 
 
