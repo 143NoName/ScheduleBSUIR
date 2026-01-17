@@ -98,7 +98,7 @@ struct AppStorageServiceForApp: AppStorageServiceForAppProtocol, SourceData {
 //        }
 //    }
     
-    func saveFavoriteGroupScheduleToAppStorage(_ data: EachGroupResponse) throws {
+    func saveFavoriteGroupScheduleToAppStorage(_ data: EachGroupResponse) throws {                          // загрузка расписания группы
         do {
             let rawData = try encoder.encode(data)
             favoriteSchedule = rawData
@@ -107,7 +107,7 @@ struct AppStorageServiceForApp: AppStorageServiceForAppProtocol, SourceData {
         }
     }
     
-    func saveFavoriteEmployeeScheduleToAppStorage(_ data: EachEmployeeResponse) throws {
+    func saveFavoriteEmployeeScheduleToAppStorage(_ data: EachEmployeeResponse) throws {                    // загрузка расписания преподавателя
         do {
             let rawData = try encoder.encode(data)
             favoriteSchedule = rawData
@@ -117,8 +117,7 @@ struct AppStorageServiceForApp: AppStorageServiceForAppProtocol, SourceData {
     }
     
     
-    
-    func getScheduleGroup(_ group: String) async throws -> EachGroupResponse {
+    func getScheduleGroup(_ group: String) async throws -> EachGroupResponse {                              // получение расписания группы
         guard let rawData = favoriteSchedule else {
             throw NSError(domain: "AppStorageError",
                           code: 1,
@@ -135,7 +134,7 @@ struct AppStorageServiceForApp: AppStorageServiceForAppProtocol, SourceData {
         }
     }
     
-    func getEachEmployeeSchedule(_ urlId: String) async throws -> EachEmployeeResponse {
+    func getEachEmployeeSchedule(_ urlId: String) async throws -> EachEmployeeResponse {                    // получение расписания преподавателя
         guard let rawData = favoriteSchedule else {
             throw NSError(domain: "AppStorageError",
                           code: 1,

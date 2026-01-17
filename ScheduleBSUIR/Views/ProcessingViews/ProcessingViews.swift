@@ -23,8 +23,8 @@ struct IfDayLessonIsEmpty: View {
 }
 
 struct IfHaveErrorSchedule: View {
-    
-    @EnvironmentObject var groupScheduleViewModel: NetworkViewModelForScheduleGroups
+        
+    let error: String
     
     var body: some View {
         HStack {
@@ -33,11 +33,10 @@ struct IfHaveErrorSchedule: View {
                 .foregroundStyle(.red)
                 .frame(width: 100, height: 100)
             Spacer()
-            Text(groupScheduleViewModel.errorOfScheduleGroup)
+            Text(error)
                 .font(.system(size: 16, weight: .medium))
             #warning("Пишется только ошибки для групп, можно сделать одну универсальную вместо 3 похожих")
         }
-//        .glassEffect(.regular , in: .rect(cornerRadius: 20))
         .padding(EdgeInsets(top: 12, leading: 20, bottom: 12, trailing: 20))
     }
 }

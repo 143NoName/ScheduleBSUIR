@@ -73,12 +73,13 @@ struct TabBarView: View {
                 Tab("Преподаватели", systemImage: "calendar.and.person", value: 1) {
                     EmployeesTab()
                         .environmentObject(employeeListViewModel)
-                        .environmentObject(employeeScheduleViewModel)
+                        .environmentObject(NetworkViewModelForScheduleEmployees(sourceData: NetworkService()))
                 }
                 if appStorageSave.whoUser == .student && appStorageSave.favoriteGroup != "Не выбрано" {
                     Tab("Моя группа", systemImage: "star", value: 2) {
                         NavigationStack {
                             EachGroup(groupName: appStorageSave.favoriteGroup)
+                                .environmentObject(groupListViewModel)
                                 .environmentObject(NetworkViewModelForScheduleGroups(sourceData: AppStorageServiceForApp()))
                         }
                     }
@@ -86,13 +87,16 @@ struct TabBarView: View {
                     Tab("Мое расписание", systemImage: "star", value: 2) {
                         NavigationStack {
                             EachEmployee(employeeName: appStorageSave.employeeName)
-                                .environmentObject(groupListViewModel)
-                                .environmentObject(employeeScheduleViewModel)
+                                .environmentObject(employeeListViewModel)
+                                .environmentObject(NetworkViewModelForScheduleEmployees(sourceData: AppStorageServiceForApp()))
                         }
                     }
                 }
                 Tab("Личный кабинет", systemImage: "person.circle", value: 3) {
                     PersonalAccount()
+                        .environmentObject(groupListViewModel)
+                        .environmentObject(employeeListViewModel)
+                        .environmentObject(NetworkViewModelForScheduleEmployees(sourceData: AppStorageServiceForApp()))
                 }
             }
             

@@ -106,15 +106,10 @@ protocol NetworkViewModelForScheduleGroupsProtocol {
 }
 
 class NetworkViewModelForScheduleGroups: ObservableObject, NetworkViewModelForScheduleGroupsProtocol {
+        
+    private let sourceData: SourceData // сервис получения расписания (по умолчанию NetworkService(), но может быть и AppStorageServiceForApp())
     
-//    private let networkService: NetworkServiceProtocol
-    
-    private let sourceData: SourceData // сервис получения расписания (по умолчанию NetworkService, но может быть и AppStorageServiceForApp)
-    
-    init(
-//        networkService: NetworkServiceProtocol = NetworkService(),
-        sourceData: SourceData = NetworkService()) {
-//        self.networkService = networkService
+    init(sourceData: SourceData = NetworkService()) {
         self.sourceData = sourceData
     }
     let logger = Logger()
@@ -282,14 +277,9 @@ protocol NetworkViewModelForScheduleEmployeesProtocol {
 
 class NetworkViewModelForScheduleEmployees: ObservableObject, NetworkViewModelForScheduleEmployeesProtocol {
     
-//    private let networkService: NetworkServiceProtocol
     private let sourceData: SourceData
     
-    init(
-//        networkService: NetworkServiceProtocol = NetworkService()
-        sourceData: SourceData = NetworkService()
-    ) {
-//        self.networkService = networkService
+    init(sourceData: SourceData = NetworkService()) {
         self.sourceData = sourceData
     }
     let logger = Logger()

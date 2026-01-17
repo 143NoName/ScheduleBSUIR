@@ -62,7 +62,7 @@ struct EachGroup: View {
                     }
                 } else {
                     if !groupScheduleViewModel.errorOfScheduleGroup.isEmpty {
-                        IfHaveErrorSchedule()
+                        IfHaveErrorSchedule(error: groupScheduleViewModel.errorOfScheduleGroup)
                     } else {
                         Section(header:
                                     Text("Расписание")
