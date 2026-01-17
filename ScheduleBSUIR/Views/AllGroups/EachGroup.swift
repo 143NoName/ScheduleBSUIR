@@ -13,9 +13,7 @@ struct EachGroup: View {
     #warning("Надо ограничить уроки по началу и концу сесиии")
     
     @EnvironmentObject var weekViewModel: NetworkViewModelForWeek
-    @EnvironmentObject var groupScheduleViewModel: NetworkViewModelForScheduleGroups  // получение расписания группы (тут только один экземпляр с сетевым менеджером)
-    
-//    @StateObject var sourceService = NetworkViewModelForScheduleGroups(sourceData: AppStorageServiceForApp())
+    @EnvironmentObject var groupScheduleViewModel: NetworkViewModelForScheduleGroups
     
     @Environment(\.dismiss) var dismiss
     @Environment(\.colorScheme) var colorScheme
@@ -132,8 +130,8 @@ struct EachGroup: View {
         }
         
         .onDisappear {
-            dismiss() // при переходе в другой tab чтобы выходило к списку
-            groupScheduleViewModel.scheduleForEachGroupInNull() // очистить при выходе (ошибки убрать и т.д.)
+            dismiss()                                                                                   // при переходе в другой tab чтобы выходило к списку
+            groupScheduleViewModel.scheduleForEachGroupInNull()                                         // очистить при выходе (ошибки убрать и т.д.)
         }
     }
 }
@@ -142,6 +140,8 @@ struct EachGroup: View {
     NavigationStack {
         EachGroup(groupName: "310101")
             .environmentObject(NetworkViewModelForWeek())
-            .environmentObject(NetworkViewModelForScheduleGroups())
+        // на выбор какой сервис
+            .environmentObject(NetworkViewModelForScheduleGroups(sourceData: NetworkService()))
+//            .environmentObject(NetworkViewModelForScheduleGroups(sourceData: AppStorageServiceForApp()))
     }
 }

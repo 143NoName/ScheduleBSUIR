@@ -90,7 +90,7 @@ struct ButtonShowMaxOrMin: View {
 struct MaxViewGroupInSelector: View {
     
     @EnvironmentObject var appStorageSaveKey: AppStorageSave
-    @EnvironmentObject var groupListViewModel: NetworkViewModelForListGroups
+    @EnvironmentObject var groupListViewModel: NetworkViewModelForListGroups 
     
     let networkService = NetworkViewModelForScheduleGroups() // эксперимент // используется обычный сетевой сервис, для получения данных из сети
     

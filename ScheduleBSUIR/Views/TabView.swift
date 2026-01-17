@@ -86,6 +86,7 @@ struct TabBarView: View {
                     Tab("Мое расписание", systemImage: "star", value: 2) {
                         NavigationStack {
                             EachEmployee(employeeName: appStorageSave.employeeName)
+                                .environmentObject(groupListViewModel)
                                 .environmentObject(employeeScheduleViewModel)
                         }
                     }
