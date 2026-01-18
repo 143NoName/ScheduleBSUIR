@@ -19,6 +19,8 @@ protocol SourceData {
 }
 
 
+
+
 // MARK: - Для номера недели
 protocol NetworkViewModelForWeekProtocol {
     var currentWeek: Int { get }

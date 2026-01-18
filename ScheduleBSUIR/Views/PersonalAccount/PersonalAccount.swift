@@ -160,9 +160,9 @@ struct PersonalAccount: View {
 //                }
             }
             
-            .onChange(of: appStorageSaveKey.whoUser) {
-                getListStudentOrEmployees()
-            }
+//            .onChange(of: appStorageSaveKey.whoUser) {
+//                getListStudentOrEmployees()
+//            }
             
             .refreshable {
                 getListStudentOrEmployees()

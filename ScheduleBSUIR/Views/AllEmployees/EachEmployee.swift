@@ -82,19 +82,6 @@ struct EachEmployee: View {
         }
         .navigationTitle(pageName)
         
-//        .navigationBarBackButtonHidden(true)
-//        .toolbar {
-//            ToolbarItem(placement: .topBarLeading) {
-//                Button {
-//                    dismiss()
-//                } label: {
-//                    HStack {
-//                        Image(systemName: "chevron.left")
-//                    }
-//                }
-//            }
-//        }
-        
         .refreshable {
             employeeScheduleViewModel.scheduleForEachEmployeeInNull()                           // очистка расписания
             await employeeScheduleViewModel.getEachEmployeeSchedule(employeeName)               // получение расписания преподавателя

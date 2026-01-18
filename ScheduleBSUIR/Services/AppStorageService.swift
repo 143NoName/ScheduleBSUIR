@@ -68,38 +68,9 @@ struct AppStorageServiceForApp: AppStorageServiceForAppProtocol, SourceData {
     let decoder = JSONDecoder()
     let encoder = JSONEncoder()
     
-    // MARK: - Для приложения. Данные для отображения расписания выбранной группы или преподавателя
-    
-    // функция загрузки расписания в AppStorage
-//    func saveFavoriteScheduleToAppStorage(_ data: T) throws { // или EachEmployeeResponse или EachGroupResponse
-//        do {
-//            let rawData = try encoder.encode(data)
-//            favoriteSchedule = rawData
-//        } catch {
-//            print(error.localizedDescription)
-//        }
-//    }
-    
-    // функция получения расписания из AppStorage
-//    func getFavoriteScheduleFromAppStorage() throws -> T {
-//        guard let rawData = favoriteSchedule else {
-//            throw NSError(domain: "AppStorageError",
-//                          code: 1,
-//                          userInfo: [NSLocalizedDescriptionKey: "No data found in AppStorage"]
-//            )
-//        }
-//        
-//        do {
-//            let data = try decoder.decode(T.self, from: rawData)
-//            return data
-//        } catch {
-//            print("Ошибка при попытке декодировать: \(error.localizedDescription)")
-//            throw error
-//        }
-//    }
-    
     func saveFavoriteGroupScheduleToAppStorage(_ data: EachGroupResponse) throws {                          // загрузка расписания группы
         do {
+            print("Данные записаны: \(data)")
             let rawData = try encoder.encode(data)
             favoriteSchedule = rawData
         } catch {
@@ -109,6 +80,7 @@ struct AppStorageServiceForApp: AppStorageServiceForAppProtocol, SourceData {
     
     func saveFavoriteEmployeeScheduleToAppStorage(_ data: EachEmployeeResponse) throws {                    // загрузка расписания преподавателя
         do {
+            print("Данные записаны: \(data)")
             let rawData = try encoder.encode(data)
             favoriteSchedule = rawData
         } catch {
