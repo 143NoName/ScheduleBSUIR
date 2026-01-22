@@ -5,18 +5,18 @@
 //  Created by user on 26.10.25.
 //
 
+import SwiftUI
 import Combine
 import Alamofire
-import SwiftUI
 import OSLog
 
 
-// под это протокол пописаны AppStorageServiceForApp и NetworkService (это сервисы, которые используются в viewModel)
-// этим протоколом надо заменить сетевой сервис
-protocol SourceData {
-    func getScheduleGroup(_ group: String) async throws -> EachGroupResponse
-    func getEachEmployeeSchedule(_ urlId: String) async throws -> EachEmployeeResponse
-}
+//// под это протокол пописаны AppStorageServiceForApp и NetworkService (это сервисы, которые используются в viewModel)
+//// этим протоколом надо заменить сетевой сервис
+//protocol SourceData {
+//    func getScheduleGroup(_ group: String) async throws -> EachGroupResponse
+//    func getEachEmployeeSchedule(_ urlId: String) async throws -> EachEmployeeResponse
+//}
 
 
 
@@ -109,11 +109,17 @@ protocol NetworkViewModelForScheduleGroupsProtocol {
 
 class NetworkViewModelForScheduleGroups: ObservableObject, NetworkViewModelForScheduleGroupsProtocol {
         
-    private let sourceData: SourceData // сервис получения расписания (по умолчанию NetworkService(), но может быть и AppStorageServiceForApp())
+//    private let sourceData: SourceData // сервис получения расписания (по умолчанию NetworkService(), но может быть и AppStorageServiceForApp())
+//    
+//    init(sourceData: SourceData) {
+//        self.sourceData = sourceData
+//    }
+    let networkService: NetworkServiceProtocol
     
-    init(sourceData: SourceData) {
-        self.sourceData = sourceData
+    init(networkService: NetworkServiceProtocol = NetworkService()) {
+        self.networkService = networkService
     }
+    
     let logger = Logger()
     
     @Published private(set) var arrayOfScheduleGroup: EachGroupResponse = EachGroupResponse(
@@ -141,7 +147,7 @@ class NetworkViewModelForScheduleGroups: ObservableObject, NetworkViewModelForSc
     // получение расписания группы от API
     func getScheduleGroup(group: String) async {
         do {
-            arrayOfScheduleGroup = try await sourceData.getScheduleGroup(group)
+            arrayOfScheduleGroup = try await networkService.getScheduleGroup(group)
             convertToScheduleDaysGroup() // сразу преобразовать в (День: [Занятия])
             withAnimation(.easeIn) {
                 isLoadingArrayOfScheduleGroup = true
@@ -234,6 +240,7 @@ class NetworkViewModelForListEmployees: ObservableObject, NetworkViewModelForLis
     init(networkService: NetworkServiceProtocol = NetworkService()) {
         self.networkService = networkService
     }
+    
     let logger = Logger()
     
     @Published private(set) var scheduleForEmployees: [EmployeeModel] = []
@@ -278,11 +285,12 @@ protocol NetworkViewModelForScheduleEmployeesProtocol {
 
 class NetworkViewModelForScheduleEmployees: ObservableObject, NetworkViewModelForScheduleEmployeesProtocol {
     
-    private let sourceData: SourceData
+    let networkService: NetworkServiceProtocol
     
-    init(sourceData: SourceData) {
-        self.sourceData = sourceData
+    init(networkService: NetworkServiceProtocol = NetworkService()) {
+        self.networkService = networkService
     }
+    
     let logger = Logger()
     
     @Published private(set) var scheduleForEachEmployee: EachEmployeeResponse = EachEmployeeResponse(startDate: "", endDate: "", startExamsDate: "", endExamsDate: "", employeeDto: EmployeeDto(id: 0, firstName: "", middleName: "", lastName: "", photoLink: "", email: "", urlId: "", calendarId: "", chief: false), schedules: Schedules(monday: [], tuesday: [], wednesday: [], thursday: [], friday: [], saturday: [], sunday: []), currentPeriod: "")
@@ -293,7 +301,7 @@ class NetworkViewModelForScheduleEmployees: ObservableObject, NetworkViewModelFo
     func getEachEmployeeSchedule(_ urlId: String) async {
         scheduleForEachEmployeeInNull()
         do {
-            scheduleForEachEmployee = try await sourceData.getEachEmployeeSchedule(urlId)
+            scheduleForEachEmployee = try await networkService.getEachEmployeeSchedule(urlId)
             convertToScheduleDaysEmployee()
             withAnimation(.easeIn) {
                 isLoadingScheduleForEachEmployee = true

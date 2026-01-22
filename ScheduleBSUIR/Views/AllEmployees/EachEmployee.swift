@@ -106,6 +106,6 @@ struct EachEmployee: View {
     NavigationStack {
         EachEmployee(employeeName: "i-abramov")
             .environmentObject(NetworkViewModelForWeek())
-            .environmentObject(NetworkViewModelForScheduleEmployees(sourceData: NetworkService()))
+            .environmentObject(NetworkViewModelForScheduleEmployees())
     }
 }

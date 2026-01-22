@@ -93,7 +93,7 @@ struct MaxViewGroupInSelector: View {
     @EnvironmentObject var groupListViewModel: NetworkViewModelForListGroups                        // viewModel для получения массива преподавателей и загрузки его расписания для дальнейшей загрузки в AppStorage
 //    @EnvironmentObject var networkViewModelForListGroups: NetworkViewModelForListGroups
     
-    let networkService = NetworkViewModelForScheduleGroups(sourceData: NetworkService()) // эксперимент // используется обычный сетевой сервис, для получения данных из сети
+    let networkService = NetworkViewModelForScheduleGroups() // эксперимент // используется обычный сетевой сервис, для получения данных из сети
     
     @StateObject private var viewModelForAppStorage = ViewModelForAppStorage()
     

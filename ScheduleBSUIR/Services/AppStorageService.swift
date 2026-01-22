@@ -61,7 +61,7 @@ protocol AppStorageServiceForAppProtocol {
 }
 
 
-struct AppStorageServiceForApp: AppStorageServiceForAppProtocol, SourceData {
+struct AppStorageServiceForApp: AppStorageServiceForAppProtocol {
         
     #warning("По идее эти данные должны идти в виджет")
     @AppStorage("favoriteSchedule") var favoriteSchedule: Data?                                 // все данные расписания для отображения в "Мое расписание"

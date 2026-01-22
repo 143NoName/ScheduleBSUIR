@@ -34,12 +34,10 @@ struct TabBarView: View {
     
     @StateObject private var weekViewModel = NetworkViewModelForWeek()                              // получение текущей недели
     @StateObject private var groupListViewModel = NetworkViewModelForListGroups()                   // получение списка групп
-    @StateObject private var groupScheduleViewModel = NetworkViewModelForScheduleGroups(sourceData: NetworkService())           // получение расписания группы (тут только один экземпляр с сетевым менеджером)
-//    @StateObject private var
+    @StateObject private var groupScheduleViewModel = NetworkViewModelForScheduleGroups()           // получение расписания группы (тут только один экземпляр с сетевым менеджером)
     @StateObject private var employeeListViewModel = NetworkViewModelForListEmployees()             // получение списка преподавателей
-    @StateObject private var employeeScheduleViewModel = NetworkViewModelForScheduleEmployees(sourceData: NetworkService())     // получение расписания преподавателя
+    @StateObject private var employeeScheduleViewModel = NetworkViewModelForScheduleEmployees()     // получение расписания преподавателя
     
-    @StateObject private var viewModelForAppStorage = ViewModelForAppStorage()
     @StateObject private var appStorageSave = AppStorageSave() // хранилище всех AppStorage
                  private var saveForWidgetService = SaveForWidgetService() // плохо, что view знает о сервисе, можно сдеать viewModel
     
@@ -66,31 +64,25 @@ struct TabBarView: View {
             TabView(selection: $selectedTab) {
                 Tab("Все группы", systemImage: "person.3", value: 0) {
                     GroupsTab()
-                        .environmentObject(NetworkViewModelForScheduleGroups(sourceData: NetworkService()))                     // расписание группы
                 }
                 Tab("Преподаватели", systemImage: "calendar.and.person", value: 1) {
                     EmployeesTab()
-                        .environmentObject(NetworkViewModelForScheduleEmployees(sourceData: NetworkService()))                  // расписание преподавателя
                 }
                 if appStorageSave.whoUser == .student && appStorageSave.favoriteGroup != "Не выбрано" {
                     Tab("Моя группа", systemImage: "star", value: 2) {
                         NavigationStack {
                             EachGroup(groupName: appStorageSave.favoriteGroup)
-                                .environmentObject(NetworkViewModelForScheduleGroups(sourceData: AppStorageServiceForApp()))
                         }
                     }
                 } else if appStorageSave.whoUser == .employee && appStorageSave.employeeName != "Не выбрано" {
                     Tab("Мое расписание", systemImage: "star", value: 2) {
                         NavigationStack {
                             EachEmployee(employeeName: appStorageSave.employeeName)
-                                .environmentObject(NetworkViewModelForScheduleEmployees(sourceData: AppStorageServiceForApp()))
                         }
                     }
                 }
                 Tab("Личный кабинет", systemImage: "person.circle", value: 3) {
                     PersonalAccount()
-                        .environmentObject(NetworkViewModelForScheduleEmployees(sourceData: AppStorageServiceForApp()))
-//                        .environmentObject(NetworkViewModelForScheduleGroups(sourceData: NetworkService()))
                     // тут нужны 2 экзампляра (сетевой для получения списков (можно убрать) и хранилище)
                 }
             }
@@ -128,11 +120,11 @@ struct TabBarView: View {
             
 //        }
         
-        .environmentObject(weekViewModel) // много ли где нужно?
-        
+        .environmentObject(weekViewModel)
         .environmentObject(groupListViewModel)                                      // список групп
         .environmentObject(employeeListViewModel)                                   // список преподавателей
-        
+        .environmentObject(groupScheduleViewModel)                                  // расписание группы
+        .environmentObject(employeeScheduleViewModel)                               // расписание преподавателя
         .environment(\.saveForWidgetService, saveForWidgetService)
         .environmentObject(appStorageSave)
     }
