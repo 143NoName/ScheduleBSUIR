@@ -110,6 +110,9 @@ struct EachGroup: View {
             await groupScheduleViewModel.getScheduleGroup(group: groupName)                             // получение новых данных
             groupScheduleViewModel.filterGroupSchedule(currentWeek: weekNumber, subGroup: subGroup)     // фильтрация полученных данных
             funcs.findToday(selectedWeekNumber: &weekNumber, weekDay: &weekDay)                         // для отображения сегодняшей даты
+            
+            print(groupScheduleViewModel.isLoadingArrayOfScheduleGroup)
+
         }
 
         .toolbar {
@@ -127,6 +130,8 @@ struct EachGroup: View {
             await groupScheduleViewModel.getScheduleGroup(group: groupName)                             // получение расписания группы
             groupScheduleViewModel.filterGroupSchedule(currentWeek: weekNumber, subGroup: subGroup)     // фильтрация по неделе и по подгруппе
             funcs.findToday(selectedWeekNumber: &weekNumber, weekDay: &weekDay)                         // нахождение сегодняшнего дня (недели и дня недели)
+            
+            print(groupScheduleViewModel.scheduleGroupByDays)
         }
         
         .onDisappear {

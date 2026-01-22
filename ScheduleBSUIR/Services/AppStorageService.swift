@@ -63,6 +63,7 @@ protocol AppStorageServiceForAppProtocol {
 
 struct AppStorageServiceForApp: AppStorageServiceForAppProtocol, SourceData {
         
+    #warning("По идее эти данные должны идти в виджет")
     @AppStorage("favoriteSchedule") var favoriteSchedule: Data?                                 // все данные расписания для отображения в "Мое расписание"
     
     let decoder = JSONDecoder()
@@ -70,7 +71,6 @@ struct AppStorageServiceForApp: AppStorageServiceForAppProtocol, SourceData {
     
     func saveFavoriteGroupScheduleToAppStorage(_ data: EachGroupResponse) throws {                          // загрузка расписания группы
         do {
-            print("Данные записаны: \(data)")
             let rawData = try encoder.encode(data)
             favoriteSchedule = rawData
         } catch {
@@ -92,10 +92,10 @@ struct AppStorageServiceForApp: AppStorageServiceForAppProtocol, SourceData {
     func getScheduleGroup(_ group: String) async throws -> EachGroupResponse {                              // получение расписания группы
         guard let rawData = favoriteSchedule else {
             throw NSError(domain: "AppStorageError",
-                          code: 1,
-                          userInfo: [NSLocalizedDescriptionKey: "No data found in AppStorage"]
-            )
-        }
+                        code: 1,
+                        userInfo: [NSLocalizedDescriptionKey: "No data found in AppStorage"]
+                )
+            }
         
         do {
             let data = try decoder.decode(EachGroupResponse.self, from: rawData)
@@ -105,6 +105,7 @@ struct AppStorageServiceForApp: AppStorageServiceForAppProtocol, SourceData {
             throw error
         }
     }
+    
     
     func getEachEmployeeSchedule(_ urlId: String) async throws -> EachEmployeeResponse {                    // получение расписания преподавателя
         guard let rawData = favoriteSchedule else {

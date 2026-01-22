@@ -182,7 +182,7 @@ struct PersonalAccount: View {
         PersonalAccount()
             .environmentObject(NetworkViewModelForListGroups())
             .environmentObject(NetworkViewModelForListEmployees())
-            .environmentObject(NetworkViewModelForScheduleEmployees())
+            .environmentObject(NetworkViewModelForScheduleEmployees(sourceData: NetworkService()))
             .environmentObject(AppStorageSave())
     }
 }

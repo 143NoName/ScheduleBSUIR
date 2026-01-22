@@ -89,14 +89,15 @@ struct ButtonShowMaxOrMin: View {
 // ученик
 struct MaxViewGroupInSelector: View {
     
-    @EnvironmentObject var appStorageSaveKey: AppStorageSave                                      // ключи AppStorage
-    @EnvironmentObject var groupListViewModel: NetworkViewModelForListGroups                       // viewModel для получения массива преподавателей и загрузки его расписания для дальнейшей загрузки в AppStorage
+    @EnvironmentObject var appStorageSaveKey: AppStorageSave                                        // ключи AppStorage
+    @EnvironmentObject var groupListViewModel: NetworkViewModelForListGroups                        // viewModel для получения массива преподавателей и загрузки его расписания для дальнейшей загрузки в AppStorage
+//    @EnvironmentObject var networkViewModelForListGroups: NetworkViewModelForListGroups
     
-    let networkService = NetworkViewModelForScheduleGroups() // эксперимент // используется обычный сетевой сервис, для получения данных из сети
+    let networkService = NetworkViewModelForScheduleGroups(sourceData: NetworkService()) // эксперимент // используется обычный сетевой сервис, для получения данных из сети
     
     @StateObject private var viewModelForAppStorage = ViewModelForAppStorage()
     
-#warning("Надо бы перенести в appStorageSaveKey")
+    #warning("Надо бы перенести в appStorageSaveKey")
     @AppStorage("scheduleForWidget", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var scheduleForWidget: Data?
         
     var body: some View {
@@ -127,10 +128,14 @@ struct MaxViewGroupInSelector: View {
             }
             .padding(.leading, 10)
             
-            .onChange(of: appStorageSaveKey.favoriteGroup) {                                    // при изменении выбранно группы
+            .onChange(of: appStorageSaveKey.favoriteGroup) {                                    // при изменении выбранной группы
                 Task {
-                    await networkService.getScheduleGroup(group: appStorageSaveKey.favoriteGroup) // загрузка данных для дальнейшей загрузки в AppStorage (тут используется )
-                    viewModelForAppStorage.saveFavoriteGroupScheduleToAppStorage(networkService.arrayOfScheduleGroup)
+                    await networkService.getScheduleGroup(group: appStorageSaveKey.favoriteGroup)
+                    if networkService.errorOfScheduleGroup == "" {
+                        viewModelForAppStorage.saveFavoriteGroupScheduleToAppStorage(networkService.arrayOfScheduleGroup)
+                    } else {
+                        return
+                    }
                 }
                 
                 
@@ -156,7 +161,7 @@ struct MaxViewGroupInSelector: View {
         }
         .padding(EdgeInsets(top: 10, leading: 10, bottom: 0, trailing: 10))
         
-        .navigationDestination(for: String.self) { _ in
+        .navigationDestination(for: String.self) { _ in                                         #warning("Надо показывать массив преподавателей, который уже найден в task TabView")
             UniversalPicker(selected: $appStorageSaveKey.favoriteGroup, title: "Преподаватели", items: groupListViewModel.arrayOfGroupsNum, value: \.name, secondValue: \.name)
         }
     }

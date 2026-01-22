@@ -28,19 +28,18 @@ extension EnvironmentValues {
 
 struct TabBarView: View {
     
+    #warning("Сделать DI")
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(\.verticalSizeClass) var verticalSizeClass
     
     @StateObject private var weekViewModel = NetworkViewModelForWeek()                              // получение текущей недели
     @StateObject private var groupListViewModel = NetworkViewModelForListGroups()                   // получение списка групп
-    @StateObject private var groupScheduleViewModel = NetworkViewModelForScheduleGroups()           // получение расписания группы (тут только один экземпляр с сетевым менеджером)
+    @StateObject private var groupScheduleViewModel = NetworkViewModelForScheduleGroups(sourceData: NetworkService())           // получение расписания группы (тут только один экземпляр с сетевым менеджером)
 //    @StateObject private var
     @StateObject private var employeeListViewModel = NetworkViewModelForListEmployees()             // получение списка преподавателей
-    @StateObject private var employeeScheduleViewModel = NetworkViewModelForScheduleEmployees()     // получение расписания преподавателя
+    @StateObject private var employeeScheduleViewModel = NetworkViewModelForScheduleEmployees(sourceData: NetworkService())     // получение расписания преподавателя
     
     @StateObject private var viewModelForAppStorage = ViewModelForAppStorage()
-    
-    #warning("Сделать DI")
     @StateObject private var appStorageSave = AppStorageSave() // хранилище всех AppStorage
                  private var saveForWidgetService = SaveForWidgetService() // плохо, что view знает о сервисе, можно сдеать viewModel
     
@@ -67,19 +66,16 @@ struct TabBarView: View {
             TabView(selection: $selectedTab) {
                 Tab("Все группы", systemImage: "person.3", value: 0) {
                     GroupsTab()
-                        .environmentObject(groupListViewModel)
-                        .environmentObject(NetworkViewModelForScheduleGroups(sourceData: NetworkService()))
+                        .environmentObject(NetworkViewModelForScheduleGroups(sourceData: NetworkService()))                     // расписание группы
                 }
                 Tab("Преподаватели", systemImage: "calendar.and.person", value: 1) {
                     EmployeesTab()
-                        .environmentObject(employeeListViewModel)
-                        .environmentObject(NetworkViewModelForScheduleEmployees(sourceData: NetworkService()))
+                        .environmentObject(NetworkViewModelForScheduleEmployees(sourceData: NetworkService()))                  // расписание преподавателя
                 }
                 if appStorageSave.whoUser == .student && appStorageSave.favoriteGroup != "Не выбрано" {
                     Tab("Моя группа", systemImage: "star", value: 2) {
                         NavigationStack {
                             EachGroup(groupName: appStorageSave.favoriteGroup)
-                                .environmentObject(groupListViewModel)
                                 .environmentObject(NetworkViewModelForScheduleGroups(sourceData: AppStorageServiceForApp()))
                         }
                     }
@@ -87,34 +83,30 @@ struct TabBarView: View {
                     Tab("Мое расписание", systemImage: "star", value: 2) {
                         NavigationStack {
                             EachEmployee(employeeName: appStorageSave.employeeName)
-                                .environmentObject(employeeListViewModel)
                                 .environmentObject(NetworkViewModelForScheduleEmployees(sourceData: AppStorageServiceForApp()))
                         }
                     }
                 }
                 Tab("Личный кабинет", systemImage: "person.circle", value: 3) {
                     PersonalAccount()
-                        .environmentObject(groupListViewModel)
-                        .environmentObject(employeeListViewModel)
                         .environmentObject(NetworkViewModelForScheduleEmployees(sourceData: AppStorageServiceForApp()))
+//                        .environmentObject(NetworkViewModelForScheduleGroups(sourceData: NetworkService()))
+                    // тут нужны 2 экзампляра (сетевой для получения списков (можно убрать) и хранилище)
                 }
             }
             
             .task {
-                await Task.detached {
-                    await weekViewModel.getCurrentWeek()           // получение текущей недели
-                    await groupListViewModel.getArrayOfGroupNum()       // получение списка групп
-                    await employeeListViewModel.getArrayOfEmployees()      // получение списка преподавателей
+                await weekViewModel.getCurrentWeek()                            // получение текущей недели
+                await groupListViewModel.getArrayOfGroupNum()                   // получение списка групп
+                await employeeListViewModel.getArrayOfEmployees()               // получение списка преподавателей
                     
-                    do {
-                        try await saveForWidgetService.saveDataForWidgetToAppStorage(groupScheduleViewModel.arrayOfScheduleGroup.nextSchedules)
-                    } catch {
-                        print("Неудачная попытка загрузить расписание в AppStorage: \(error)")
-                    }
-                }.value
+                do {
+                    try saveForWidgetService.saveDataForWidgetToAppStorage(groupScheduleViewModel.arrayOfScheduleGroup.nextSchedules)
+                } catch {
+                    print("Неудачная попытка загрузить расписание в AppStorage: \(error)")
+                }
                 
                 saveForWidgetService.saveWeekNumberToAppStorage(weekViewModel.currentWeek) // запись номера недели в appStorage
-                
             }
             
 //            #warning("Создание большого количество потоков")
@@ -138,8 +130,8 @@ struct TabBarView: View {
         
         .environmentObject(weekViewModel) // много ли где нужно?
         
-        
-        
+        .environmentObject(groupListViewModel)                                      // список групп
+        .environmentObject(employeeListViewModel)                                   // список преподавателей
         
         .environment(\.saveForWidgetService, saveForWidgetService)
         .environmentObject(appStorageSave)

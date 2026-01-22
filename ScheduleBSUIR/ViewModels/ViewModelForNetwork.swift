@@ -111,7 +111,7 @@ class NetworkViewModelForScheduleGroups: ObservableObject, NetworkViewModelForSc
         
     private let sourceData: SourceData // сервис получения расписания (по умолчанию NetworkService(), но может быть и AppStorageServiceForApp())
     
-    init(sourceData: SourceData = NetworkService()) {
+    init(sourceData: SourceData) {
         self.sourceData = sourceData
     }
     let logger = Logger()
@@ -217,7 +217,6 @@ class NetworkViewModelForScheduleGroups: ObservableObject, NetworkViewModelForSc
 
 
 
-
 // MARK: - Список преподавателей
 protocol NetworkViewModelForListEmployeesProtocol {
     var scheduleForEmployees: [EmployeeModel] { get }                                       // список всех преподавателей
@@ -281,7 +280,7 @@ class NetworkViewModelForScheduleEmployees: ObservableObject, NetworkViewModelFo
     
     private let sourceData: SourceData
     
-    init(sourceData: SourceData = NetworkService()) {
+    init(sourceData: SourceData) {
         self.sourceData = sourceData
     }
     let logger = Logger()

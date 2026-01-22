@@ -27,7 +27,6 @@ class ViewModelForAppStorage: ObservableObject {
     func saveFavoriteGroupScheduleToAppStorage(_ data: EachGroupResponse) {
         do {
             try appStorageService.saveFavoriteGroupScheduleToAppStorage(data)
-            print("Данные загружены в AppStorage: \(data)")
         } catch {
             print(error)
         }

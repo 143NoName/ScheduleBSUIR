@@ -70,10 +70,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		49571B8A2F19070300D4AC1A /* ScheduleBSUIRTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = ScheduleBSUIRTests.xctest; path = "/Library/Моя прога/SwiftUI/ScheduleBSUIR/build/Debug-iphoneos/ScheduleBSUIR.app/PlugIns/ScheduleBSUIRTests.xctest"; sourceTree = "<absolute>"; };
-		49571B8B2F19070300D4AC1A /* ScheduleBSUIRUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = ScheduleBSUIRUITests.xctest; path = "/Library/Моя прога/SwiftUI/ScheduleBSUIR/build/Debug-iphoneos/ScheduleBSUIRUITests-Runner.app/PlugIns/ScheduleBSUIRUITests.xctest"; sourceTree = "<absolute>"; };
 		49571C632F1B932800D4AC1A /* ScheduleBSUIR.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = ScheduleBSUIR.xcodeproj; sourceTree = SOURCE_ROOT; };
 		498676EB2ED8560500892C4B /* ScheduleCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ScheduleCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		498C69DF2F1D09BA006BF8FD /* ScheduleBSUIRTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = ScheduleBSUIRTests.xctest; path = "/Library/Моя прога/SwiftUI/ScheduleBSUIR/build/Debug-iphoneos/ScheduleBSUIR.app/PlugIns/ScheduleBSUIRTests.xctest"; sourceTree = "<absolute>"; };
+		498C69E02F1D09BA006BF8FD /* ScheduleBSUIRUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = ScheduleBSUIRUITests.xctest; path = "/Library/Моя прога/SwiftUI/ScheduleBSUIR/build/Debug-iphoneos/ScheduleBSUIRUITests-Runner.app/PlugIns/ScheduleBSUIRUITests.xctest"; sourceTree = "<absolute>"; };
 		49B688132EF29F550012B3BB /* ScheduleBSUIRWidgetExtensionDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ScheduleBSUIRWidgetExtensionDebug.entitlements; sourceTree = "<group>"; };
 		49F20D672EE0C9A1005F184A /* ScheduleBSUIR.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ScheduleBSUIR.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AF5B118F2EB4DD7800EBC825 /* ScheduleBSUIRWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ScheduleBSUIRWidgetExtension.entitlements; sourceTree = "<group>"; };
@@ -194,6 +194,11 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		498C6A4A2F1D09BB006BF8FD /* Products */ = {
+			isa = PBXGroup;
+			name = Products;
+			sourceTree = "<group>";
+		};
 		AFA212E92EAE29F20010C9F6 = {
 			isa = PBXGroup;
 			children = (
@@ -297,7 +302,7 @@
 			packageProductDependencies = (
 			);
 			productName = ScheduleBSUIRTests;
-			productReference = 49571B8A2F19070300D4AC1A /* ScheduleBSUIRTests.xctest */;
+			productReference = 498C69DF2F1D09BA006BF8FD /* ScheduleBSUIRTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		AFA213082EAE29F30010C9F6 /* ScheduleBSUIRUITests */ = {
@@ -317,7 +322,7 @@
 			packageProductDependencies = (
 			);
 			productName = ScheduleBSUIRUITests;
-			productReference = 49571B8B2F19070300D4AC1A /* ScheduleBSUIRUITests.xctest */;
+			productReference = 498C69E02F1D09BA006BF8FD /* ScheduleBSUIRUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 		AFF20D852EB365B100383B2B /* ScheduleBSUIRWidgetExtension */ = {
@@ -384,6 +389,12 @@
 			preferredProjectObjectVersion = 77;
 			productRefGroup = AFA212E92EAE29F20010C9F6;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 498C6A4A2F1D09BB006BF8FD /* Products */;
+					ProjectRef = 49571C632F1B932800D4AC1A /* ScheduleBSUIR.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				AFA212F12EAE29F20010C9F6 /* ScheduleBSUIR */,
