@@ -5,12 +5,7 @@
 //  Created by andrew on 21.12.25.
 //
 
-import Foundation
 import SwiftUI
-
-protocol ScheduleResponseProtocol {
-    var schedule: Schedules { get }
-}
 
 struct Schedules: Codable, Sendable {
     let monday: [Lesson]?

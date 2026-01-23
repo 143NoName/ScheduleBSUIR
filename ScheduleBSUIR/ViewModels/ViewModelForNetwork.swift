@@ -161,6 +161,17 @@ class NetworkViewModelForScheduleGroups: ObservableObject, NetworkViewModelForSc
         }
     }
     
+    #warning("Новая функция, которая просто получает и возвращает расписание группы")
+    func getScheduleGroupForWidget(group: String) async -> [FormatedSchedules] {
+        do {
+            let data = try await networkService.getScheduleGroup(group)
+            return data.nextSchedules.getFormatedSchedules()
+        } catch {
+            print(error.localizedDescription)
+            return []
+        }
+    }
+    
     func scheduleForEachGroupInNull() {
         arrayOfScheduleGroup = EachGroupResponse(
             startDate: "",
