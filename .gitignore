@@ -3,6 +3,7 @@
 # Xcode
 *.xcuserstate
 *.xcuserdata
+*.xcuserdatad
 *.xcworkspace/
 
 DerivedData/
