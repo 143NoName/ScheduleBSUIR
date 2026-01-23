@@ -12,19 +12,26 @@ import os.log
 
 struct Provider: TimelineProvider {
     
+    let appStorageSave = AppStorageSave()
+    
+    let filterInWidget: FilterInWidgetProtocol
+    let getScheduleInWidget: GetScheduleForWidgetProtocol
+    
+    init(
+         filterInWidget: FilterInWidgetProtocol = FilterInWidget(),
+         getScheduleInWidget: GetScheduleForWidgetProtocol = GetScheduleForWidget()
+    ){
+        self.filterInWidget = filterInWidget
+        self.getScheduleInWidget = getScheduleInWidget
+    }
+    
     func placeholder(in context: Context) -> LessonsInWidget { // показывает заглушку при первом добавлении виджета
-        LessonsInWidget(date: Date(), lessons: [], favoriteGroup: "261402", subGroup: 1, weekNum: 1) // показывается в canvass
+        LessonsInWidget(date: Date(), lessons: [], favoriteGroup: "261402", subGroup: .all, weekNum: 1) // показывается в canvass
     }
 
     func getSnapshot(in context: Context, completion: @escaping (LessonsInWidget) -> ()) { // показывает пример виджета при выборе
-        let entry = LessonsInWidget(date: Date(), lessons: [], favoriteGroup: "261402", subGroup: 2, weekNum: 1)
+        let entry = LessonsInWidget(date: Date(), lessons: [], favoriteGroup: "261402", subGroup: .all, weekNum: 1)
         completion(entry)
-    }
-
-    let funcsService: FuncsServiceForWidget
-    
-    init(funcsService: FuncsServiceForWidget = FuncsServiceForWidget()) {
-        self.funcsService = funcsService
     }
     
     func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) { // основная функция, создает расписание обновлений
@@ -36,18 +43,19 @@ struct Provider: TimelineProvider {
         var lessons: [FormatedSchedules] = [] // массив для расписания в виджете
         
         do {
-            guard let data = try funcsService.getDataFromUserDefaults() else { return } // получение данных из UserDefaults
+            guard let data = try getScheduleInWidget.getDataFromAppStorage() else { return } // получение данных из UserDefaults
             lessons = data
         } catch {
             print("Ошибка при получении расписания в виджет")
         }
         
+        // определение завтрашнего дня
         guard let nextDay = calendar.date(byAdding: .day, value: 1, to: date) else { return }
         let startOfNextDay = calendar.startOfDay(for: nextDay)
         
         let timeLine = [
-            LessonsInWidget(date: date, lessons: funcsService.findTodayLessons(lessons: lessons), favoriteGroup: funcsService.favoriteGroup == "" ? "Неизвество" : funcsService.favoriteGroup, subGroup: funcsService.subGroup, weekNum: funcsService.weekNumber),
-            LessonsInWidget(date: startOfNextDay, lessons: funcsService.findTodayLessons(lessons: lessons), favoriteGroup: funcsService.favoriteGroup == "" ? "Неизвество" : funcsService.favoriteGroup, subGroup: funcsService.subGroup, weekNum: funcsService.weekNumber)
+            LessonsInWidget(date: date, lessons: filterInWidget.findTodayLessons(lessons: lessons), favoriteGroup: appStorageSave.favoriteGroup, subGroup: appStorageSave.subGroup, weekNum: appStorageSave.weekNumber),
+            LessonsInWidget(date: startOfNextDay, lessons: filterInWidget.findTodayLessons(lessons: lessons), favoriteGroup: appStorageSave.favoriteGroup, subGroup: appStorageSave.subGroup, weekNum: appStorageSave.weekNumber)
         ]
         
         completion(Timeline(entries: timeLine, policy: .after(Date())))
@@ -58,7 +66,7 @@ struct LessonsInWidget: TimelineEntry {
     let date: Date
     let lessons: [Lesson]
     let favoriteGroup: String
-    let subGroup: Int
+    let subGroup: SubGroupInPicker
     let weekNum: Int
 }
 
@@ -78,7 +86,7 @@ struct ScheduleBSUIRWidgetEntryView: View {
         case .systemMedium:
             ViewForMedium(date: date, favoriteGroup: entry.favoriteGroup, lesson: findCurrentLesson, isWeekend: isWeekend, isHaveLessons: isHaveLessons)
         case .systemLarge:
-            ViewForLarge(date: date, favoriteGroup: entry.favoriteGroup, weenNumber: weenNumber, subGroup: subGroup, lesson: findCurrentLesson, isWeekend: isWeekend, isHaveLessons: isHaveLessons)
+            ViewForLarge(date: date, favoriteGroup: entry.favoriteGroup, weenNumber: entry.weekNum, subGroup: entry.subGroup, lesson: findCurrentLesson, isWeekend: isWeekend, isHaveLessons: isHaveLessons)
         default:
             EmptyView()
         }
@@ -149,17 +157,6 @@ extension ScheduleBSUIRWidgetEntryView {
     var date: String {
         "\(getShortWeekdaySymbol()), \(calendar.component(.day, from: Date()))"
     } // почему то выполняется 6 раз
-
-    
-    // только для большого виджета
-    var subGroup: Int {
-        return entry.subGroup
-    }
-    
-    var weenNumber: Int {
-        return entry.weekNum
-    }
-    // только для большого виджета
     
     
     

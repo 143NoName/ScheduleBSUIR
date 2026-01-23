@@ -89,15 +89,17 @@ struct ButtonShowMaxOrMin: View {
 // ученик
 struct MaxViewGroupInSelector: View {
     
-    @EnvironmentObject var appStorageSaveKey: AppStorageSave                                      // ключи AppStorage
-    @EnvironmentObject var groupListViewModel: NetworkViewModelForListGroups                       // viewModel для получения массива преподавателей и загрузки его расписания для дальнейшей загрузки в AppStorage
+    @EnvironmentObject var appStorageSaveKey: AppStorageSave                                        // ключи AppStorage
+    @EnvironmentObject var groupListViewModel: NetworkViewModelForListGroups                        // viewModel для получения массива преподавателей и загрузки его расписания для дальнейшей загрузки в AppStorage
+    @EnvironmentObject var scheduleGroup: NetworkViewModelForScheduleGroups                         // расписание гурппы
     
     let networkService = NetworkViewModelForScheduleGroups() // эксперимент // используется обычный сетевой сервис, для получения данных из сети
     
-    @StateObject private var viewModelForAppStorage = ViewModelForAppStorage()
-    
-#warning("Надо бы перенести в appStorageSaveKey")
-    @AppStorage("scheduleForWidget", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var scheduleForWidget: Data?
+    let encoder = JSONEncoder()
+        
+    #warning("Надо бы перенести в appStorageSaveKey")
+    @AppStorage("favoriteGroup", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var favoriteGroup: String = "Не выбрано"         // номер группы
+    @AppStorage("scheduleForWidget", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var scheduleForWidget: Data?                 // пусть это будет универсальные данные в виджете (массив дней и расписаний к ним)
         
     var body: some View {
         HStack {
@@ -127,11 +129,23 @@ struct MaxViewGroupInSelector: View {
             }
             .padding(.leading, 10)
             
-            .onChange(of: appStorageSaveKey.favoriteGroup) {                                    // при изменении выбранно группы
+            .onChange(of: appStorageSaveKey.favoriteGroup) {                                                                // при изменении выбранной группы:
+                                
+                // при изменении: надо получить расписание группы, отфильтровать, записать в appStorage и обновить виджет
                 Task {
-                    await networkService.getScheduleGroup(group: appStorageSaveKey.favoriteGroup) // загрузка данных для дальнейшей загрузки в AppStorage (тут используется )
-                    viewModelForAppStorage.saveFavoriteGroupScheduleToAppStorage(networkService.arrayOfScheduleGroup)
+                    let data = await scheduleGroup.getScheduleGroupForWidget(group: appStorageSaveKey.favoriteGroup)        // получение расписания
+    
+                    // надо отфильтровать                                                                                   // фильтрация расписания
+                    
+                    do {                                                                                                    // кодирование и запись данных
+                        scheduleForWidget = try encoder.encode(data)
+                    } catch {
+                        print("Проблема с декодированием")
+                    }
                 }
+                
+                // обновиться само
+//                WidgetCenter.shared.reloadAllTimelines()                                                                    // обновленние
                 
                 
                 // тут надо загружать расписание в AppStorage groupSchedule
@@ -149,15 +163,11 @@ struct MaxViewGroupInSelector: View {
             }
             // тут при изменении номера группы надо изменять номер группы и ее расписание (номер группы изменяется реактивно, а для изменения группы надо вызывать функцию получения и сохранения расписания)
             
-            .onChange(of: appStorageSaveKey.subGroup) {
-                WidgetCenter.shared.reloadAllTimelines()
-                // надо будет тут опять вызывать обновление данных в виджете так как надо отфильтровать по подгруппе
-            }
         }
         .padding(EdgeInsets(top: 10, leading: 10, bottom: 0, trailing: 10))
         
         .navigationDestination(for: String.self) { _ in
-            UniversalPicker(selected: $appStorageSaveKey.favoriteGroup, title: "Преподаватели", items: groupListViewModel.arrayOfGroupsNum, value: \.name, secondValue: \.name)
+            UniversalPicker(selected: $appStorageSaveKey.favoriteGroup, title: "Группы", items: groupListViewModel.arrayOfGroupsNum, value: \.name, secondValue: \.name)
         }
     }
 }

@@ -22,7 +22,7 @@ protocol NetworkServiceProtocol {
     func getEachEmployeeSchedule(_ id: String) async throws -> EachEmployeeResponse
 }
 
-class NetworkService: NetworkServiceProtocol, SourceData {
+class NetworkService: NetworkServiceProtocol {
     let decoder = JSONDecoder()
     
     // НЕДЕЛЯ

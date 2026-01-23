@@ -140,8 +140,6 @@ struct EachGroup: View {
     NavigationStack {
         EachGroup(groupName: "310101")
             .environmentObject(NetworkViewModelForWeek())
-        // на выбор какой сервис
-            .environmentObject(NetworkViewModelForScheduleGroups(sourceData: NetworkService()))
-//            .environmentObject(NetworkViewModelForScheduleGroups(sourceData: AppStorageServiceForApp()))
+            .environmentObject(NetworkViewModelForScheduleGroups())
     }
 }

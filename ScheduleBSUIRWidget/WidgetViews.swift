@@ -175,7 +175,7 @@ struct ViewForLarge: View {
     let date: String
     let favoriteGroup: String
     let weenNumber: Int
-    let subGroup: Int
+    let subGroup: SubGroupInPicker
     let lesson: [Lesson]
     let isWeekend: Bool
     let isHaveLessons: Bool
@@ -250,10 +250,10 @@ struct ViewForLarge: View {
             HStack {
                 Text("Неделя: \(weenNumber)")
                 Spacer()
-                if subGroup == 0 {
+                if subGroup == .all {
                     Text("Все подгруппы")
                 } else {
-                    Text("Подргуппа: \(subGroup)")
+                    Text("Подргуппа: \(subGroup.rawValue)")
                 }
             }
             .padding(EdgeInsets(top: 4, leading: 4, bottom: 0, trailing: 4))
@@ -268,17 +268,17 @@ struct ViewForLarge: View {
 #Preview(as: .systemSmall) {
     ScheduleBSUIRWidget()
 } timeline: {
-    LessonsInWidget(date: .now, lessons: [], favoriteGroup: "261402", subGroup: 1, weekNum: 1)
+    LessonsInWidget(date: .now, lessons: [], favoriteGroup: "261402", subGroup: .all, weekNum: 1)
 }
 
 #Preview(as: .systemMedium) {
     ScheduleBSUIRWidget()
 } timeline: {
-    LessonsInWidget(date: .now, lessons: [], favoriteGroup: "261402", subGroup: 1, weekNum: 1)
+    LessonsInWidget(date: .now, lessons: [], favoriteGroup: "261402", subGroup: .all, weekNum: 1)
 }
 
 #Preview(as: .systemLarge) {
     ScheduleBSUIRWidget()
 } timeline: {
-    LessonsInWidget(date: .now, lessons: [], favoriteGroup: "261402", subGroup: 1, weekNum: 1)
+    LessonsInWidget(date: .now, lessons: [], favoriteGroup: "261402", subGroup: .all, weekNum: 1)
 }
