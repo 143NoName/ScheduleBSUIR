@@ -63,7 +63,7 @@ struct SelectorViewForEmployee: View {
 
 private struct MaxViewSelector: View {
     
-    @EnvironmentObject var employeeScheduleViewModel: NetworkViewModelForScheduleEmployees
+    @Environment(NetworkViewModelForScheduleEmployees.self) var employeeScheduleViewModel
     @Binding var weekNumber: WeeksInPicker
     @Binding var weekDay: DaysInPicker
     

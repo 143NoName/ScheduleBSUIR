@@ -9,7 +9,7 @@ import SwiftUI
 
 struct GroupsTab: View {
     
-    @EnvironmentObject var groupListViewModel: NetworkViewModelForListGroups            // viewModel для получения списка групп
+    @Environment(NetworkViewModelForListGroups.self) var groupListViewModel             // viewModel для получения списка групп
     @Environment(\.colorScheme) var colorScheme
     
     @State var searchText: String = ""
@@ -70,7 +70,7 @@ struct GroupsTab: View {
 
 #Preview {
     GroupsTab()
-        .environmentObject(NetworkViewModelForListGroups())
+        .environment(NetworkViewModelForListGroups())
 }
 
 private struct ViewEachGroup: View {

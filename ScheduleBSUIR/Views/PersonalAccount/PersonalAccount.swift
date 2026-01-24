@@ -10,10 +10,10 @@ import PhotosUI
 
 struct PersonalAccount: View {
     
-    @EnvironmentObject var groupListViewModel: NetworkViewModelForListGroups
-    @EnvironmentObject var employeeListViewModel: NetworkViewModelForListEmployees
-    @EnvironmentObject var employeeScheduleViewModel: NetworkViewModelForScheduleEmployees
-    @EnvironmentObject var appStorageSaveKey: AppStorageSave // ключи AppStorage
+    @Environment(NetworkViewModelForListGroups.self) var groupListViewModel
+    @Environment(NetworkViewModelForListEmployees.self) var employeeListViewModel
+    @Environment(NetworkViewModelForScheduleEmployees.self) var employeeScheduleViewModel
+//    @Environment(\.appStorageSaveService) var appStorageSaveKey // ключи AppStorage
     
     @Environment(\.colorScheme) var colorScheme
     
@@ -30,16 +30,16 @@ struct PersonalAccount: View {
     @State private var studentSurname: String = ""
     @State private var studentPatronymic: String = ""
         
+    @AppStorage("whoUser", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var whoUser: WhoUser = .none
     @AppStorage("employeeName", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var employeeName: String = "Не выбрано"
-    
     @AppStorage("favoriteGroup", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var favoriteGroup: String = "Не выбрано"
     @AppStorage("subGroup", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var subGroup: Int = 0
     
     func getListStudentOrEmployees() {
         Task {
-            if appStorageSaveKey.whoUser == .student {
+            if whoUser == .student {
                 await groupListViewModel.getArrayOfGroupNum()
-            } else if appStorageSaveKey.whoUser == .employee {
+            } else if whoUser == .employee {
                 await employeeListViewModel.getArrayOfEmployees()
                 if employeeName != "Не выбрано" {
                     await employeeScheduleViewModel.getEachEmployeeSchedule(employeeName)
@@ -83,7 +83,6 @@ struct PersonalAccount: View {
                         .opacity(0.15)
                         .ignoresSafeArea(edges: .all)
                 }
-                #warning("Может быть вынести ZStack с условием if/else и цветом на заднем фоне")
                 VStack {
                     List {
                         Section {
@@ -116,7 +115,7 @@ struct PersonalAccount: View {
                                         .tint(Color.primary.opacity(0.8))
                                 }
                             }
-                            if appStorageSaveKey.whoUser == .employee {
+                            if whoUser == .employee {
                                 Section {
                                     if employeeListViewModel.isLoadingScheduleForEmployees {
                                         ProgressView()
@@ -133,7 +132,7 @@ struct PersonalAccount: View {
                         .frame(maxWidth: .infinity)
                         
                         
-                        if appStorageSaveKey.whoUser == .student {
+                        if whoUser == .student {
                             Section(header: Text("ФИО")) {
                                 TextField("Твое имя", text: $studentName)
                                 TextField("Твоя фамилия", text: $studentSurname)
@@ -176,13 +175,13 @@ struct PersonalAccount: View {
 
 #Preview() {
     @Previewable @State var whoUser: WhoUser = .employee
+    #warning("Не видит из за виджета (таргета)")
     
-    
-    return NavigationView {
+    NavigationView {
         PersonalAccount()
-            .environmentObject(NetworkViewModelForListGroups())
-            .environmentObject(NetworkViewModelForListEmployees())
-            .environmentObject(NetworkViewModelForScheduleEmployees())
-            .environmentObject(AppStorageSave())
+            .environment(NetworkViewModelForListGroups())
+            .environment(NetworkViewModelForListEmployees())
+            .environment(NetworkViewModelForScheduleEmployees())
+//            .environment(\.appStorageSaveService, appStorageAppStorageSave)
     }
 }

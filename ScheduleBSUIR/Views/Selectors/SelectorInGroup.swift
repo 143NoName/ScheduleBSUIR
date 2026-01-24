@@ -66,7 +66,7 @@ struct SelectorViewForGroup: View {
 
 private struct MaxViewSelector: View {
     
-    @EnvironmentObject var groupScheduleViewModel: NetworkViewModelForScheduleGroups
+    @Environment(NetworkViewModelForScheduleGroups.self) var groupScheduleViewModel
     @Binding var subGroup: SubGroupInPicker
     @Binding var weekNumber: WeeksInPicker
     @Binding var weekDay: DaysInPicker

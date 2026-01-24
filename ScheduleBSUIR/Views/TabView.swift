@@ -15,11 +15,20 @@ struct SaveForWidgetServiceKey: EnvironmentKey {
 //    static let defaultValue: Bool = false
 //}
 
+//struct AppStorageSaveKey: EnvironmentKey {
+//    static let defaultValue: AppStorageSave = AppStorageSave()
+//}
+
 extension EnvironmentValues {
     var saveForWidgetService: SaveForWidgetService? {
         get { self[SaveForWidgetServiceKey.self] }
         set { self[SaveForWidgetServiceKey.self] = newValue }
     }
+    
+//    var appStorageSaveService: AppStorageSave {
+//        get { self[AppStorageSaveKey.self] }
+//        set { self[AppStorageSaveKey.self] = newValue }
+//    }
 //    var isPortraitOniPhone: Bool {
 //        get { self[IsPortraitOniPhone.self] }
 //        set { self[IsPortraitOniPhone.self] = newValue }
@@ -32,16 +41,21 @@ struct TabBarView: View {
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(\.verticalSizeClass) var verticalSizeClass
     
-    @StateObject private var weekViewModel = NetworkViewModelForWeek()                              // получение текущей недели
-    @StateObject private var groupListViewModel = NetworkViewModelForListGroups()                   // получение списка групп
-    @StateObject private var groupScheduleViewModel = NetworkViewModelForScheduleGroups()           // получение расписания группы (тут только один экземпляр с сетевым менеджером)
-    @StateObject private var employeeListViewModel = NetworkViewModelForListEmployees()             // получение списка преподавателей
-    @StateObject private var employeeScheduleViewModel = NetworkViewModelForScheduleEmployees()     // получение расписания преподавателя
+    @State private var weekViewModel = NetworkViewModelForWeek()                              // получение текущей недели
+    @State private var groupListViewModel = NetworkViewModelForListGroups()                   // получение списка групп
+    @State private var groupScheduleViewModel = NetworkViewModelForScheduleGroups()           // получение расписания группы (тут только один экземпляр с сетевым менеджером)
+    @State private var employeeListViewModel = NetworkViewModelForListEmployees()             // получение списка преподавателей
+    @State private var employeeScheduleViewModel = NetworkViewModelForScheduleEmployees()     // получение расписания преподавателя
+//    @State private var appStorageSave = AppStorageSave()                                      // хранилище всех AppStorage
+           private let saveForWidgetService = SaveForWidgetService()                                                // плохо, что view знает о сервисе, можно сдеать viewModel
     
-    @StateObject private var appStorageSave = AppStorageSave() // хранилище всех AppStorage
-                 private var saveForWidgetService = SaveForWidgetService() // плохо, что view знает о сервисе, можно сдеать viewModel
     
     @State private var selectedTab: Int = 2
+    
+    @AppStorage("whoUser", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var whoUser: WhoUser = .none
+    @AppStorage("favoriteGroup", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var favoriteGroup: String = "Не выбрано"
+    @AppStorage("employeeName", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var employeeName: String = "Не выбрано"
+    
 //    @State private var splashScreen: Bool = true
     
 //    @State private var isPresentedSplashScreen: Bool = true
@@ -68,16 +82,16 @@ struct TabBarView: View {
                 Tab("Преподаватели", systemImage: "calendar.and.person", value: 1) {
                     EmployeesTab()
                 }
-                if appStorageSave.whoUser == .student && appStorageSave.favoriteGroup != "Не выбрано" {
+                if whoUser == .student && favoriteGroup != "Не выбрано" {
                     Tab("Моя группа", systemImage: "star", value: 2) {
                         NavigationStack {
-                            EachGroup(groupName: appStorageSave.favoriteGroup)
+                            EachGroup(groupName: favoriteGroup)
                         }
                     }
-                } else if appStorageSave.whoUser == .employee && appStorageSave.employeeName != "Не выбрано" {
+                } else if whoUser == .employee && employeeName != "Не выбрано" {
                     Tab("Мое расписание", systemImage: "star", value: 2) {
                         NavigationStack {
-                            EachEmployee(employeeName: appStorageSave.employeeName)
+                            EachEmployee(employeeName: employeeName)
                         }
                     }
                 }
@@ -120,13 +134,14 @@ struct TabBarView: View {
             
 //        }
         
-        .environmentObject(weekViewModel)
-        .environmentObject(groupListViewModel)                                      // список групп
-        .environmentObject(employeeListViewModel)                                   // список преподавателей
-        .environmentObject(groupScheduleViewModel)                                  // расписание группы
-        .environmentObject(employeeScheduleViewModel)                               // расписание преподавателя
+        .environment(weekViewModel)
+        .environment(groupListViewModel)                                      // список групп
+        .environment(employeeListViewModel)                                   // список преподавателей
+        .environment(groupScheduleViewModel)                                  // расписание группы
+        .environment(employeeScheduleViewModel)                               // расписание преподавателя
         .environment(\.saveForWidgetService, saveForWidgetService)
-        .environmentObject(appStorageSave)
+//        .environment(appStorageSave)
+        #warning("Сделать @Observable")
     }
 }
 

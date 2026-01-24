@@ -10,7 +10,7 @@ import Marquee
 
 struct EmployeesTab: View {
     
-    @EnvironmentObject var employeeListViewModel: NetworkViewModelForListEmployees
+    @Environment(NetworkViewModelForListEmployees.self) var employeeListViewModel
     @Environment(\.colorScheme) var colorScheme
 
     @State var searchText: String = ""

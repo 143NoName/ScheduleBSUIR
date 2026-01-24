@@ -9,18 +9,25 @@ import SwiftUI
 import WidgetKit
 
 struct SelectorViewForPersonalAccount: View {
-    @EnvironmentObject var appStorageSaveKey: AppStorageSave
+//    @Environment(AppStorageSave.self) var appStorageSaveKey
+    
+    @AppStorage("whoUser", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var whoUser: WhoUser = .none
+    @AppStorage("subGroup", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var subGroup: SubGroupInPicker = .all
+    @AppStorage("favoriteGroup", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var favoriteGroup: String = "Не выбрано"
+    @AppStorage("employeeName", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var employeeName: String = "Не выбрано"
+    
     @State var showAll: Bool = true
         
     var body: some View {
+//        @Bindable var appStorageSaveKey = appStorageSaveKey
         NavigationStack {
             VStack {
                 ButtonShowMaxOrMin(showAll: $showAll)
                 VStack {
                     if showAll {
-                        if appStorageSaveKey.whoUser == .student {
+                        if whoUser == .student {
                             MaxViewGroupInSelector()                 // полный вид для группы
-                        } else if appStorageSaveKey.whoUser == .employee {
+                        } else if whoUser == .employee {
                             MaxViewEmployeeInSelector()             // полный вид для преподавателей
                         }
                         VStack {
@@ -28,7 +35,7 @@ struct SelectorViewForPersonalAccount: View {
                                 Text("Пользователь")
                                     .font(.system(size: 16, weight: .semibold))
                                     .padding(.leading)
-                                Picker("", selection: $appStorageSaveKey.whoUser) {
+                                Picker("", selection: $whoUser) {
                                     Text("Ученик").tag(WhoUser.student)
                                     Text("Преподаватель").tag(WhoUser.employee)
                                     Text("Другое").tag(WhoUser.none)
@@ -38,17 +45,17 @@ struct SelectorViewForPersonalAccount: View {
                             .padding(10)
                         }
                     } else {
-                        if appStorageSaveKey.whoUser == .student {
-                            MinViewGroupInSelector(subGroup: appStorageSaveKey.subGroup.inString, favoriteGroup: appStorageSaveKey.favoriteGroup, whoUser: appStorageSaveKey.whoUser.rawValue, showAll: $showAll)                       // уменьшенный вид для группы
-                        } else if appStorageSaveKey.whoUser == .employee {
-                            MimViewEmployeeInSelector(employeeName: appStorageSaveKey.employeeName, whoUser: appStorageSaveKey.whoUser.rawValue, showAll: $showAll)  // уменьшенный вид для преподавателей
+                        if whoUser == .student {
+                            MinViewGroupInSelector(subGroup: subGroup.inString, favoriteGroup: favoriteGroup, whoUser: whoUser.rawValue, showAll: $showAll)                       // уменьшенный вид для группы
+                        } else if whoUser == .employee {
+                            MimViewEmployeeInSelector(employeeName: employeeName, whoUser: whoUser.rawValue, showAll: $showAll)  // уменьшенный вид для преподавателей
                         } else {
-                            MinViewNoneInSelector(whoUser: appStorageSaveKey.whoUser.rawValue, showAll: $showAll)
+                            MinViewNoneInSelector(whoUser: whoUser.rawValue, showAll: $showAll)
                         }
                     }
                 }
                 .glassEffect(.regular , in: .rect(cornerRadius: 20))
-                .animation(.easeOut, value: appStorageSaveKey.whoUser)
+                .animation(.easeOut, value: whoUser)
             }
             .padding()
         }
@@ -89,25 +96,24 @@ struct ButtonShowMaxOrMin: View {
 // ученик
 struct MaxViewGroupInSelector: View {
     
-    @EnvironmentObject var appStorageSaveKey: AppStorageSave                                        // ключи AppStorage
-    @EnvironmentObject var groupListViewModel: NetworkViewModelForListGroups                        // viewModel для получения массива преподавателей и загрузки его расписания для дальнейшей загрузки в AppStorage
-    @EnvironmentObject var scheduleGroup: NetworkViewModelForScheduleGroups                         // расписание гурппы
+    @AppStorage("scheduleForWidget", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var scheduleForWidget: Data?                 // пусть это будет универсальные данные в виджете (массив дней и расписаний к ним)
+    @AppStorage("subGroup", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var subGroup: SubGroupInPicker = .all
+    @AppStorage("favoriteGroup", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var favoriteGroup: String = "Не выбрано"
     
-    let networkService = NetworkViewModelForScheduleGroups() // эксперимент // используется обычный сетевой сервис, для получения данных из сети
-    
+//    @Environment(AppStorageSave.self) private var appStorageSave                                           // ключи AppStorage
+    @Environment(NetworkViewModelForListGroups.self) var groupListViewModel                        // viewModel для получения массива преподавателей и загрузки его расписания для дальнейшей загрузки в AppStorage
+    @Environment(NetworkViewModelForScheduleGroups.self) var scheduleGroup                         // расписание гурппы
+        
     let encoder = JSONEncoder()
         
-    #warning("Надо бы перенести в appStorageSaveKey")
-    @AppStorage("favoriteGroup", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var favoriteGroup: String = "Не выбрано"         // номер группы
-    @AppStorage("scheduleForWidget", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var scheduleForWidget: Data?                 // пусть это будет универсальные данные в виджете (массив дней и расписаний к ним)
-        
     var body: some View {
+//        @Bindable var appStorageSave = appStorageSave
         HStack {
             VStack(alignment: .leading) {
                 Text("Подгруппа")
                     .font(.system(size: 16, weight: .semibold))
                     .padding(.leading)
-                Picker("", selection: $appStorageSaveKey.subGroup) {
+                Picker("", selection: $subGroup) {
                     Text("Все").tag(SubGroupInPicker.all)
                     Text("1").tag(SubGroupInPicker.first)
                     Text("2").tag(SubGroupInPicker.second)
@@ -119,7 +125,7 @@ struct MaxViewGroupInSelector: View {
                     .font(.system(size: 16, weight: .semibold))
                 HStack {
                     NavigationLink(value: "choice") {
-                        Text(appStorageSaveKey.favoriteGroup)
+                        Text(favoriteGroup)
                             .tint(Color.primary)
                             .padding(EdgeInsets(top: 6, leading: 16, bottom: 6, trailing: 16))
                             .background(Color.gray.opacity(0.15))
@@ -129,11 +135,11 @@ struct MaxViewGroupInSelector: View {
             }
             .padding(.leading, 10)
             
-            .onChange(of: appStorageSaveKey.favoriteGroup) {                                                                // при изменении выбранной группы:
+            .onChange(of: favoriteGroup) {                                                                // при изменении выбранной группы:
                                 
                 // при изменении: надо получить расписание группы, отфильтровать, записать в appStorage и обновить виджет
                 Task {
-                    let data = await scheduleGroup.getScheduleGroupForWidget(group: appStorageSaveKey.favoriteGroup)        // получение расписания
+                    let data = await scheduleGroup.getScheduleGroupForWidget(group: favoriteGroup)        // получение расписания
     
                     // надо отфильтровать                                                                                   // фильтрация расписания
                     
@@ -167,7 +173,7 @@ struct MaxViewGroupInSelector: View {
         .padding(EdgeInsets(top: 10, leading: 10, bottom: 0, trailing: 10))
         
         .navigationDestination(for: String.self) { _ in
-            UniversalPicker(selected: $appStorageSaveKey.favoriteGroup, title: "Группы", items: groupListViewModel.arrayOfGroupsNum, value: \.name, secondValue: \.name)
+            UniversalPicker(selected: $favoriteGroup, title: "Группы", items: groupListViewModel.arrayOfGroupsNum, value: \.name, secondValue: \.name)
         }
     }
 }
@@ -176,17 +182,18 @@ struct MaxViewGroupInSelector: View {
 // преподаватель
 struct MaxViewEmployeeInSelector: View {
     
-    @EnvironmentObject var appStorageSaveKey: AppStorageSave                                // ключи AppStorage
-    @EnvironmentObject var employeeListViewModel: NetworkViewModelForListEmployees          // viewModel для получения массива преподавателей и загрузки его расписания для дальнейшей загрузки в AppStorage
-            
-    @StateObject private var viewModelForAppStorage = ViewModelForAppStorage()
-    
     #warning("Надо бы перенести в appStorageSaveKey")
     @AppStorage("employeeSchedule", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var employeeSchedule: Data?
+    @AppStorage("employeeName", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var employeeName: String = "Не выбрано"
+    
+//    @Environment(AppStorageSave.self) private var appStorageSave                               // ключи AppStorage
+    @Environment(NetworkViewModelForListEmployees.self) var employeeListViewModel          // viewModel для получения массива преподавателей и загрузки его расписания для дальнейшей загрузки в AppStorage
+            
+    @StateObject private var viewModelForAppStorage = ViewModelForAppStorage()
         
     var employeeNameToFio: String {
-        if appStorageSaveKey.employeeName != "Не выбрано" {
-            let words = appStorageSaveKey.employeeName.split(separator: " ")
+        if employeeName != "Не выбрано" {
+            let words = employeeName.split(separator: " ")
                 .enumerated()
                 .map { index, word in
                     index < 1 ? word : "\(word.first!)."
@@ -194,12 +201,13 @@ struct MaxViewEmployeeInSelector: View {
                 .joined(separator: " ")
             return words
         } else {
-            return appStorageSaveKey.employeeName
+            return employeeName
         }
     }
     #warning("В AppStorage сохраняется urlId, а не фио")
     
     var body: some View {
+//        @Bindable var appStorageSave = appStorageSave
         VStack(alignment: .leading) {
             Text("Ваше ФИО")
                 .font(.system(size: 16, weight: .semibold))
@@ -219,15 +227,15 @@ struct MaxViewEmployeeInSelector: View {
         }
         .padding(EdgeInsets(top: 10, leading: 10, bottom: 0, trailing: 10))
         
-        .onChange(of: appStorageSaveKey.employeeName) {                                     // при изменении выбранного преподавателя
-            print(appStorageSaveKey.employeeName)
+        .onChange(of: employeeName) {                                     // при изменении выбранного преподавателя
+            print(employeeName)
             
 //            viewModelForAppStorage.saveFavoriteEmployeeScheduleToAppStorage(networkService.getSchedule(appStorageSaveKey.employeeName))
 
         }
         
         .navigationDestination(for: String.self) { _ in
-            UniversalPicker(selected: $appStorageSaveKey.employeeName, title: "Преподаватели", items: employeeListViewModel.scheduleForEmployees, value: \.fio, secondValue: \.urlId)
+            UniversalPicker(selected: $employeeName, title: "Преподаватели", items: employeeListViewModel.scheduleForEmployees, value: \.fio, secondValue: \.urlId)
         }
     }
 }

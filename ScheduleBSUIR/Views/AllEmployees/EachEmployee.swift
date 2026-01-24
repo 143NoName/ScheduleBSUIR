@@ -9,8 +9,8 @@ import SwiftUI
 
 struct EachEmployee: View {
     
-    @EnvironmentObject var weekViewModel: NetworkViewModelForWeek
-    @EnvironmentObject var employeeScheduleViewModel: NetworkViewModelForScheduleEmployees
+    @Environment(NetworkViewModelForWeek.self) var weekViewModel
+    @Environment(NetworkViewModelForScheduleEmployees.self) var employeeScheduleViewModel
     @Environment(\.dismiss) var dismiss
     @Environment(\.colorScheme) var colorScheme
     
@@ -105,7 +105,7 @@ struct EachEmployee: View {
 #Preview {
     NavigationStack {
         EachEmployee(employeeName: "i-abramov")
-            .environmentObject(NetworkViewModelForWeek())
-            .environmentObject(NetworkViewModelForScheduleEmployees())
+            .environment(NetworkViewModelForWeek())
+            .environment(NetworkViewModelForScheduleEmployees())
     }
 }

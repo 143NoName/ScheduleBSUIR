@@ -12,8 +12,8 @@ struct EachGroup: View {
     
     #warning("Надо ограничить уроки по началу и концу сесиии")
     
-    @EnvironmentObject var weekViewModel: NetworkViewModelForWeek
-    @EnvironmentObject var groupScheduleViewModel: NetworkViewModelForScheduleGroups
+    @Environment(NetworkViewModelForWeek.self) var weekViewModel
+    @Environment(NetworkViewModelForScheduleGroups.self) var groupScheduleViewModel
     
     @Environment(\.dismiss) var dismiss
     @Environment(\.colorScheme) var colorScheme
@@ -139,7 +139,7 @@ struct EachGroup: View {
 #Preview {
     NavigationStack {
         EachGroup(groupName: "310101")
-            .environmentObject(NetworkViewModelForWeek())
-            .environmentObject(NetworkViewModelForScheduleGroups())
+            .environment(NetworkViewModelForWeek())
+            .environment(NetworkViewModelForScheduleGroups())
     }
 }

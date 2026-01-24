@@ -43,7 +43,7 @@ struct IfHaveErrorSchedule: View {
 
 struct IfErrorGroups: View {
     
-    @EnvironmentObject var groupListViewModel: NetworkViewModelForListGroups
+    @Environment(NetworkViewModelForListGroups.self) var groupListViewModel
     
     var body: some View {
         HStack() {

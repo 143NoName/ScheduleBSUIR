@@ -11,9 +11,7 @@ import SwiftUI
 import os.log
 
 struct Provider: TimelineProvider {
-    
-    let appStorageSave = AppStorageSave()
-    
+        
     let filterInWidget: FilterInWidgetProtocol
     let getScheduleInWidget: GetScheduleForWidgetProtocol
     
@@ -24,6 +22,12 @@ struct Provider: TimelineProvider {
         self.filterInWidget = filterInWidget
         self.getScheduleInWidget = getScheduleInWidget
     }
+    
+    @AppStorage("whoUser", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var whoUser: WhoUser = .none
+    @AppStorage("favoriteGroup", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var favoriteGroup: String = "Не выбрано"
+    @AppStorage("subGroup", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var subGroup: SubGroupInPicker = .all
+    @AppStorage("weekNumber", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var weekNumber: Int = 0
+    
     
     func placeholder(in context: Context) -> LessonsInWidget { // показывает заглушку при первом добавлении виджета
         LessonsInWidget(date: Date(), lessons: [], favoriteGroup: "261402", subGroup: .all, weekNum: 1) // показывается в canvass
@@ -54,8 +58,8 @@ struct Provider: TimelineProvider {
         let startOfNextDay = calendar.startOfDay(for: nextDay)
         
         let timeLine = [
-            LessonsInWidget(date: date, lessons: filterInWidget.findTodayLessons(lessons: lessons), favoriteGroup: appStorageSave.favoriteGroup, subGroup: appStorageSave.subGroup, weekNum: appStorageSave.weekNumber),
-            LessonsInWidget(date: startOfNextDay, lessons: filterInWidget.findTodayLessons(lessons: lessons), favoriteGroup: appStorageSave.favoriteGroup, subGroup: appStorageSave.subGroup, weekNum: appStorageSave.weekNumber)
+            LessonsInWidget(date: date, lessons: filterInWidget.findTodayLessons(lessons: lessons), favoriteGroup: favoriteGroup, subGroup: subGroup, weekNum: weekNumber),
+            LessonsInWidget(date: startOfNextDay, lessons: filterInWidget.findTodayLessons(lessons: lessons), favoriteGroup: favoriteGroup, subGroup: subGroup, weekNum: weekNumber)
         ]
         
         completion(Timeline(entries: timeLine, policy: .after(Date())))
