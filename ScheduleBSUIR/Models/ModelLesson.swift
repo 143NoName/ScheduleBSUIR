@@ -55,7 +55,7 @@ struct FormatedSchedules: Codable {
 }
 
 // расписание уроков по отдельности
-struct Lesson: Codable {
+struct Lesson: Codable, Equatable {
     let auditories: [String]
     let endLessonTime: String
     let lessonTypeAbbrev: String
@@ -74,7 +74,7 @@ struct Lesson: Codable {
     let split: Bool
 }
 
-struct StudentGroupInfo: Codable, Sendable {
+struct StudentGroupInfo: Codable, Equatable {
     let specialityName: String
     let specialityCode: String
     let numberOfStudents: Int
@@ -82,7 +82,7 @@ struct StudentGroupInfo: Codable, Sendable {
     let educationDegree: Int
 }
 
-struct Employee: Codable, Sendable {
+struct Employee: Codable, Equatable {
     let id: Int
     let firstName: String?
     let middleName: String?

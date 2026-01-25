@@ -78,6 +78,17 @@
                ReferencedContainer = "container:ScheduleBSUIR.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "49E2F3822F265C6E00AC81BF"
+               BuildableName = "ScheduleBSUIRTests2.xctest"
+               BlueprintName = "ScheduleBSUIRTests2"
+               ReferencedContainer = "container:ScheduleBSUIR.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction
