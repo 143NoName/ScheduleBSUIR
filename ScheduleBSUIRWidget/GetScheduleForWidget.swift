@@ -14,14 +14,8 @@ protocol GetScheduleForWidgetProtocol {
 class GetScheduleForWidget: GetScheduleForWidgetProtocol {
     
     let decoder = JSONDecoder()
-    
-    let appStorageSave = AppStorageSave()
-    
+        
     @AppStorage("scheduleForWidget", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var scheduleForWidget: Data?
-    @AppStorage("employeeSchedule", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var employeeSchedule: Data?
-    @AppStorage("favoriteGroup", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var favoriteGroup: String = "Не выбрано"
-    @AppStorage("weekNumber", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var weekNumber: Int = 0
-    @AppStorage("subGroup", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var subGroup: Int = 0
     
     func getDataFromAppStorage() throws -> [FormatedSchedules]? {
         do {

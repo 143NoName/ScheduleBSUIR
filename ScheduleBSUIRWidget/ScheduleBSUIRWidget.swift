@@ -23,6 +23,8 @@ struct Provider: TimelineProvider {
         self.getScheduleInWidget = getScheduleInWidget
     }
     
+    let logger = Logger()
+    
     @AppStorage("whoUser", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var whoUser: WhoUser = .none
     @AppStorage("favoriteGroup", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var favoriteGroup: String = "Не выбрано"
     @AppStorage("subGroup", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var subGroup: SubGroupInPicker = .all
@@ -52,6 +54,9 @@ struct Provider: TimelineProvider {
         } catch {
             print("Ошибка при получении расписания в виджет")
         }
+        
+        let info = filterInWidget.findTodayLessons(lessons: lessons)
+        logger.info("\(info)")
         
         // определение завтрашнего дня
         guard let nextDay = calendar.date(byAdding: .day, value: 1, to: date) else { return }
