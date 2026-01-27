@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Marquee
 
 struct EachEmployee: View {
     
@@ -178,7 +179,17 @@ struct MoreInfoAboutEmployee: View {
                                 }
                             }
                             .frame(maxWidth: .infinity)
-                            Text("Полное фио: \(employee.employeeDto.fullName)")
+                            
+                            HStack {
+                                Text("Полное фио: ")
+                                Marquee {
+                                    Text("\(employee.employeeDto.fullName)")
+                                }
+                                .marqueeWhenNotFit(true)
+                                .marqueeDuration(8)
+                                .frame(height: 20)
+                                #warning("Может все таки можно как то начинать слева и крутить налево")
+                            }
                         }
                         Text("Email: \(employee.employeeDto.email ?? "Не известно")")
 //                        Text("Специальность: \(specialityAbbrev) (\(group.studentGroupDto.specialityName))")

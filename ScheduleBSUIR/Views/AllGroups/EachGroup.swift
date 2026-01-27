@@ -7,6 +7,7 @@
 
 import SwiftUI
 import WidgetKit
+import Marquee
 
 struct EachGroup: View {
     
@@ -179,10 +180,28 @@ struct MoreInfoAboutGroup: View {
                 List {
                     Section(header: Text("Информация о группе")) {
                         Text("Номер группы: \(group.studentGroupDto.name)")
-                        Text("Специальность: \(specialityAbbrev) (\(group.studentGroupDto.specialityName))")
-                        Text("Факультет: \(group.studentGroupDto.facultyAbbrev) (\(group.studentGroupDto.facultyName))")
-                        Text("Степень образования: \(group.studentGroupDto.educationDegree)")
+                        HStack {
+                            Text("Специальность: ")
+                            Marquee {
+                                Text("\(specialityAbbrev) (\(group.studentGroupDto.specialityName))")
+                            }
+                            .marqueeWhenNotFit(true)
+                            .marqueeDuration(8)
+                            .frame(height: 20)
+                            #warning("Может все таки можно как то начинать слева и крутить налево")
+                        }
+                        HStack {
+                            Text("Факультет: ")
+                            Marquee {
+                                Text("\(group.studentGroupDto.facultyAbbrev) (\(group.studentGroupDto.facultyName))")
+                            }
+                            .marqueeWhenNotFit(true)
+                            .marqueeDuration(8)
+                            .frame(height: 20)
+                            #warning("Может все таки можно как то начинать слева и крутить налево")
+                        }
                         
+                        Text("Степень образования: \(group.studentGroupDto.educationDegree)")
                     }
                     Section(header: Text("Занятия")) {
                         Text("Начало занятий: \(group.startDate ?? "Не известно")")
