@@ -72,7 +72,7 @@
             parallelizable = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "AFA212FE2EAE29F30010C9F6"
+               BlueprintIdentifier = "49E2F38F2F265CCF00AC81BF"
                BuildableName = "ScheduleBSUIRTests.xctest"
                BlueprintName = "ScheduleBSUIRTests"
                ReferencedContainer = "container:ScheduleBSUIR.xcodeproj">
