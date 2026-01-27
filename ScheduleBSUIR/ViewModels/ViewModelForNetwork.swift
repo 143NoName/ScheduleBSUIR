@@ -110,41 +110,48 @@ protocol NetworkViewModelForScheduleGroupsProtocol {
 
 
 @Observable class NetworkViewModelForScheduleGroups: NetworkViewModelForScheduleGroupsProtocol {
-        
-//    private let sourceData: SourceData // сервис получения расписания (по умолчанию NetworkService(), но может быть и AppStorageServiceForApp())
-//    
-//    init(sourceData: SourceData) {
-//        self.sourceData = sourceData
-//    }
-    let networkService: NetworkServiceProtocol
     
-    init(networkService: NetworkServiceProtocol = NetworkService()) {
+    let networkService: NetworkServiceProtocol
+    let filterService: FilterServiceProtocol
+    
+    init(
+        networkService: NetworkServiceProtocol = NetworkService(),
+        filterService: FilterServiceProtocol = FilterService()
+    ) {
         self.networkService = networkService
+        self.filterService = filterService
     }
     
     let logger = Logger()
     
-    private(set) var arrayOfScheduleGroup: EachGroupResponse = EachGroupResponse(
+    private(set) var arrayOfScheduleGroup: EachGroupResponse = EachGroupResponse(               // весь ответ от сервера (можно поделить на мелкие данные (типо начало, окнец уроков и тд))
         startDate: "",
         endDate: "",
         startExamsDate: nil,
         endExamsDate: nil,
-        studentGroupDto: StudentGroupDto(name: "", facultyAbbrev: "", facultyName: "", specialityName: "", specialityAbbrev: "", educationDegree: 0),
+        studentGroupDto:
+            StudentGroupDto(name: "",
+                            facultyAbbrev: "",
+                            facultyName: "",
+                            specialityName: "",
+                            specialityAbbrev: "",
+                            educationDegree: 0
+                           ),
         employeeDto: nil,
-        nextSchedules: Schedules(
-            monday: [],
-            tuesday: [],
-            wednesday: [],
-            thursday: [],
-            friday: [],
-            saturday: [],
-            sunday: []
-        ),
+        schedules:
+            Schedules(monday: [],
+                      tuesday: [],
+                      wednesday: [],
+                      thursday: [],
+                      friday: [],
+                      saturday: [],
+                      sunday: []
+                     ),
         currentTerm: "",
         currentPeriod: ""
     )
-    private(set) var isLoadingArrayOfScheduleGroup: Bool = false
-    private(set) var errorOfScheduleGroup: String = ""
+    private(set) var isLoadingArrayOfScheduleGroup: Bool = false                                // статус загрузки ответа от сервера
+    private(set) var errorOfScheduleGroup: String = ""                                          // ошибка (если есть) ответа от сервера
     
     // получение расписания группы от API
     func getScheduleGroup(group: String) async {
@@ -167,7 +174,7 @@ protocol NetworkViewModelForScheduleGroupsProtocol {
     func getScheduleGroupForWidget(group: String) async -> [FormatedSchedules] {
         do {
             let data = try await networkService.getScheduleGroup(group)
-            return data.nextSchedules.getFormatedSchedules()
+            return data.schedules.getFormatedSchedules()
         } catch {
             print(error.localizedDescription)
             return []
@@ -182,7 +189,7 @@ protocol NetworkViewModelForScheduleGroupsProtocol {
             endExamsDate: nil,
             studentGroupDto: StudentGroupDto(name: "", facultyAbbrev: "", facultyName: "", specialityName: "", specialityAbbrev: "", educationDegree: 0),
             employeeDto: nil,
-            nextSchedules: Schedules(
+            schedules: Schedules(
                 monday: [],
                 tuesday: [],
                 wednesday: [],
@@ -202,13 +209,13 @@ protocol NetworkViewModelForScheduleGroupsProtocol {
     
     func convertToScheduleDaysGroup() { // конвертация в (День: [Занятия])
         let days = [
-            ("Понедельник", arrayOfScheduleGroup.nextSchedules.monday),
-            ("Вторник", arrayOfScheduleGroup.nextSchedules.tuesday),
-            ("Среда", arrayOfScheduleGroup.nextSchedules.wednesday),
-            ("Четверг", arrayOfScheduleGroup.nextSchedules.thursday),
-            ("Пятница", arrayOfScheduleGroup.nextSchedules.friday),
-            ("Суббота", arrayOfScheduleGroup.nextSchedules.saturday),
-            ("Воскресенье", arrayOfScheduleGroup.nextSchedules.sunday)
+            ("Понедельник", arrayOfScheduleGroup.schedules.monday),
+            ("Вторник", arrayOfScheduleGroup.schedules.tuesday),
+            ("Среда", arrayOfScheduleGroup.schedules.wednesday),
+            ("Четверг", arrayOfScheduleGroup.schedules.thursday),
+            ("Пятница", arrayOfScheduleGroup.schedules.friday),
+            ("Суббота", arrayOfScheduleGroup.schedules.saturday),
+            ("Воскресенье", arrayOfScheduleGroup.schedules.sunday)
         ]
         
         scheduleGroupByDays = days.compactMap { dayName, optionalLessons in
@@ -219,7 +226,6 @@ protocol NetworkViewModelForScheduleGroupsProtocol {
         }
     }
     
-    // используется в .onChange при изменении подгруппы и недели
     func filterGroupSchedule(currentWeek: WeeksInPicker, subGroup: SubGroupInPicker) {
         convertToScheduleDaysGroup() // для того чтобы перед фильтрацией вернуть все пары, которые были отфильтрованы раньше
         let filteredArray = scheduleGroupByDays.map { (dayName, lessons) in
@@ -244,7 +250,6 @@ protocol NetworkViewModelForListEmployeesProtocol {
     func getArrayOfEmployees() async                                                        // получение списка преподавателей
     func employeesArrayInNull()                                                             // очистка списка преподавателей
 }
-
 
 @Observable class NetworkViewModelForListEmployees: NetworkViewModelForListEmployeesProtocol {
     
@@ -308,6 +313,7 @@ protocol NetworkViewModelForScheduleEmployeesProtocol {
     let logger = Logger()
     
     private(set) var scheduleForEachEmployee: EachEmployeeResponse = EachEmployeeResponse(startDate: "", endDate: "", startExamsDate: "", endExamsDate: "", employeeDto: EmployeeDto(id: 0, firstName: "", middleName: "", lastName: "", photoLink: "", email: "", urlId: "", calendarId: "", chief: false), schedules: Schedules(monday: [], tuesday: [], wednesday: [], thursday: [], friday: [], saturday: [], sunday: []), currentPeriod: "")
+    private(set) var scheduleOfEmployee: [FormatedSchedules] = []
     private(set) var isLoadingScheduleForEachEmployee: Bool = false
     private(set) var errorOfEachEmployee: String = ""
     
@@ -316,7 +322,10 @@ protocol NetworkViewModelForScheduleEmployeesProtocol {
         scheduleForEachEmployeeInNull()
         do {
             scheduleForEachEmployee = try await networkService.getEachEmployeeSchedule(urlId)
-            convertToScheduleDaysEmployee()
+            
+            convertToScheduleDaysEmployee() // сразу преобразовать в (День: [Занятия])
+            
+            scheduleOfEmployee = scheduleForEachEmployee.schedules.getFormatedSchedules() // записать в массив расписания
             withAnimation(.easeIn) {
                 isLoadingScheduleForEachEmployee = true
             }

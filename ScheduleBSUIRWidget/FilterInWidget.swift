@@ -20,7 +20,7 @@ class FilterInWidget: FilterInWidgetProtocol {
     
     // фильтрация по дню недели
     #warning("Проверить бы как работает (unit тест)")
-    func findTodayLessons(lessons: [FormatedSchedules]?) -> [Lesson] { //
+    func findTodayLessons(lessons: [FormatedSchedules]?) -> [Lesson] {
         let calendar = Calendar.current
         let date = Date()
     

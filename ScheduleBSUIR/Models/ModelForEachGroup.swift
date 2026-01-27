@@ -14,7 +14,7 @@ struct EachGroupResponse: Codable {
     let endExamsDate: String?
     let studentGroupDto: StudentGroupDto
     let employeeDto: Employee?
-    let nextSchedules: Schedules     // в течении семестра тут schedules а по окончанию nextSchedules
+    let schedules: Schedules     // в течении семестра тут schedules а по окончанию nextSchedules
     let currentTerm: String?
     let currentPeriod: String?
 }

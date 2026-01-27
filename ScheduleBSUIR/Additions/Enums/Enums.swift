@@ -51,6 +51,18 @@ enum DaysInPicker: Int, CaseIterable, Identifiable {
         case .sunday: return "Воскресенье"
         }
     }
+    
+    var inString: String {
+        switch self {
+        case .monday: return "Понедельник"
+        case .tuesday: return "Вторник"
+        case .wednesday: return "Среда"
+        case .thursday: return "Четверг"
+        case .friday: return "Пятница"
+        case .saturday: return "Суббота"
+        case .sunday: return "Воскресенье"
+        }
+    }
 }
 
 enum WeeksInPicker: Int, CaseIterable, Identifiable {

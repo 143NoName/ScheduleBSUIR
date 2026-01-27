@@ -46,7 +46,6 @@ struct TabBarView: View {
     @State private var groupScheduleViewModel = NetworkViewModelForScheduleGroups()           // получение расписания группы (тут только один экземпляр с сетевым менеджером)
     @State private var employeeListViewModel = NetworkViewModelForListEmployees()             // получение списка преподавателей
     @State private var employeeScheduleViewModel = NetworkViewModelForScheduleEmployees()     // получение расписания преподавателя
-//    @State private var appStorageSave = AppStorageSave()                                      // хранилище всех AppStorage
            private let saveForWidgetService = SaveForWidgetService()                                                // плохо, что view знает о сервисе, можно сдеать viewModel
     
     
@@ -107,7 +106,7 @@ struct TabBarView: View {
                 await employeeListViewModel.getArrayOfEmployees()               // получение списка преподавателей
                     
                 do {
-                    try saveForWidgetService.saveDataForWidgetToAppStorage(groupScheduleViewModel.arrayOfScheduleGroup.nextSchedules)
+                    try saveForWidgetService.saveDataForWidgetToAppStorage(groupScheduleViewModel.arrayOfScheduleGroup.schedules)
                 } catch {
                     print("Неудачная попытка загрузить расписание в AppStorage: \(error)")
                 }

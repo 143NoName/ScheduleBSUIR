@@ -21,7 +21,7 @@ class ViewModelForAppStorage: ObservableObject {
         self.saveForWidget = saveForWidget
     }
 
-    @Published var scheduleGroupFromAppStorage: EachGroupResponse = EachGroupResponse(startDate: nil, endDate: nil, startExamsDate: nil, endExamsDate: nil, studentGroupDto: StudentGroupDto(name: "", facultyAbbrev: "", facultyName: "", specialityName: "", specialityAbbrev: nil, educationDegree: 0), employeeDto: nil, nextSchedules: Schedules(monday: nil, tuesday: nil, wednesday: nil, thursday: nil, friday: nil, saturday: nil, sunday: nil), currentTerm: nil, currentPeriod: nil)
+    @Published var scheduleGroupFromAppStorage: EachGroupResponse = EachGroupResponse(startDate: nil, endDate: nil, startExamsDate: nil, endExamsDate: nil, studentGroupDto: StudentGroupDto(name: "", facultyAbbrev: "", facultyName: "", specialityName: "", specialityAbbrev: nil, educationDegree: 0), employeeDto: nil, schedules: Schedules(monday: nil, tuesday: nil, wednesday: nil, thursday: nil, friday: nil, saturday: nil, sunday: nil), currentTerm: nil, currentPeriod: nil)
     @Published var scheduleEmployeeFromAppStorage: EachEmployeeResponse = EachEmployeeResponse(startDate: nil, endDate: nil, startExamsDate: nil, endExamsDate: nil, employeeDto: EmployeeDto(id: 0, firstName: "", middleName: "", lastName: "", photoLink: nil, email: nil, urlId: "", calendarId: nil, chief: nil) , schedules: Schedules(monday: nil, tuesday: nil, wednesday: nil, thursday: nil, friday: nil, saturday: nil, sunday: nil), currentPeriod: nil)
     
     func saveFavoriteGroupScheduleToAppStorage(_ data: EachGroupResponse) {

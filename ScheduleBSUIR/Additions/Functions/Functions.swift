@@ -14,6 +14,11 @@ protocol MoreFunctionsProtocol {
 
 class MoreFunctions: MoreFunctionsProtocol {
 
+    
+    
+    
+    
+    
     // фильтрация по дню недели используя enum DaysInPicker
     func comparisonDay(_ selectedDay: DaysInPicker, lessonDay: String) -> Bool {
         return selectedDay.filterByDay == lessonDay

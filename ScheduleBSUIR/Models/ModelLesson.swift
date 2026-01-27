@@ -49,13 +49,14 @@ struct Schedules: Codable, Sendable {
 }
 
 // модель для виджета (загрузка в него данных и их фильтрация)
-struct FormatedSchedules: Codable {
+struct FormatedSchedules: Codable, Identifiable {
+    var id: UUID = UUID()
     let day: String
     let lesson: [Lesson]
 }
 
 // расписание уроков по отдельности
-struct Lesson: Codable, Equatable {
+struct Lesson: Codable, Equatable, Identifiable {
     let auditories: [String]
     let endLessonTime: String
     let lessonTypeAbbrev: String
@@ -72,6 +73,8 @@ struct Lesson: Codable, Equatable {
     let endLessonDate: String?
     let announcement: Bool
     let split: Bool
+    
+    var id: Int { UUID().hashValue }
 }
 
 struct StudentGroupInfo: Codable, Equatable {

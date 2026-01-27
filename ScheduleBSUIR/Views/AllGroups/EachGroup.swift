@@ -23,11 +23,9 @@ struct EachGroup: View {
     @State var weekDay: DaysInPicker = .monday
     @State var weekNumber: WeeksInPicker = .first
     @State var subGroup: SubGroupInPicker = .all
-            
-    let calendar = Calendar.current
-    let groupName: String
-        
     @State var isShowMore: Bool = false
+    
+    let groupName: String
     
     var pageName: String {
         if !groupScheduleViewModel.isLoadingArrayOfScheduleGroup {
@@ -92,18 +90,18 @@ struct EachGroup: View {
         }
         .navigationTitle(pageName)
 
-//        .navigationBarBackButtonHidden(true)
-//        .toolbar {
-//            ToolbarItem(placement: .topBarLeading) {
-//                Button {
-//                    dismiss()
-//                } label: {
-//                    HStack {
-//                        Image(systemName: "chevron.left")
-//                    }
-//                }
-//            }
-//        }
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button {
+                    dismiss()
+                } label: {
+                    HStack {
+                        Image(systemName: "chevron.left")
+                    }
+                }
+            }
+        }
         
         .refreshable {
             groupScheduleViewModel.scheduleForEachGroupInNull()                                         // очистка данных
@@ -114,6 +112,12 @@ struct EachGroup: View {
 
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
+                Text("Неделя: \(weekViewModel.currentWeek)")
+                    .padding(.horizontal)
+                    .font(.system(size: 14, weight: .semibold))
+            }
+            ToolbarSpacer(placement: .topBarTrailing)
+            ToolbarItem(placement: .topBarTrailing) {
                 Button {
                     isShowMore.toggle()
                 } label: {
@@ -121,6 +125,10 @@ struct EachGroup: View {
                         .font(.system(size: 18, weight: .semibold))
                 }
             }
+        }
+        
+        .sheet(isPresented: $isShowMore) {
+            MoreInfoAboutGroup(group: groupScheduleViewModel.arrayOfScheduleGroup, currentWeek: weekViewModel.currentWeek)
         }
         
         .task {
@@ -141,5 +149,68 @@ struct EachGroup: View {
         EachGroup(groupName: "310101")
             .environment(NetworkViewModelForWeek())
             .environment(NetworkViewModelForScheduleGroups())
+    }
+}
+
+struct MoreInfoAboutGroup: View {
+    
+    @Environment(\.dismiss) var dismiss
+    @Environment(\.colorScheme) var colorScheme
+    
+    @Environment(NetworkViewModelForWeek.self) var weekViewModel
+
+    let group: EachGroupResponse
+    let currentWeek: Int
+    
+    var specialityAbbrev: String {
+        guard let specialityAbbrev = group.studentGroupDto.specialityAbbrev else { return "" }
+        return specialityAbbrev
+    }
+    
+    var body: some View {
+        ZStack {
+            if colorScheme == .light {
+                Color.gray
+                    .opacity(0.15)
+                    .ignoresSafeArea(edges: .all)
+            }
+            
+            NavigationStack {
+                List {
+                    Section(header: Text("Информация о группе")) {
+                        Text("Номер группы: \(group.studentGroupDto.name)")
+                        Text("Специальность: \(specialityAbbrev) (\(group.studentGroupDto.specialityName))")
+                        Text("Факультет: \(group.studentGroupDto.facultyAbbrev) (\(group.studentGroupDto.facultyName))")
+                        Text("Степень образования: \(group.studentGroupDto.educationDegree)")
+                        
+                    }
+                    Section(header: Text("Занятия")) {
+                        Text("Начало занятий: \(group.startDate ?? "Не известно")")
+                        Text("Конец занятий: \(group.endDate ?? "Не известно")")
+                    }
+                    Section(header: Text("Сессия")) {
+                        Text("Начало сесии: \(group.startExamsDate ?? "Не известно")")
+                        Text("Конец занятий: \(group.endExamsDate ?? "Не известно")")
+                    }
+                    Section(header: Text("Период")) {
+                        Text("Текущая неделя: \(currentWeek)")
+                        Text("Текущий период: \(group.currentPeriod ?? "Не известно")")
+                    }
+                }
+                .scrollContentBackground(.hidden)
+                
+                .toolbar {
+                    ToolbarItem(placement: .topBarLeading) {
+                        Button {
+                            dismiss()
+                        } label: {
+                            Image(systemName: "xmark")
+                        }
+                    }
+                }
+                .navigationTitle("О группе \(group.studentGroupDto.name)")
+                .navigationBarTitleDisplayMode(.inline)
+            }
+        }
     }
 }
