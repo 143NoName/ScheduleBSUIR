@@ -170,3 +170,11 @@ enum GroupOrEmployee {
         }
     }
 }
+
+
+// перечисление видов отображения расписания
+enum Demonstrate {
+    case list
+    case allInOneWeek
+    case byDays
+}

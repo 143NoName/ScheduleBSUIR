@@ -20,6 +20,7 @@ struct SelectorViewForGroup: View {
         VStack(spacing: 0) {
             HStack {
                 Button {
+                    #warning("Сделать функция из другого класса")
                     funcs.findToday(selectedWeekNumber: &weekNumber, weekDay: &weekDay)
                 } label: {
                     Text("К сегодняшнему дню")
@@ -117,14 +118,20 @@ private struct MaxViewSelector: View {
                 }
             }
             .padding(10)
-            .onChange(of: subGroup) {
-                groupScheduleViewModel.filterGroupSchedule(currentWeek: weekNumber, subGroup: subGroup)
-//                // при изменении подгруппы фильтрация расписания
+            
+//            // при изменении дня недели выбор расписания на день (берем один день из массива дней)
+            .onChange(of: weekDay) { _, newValue in
+                groupScheduleViewModel.chooseDay(day: newValue)
             }
-//            
+
+                        
+            // при изменении подгруппы фильтрация расписания
+            .onChange(of: subGroup) {
+                groupScheduleViewModel.filterGroupSchedule2(currentWeek: weekNumber, subGroup: subGroup)
+            }
+            // при изменении недели фильтрация расписания
             .onChange(of: weekNumber) {
-                groupScheduleViewModel.filterGroupSchedule(currentWeek: weekNumber, subGroup: subGroup)
-//                // при изменении недели фильтрация расписания
+                groupScheduleViewModel.filterGroupSchedule2(currentWeek: weekNumber, subGroup: subGroup)
             }
         }
     }

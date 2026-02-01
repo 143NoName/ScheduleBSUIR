@@ -47,10 +47,6 @@ struct EachGroupLessonLoading: View {
     }
 }
 
-#Preview {
-    EachGroupLessonLoading()
-}
-
 struct EachGroupLesson: View {
         
     let funcs = MoreFunctions() // используется функций закончился ли урок по времени и по дате
@@ -81,7 +77,7 @@ struct EachGroupLesson: View {
             EmptyView()
         }
     }
-    
+
     var body: some View {
         HStack(spacing: 10) {
             VStack(alignment: .trailing) {
@@ -135,8 +131,15 @@ struct EachGroupLesson: View {
             }
             .padding(.leading, 10)
         }
-
         .font(.system(size: 14))
 //        .opacity(funcs.comparisonLessonOverTime(lesson: lesson) || !funcs.comparisonLessonOverDate(lesson: lesson).isEmpty ? 0.5 : 1)
+
+        
+            #warning("Тест")
+//        HStack {
+//            Text("\(lesson.numSubgroup)")
+//            Text("\(lesson.weekNumber)")
+//        }
+        
     }
 }

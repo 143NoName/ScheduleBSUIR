@@ -37,10 +37,10 @@ extension EnvironmentValues {
 
 struct TabBarView: View {
     
-    #warning("Сделать DI")
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(\.verticalSizeClass) var verticalSizeClass
     
+    #warning("Сделать DI")
     @State private var weekViewModel = NetworkViewModelForWeek()                              // получение текущей недели
     @State private var groupListViewModel = NetworkViewModelForListGroups()                   // получение списка групп
     @State private var groupScheduleViewModel = NetworkViewModelForScheduleGroups()           // получение расписания группы (тут только один экземпляр с сетевым менеджером)

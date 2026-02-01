@@ -40,11 +40,22 @@ protocol NetworkViewModelForScheduleGroupsProtocol {
     private(set) var isLoadingArrayOfScheduleGroup: Bool = false                                // статус загрузки ответа от сервера
     private(set) var errorOfScheduleGroup: String = ""                                          // ошибка (если есть) ответа от сервера
     
+    private(set) var scheduleOfGroup: [FormatedSchedules] = []                  // все расписание
+    private(set) var filteredScheduleOfGroup: [FormatedSchedules] = []          // отфильтрованное расписание
+    
+    private(set) var scheduleOfGroupOnDay: [Lesson] = []
+    private(set) var filteredScheduleOfGroupOnDay: [Lesson] = []
+    
     // получение расписания группы от API
     func getScheduleGroup(group: String) async {
         do {
-            arrayOfScheduleGroup = try await networkService.getScheduleGroup(group)
+            let data = try await networkService.getScheduleGroup(group)
+            arrayOfScheduleGroup = data
             convertToScheduleDaysGroup() // сразу преобразовать в (День: [Занятия])
+            
+            scheduleOfGroup = data.schedules.getFormatedSchedules()
+            filteredScheduleOfGroup = data.schedules.getFormatedSchedules()
+            
             withAnimation(.easeIn) {
                 isLoadingArrayOfScheduleGroup = true
             }
@@ -57,6 +68,7 @@ protocol NetworkViewModelForScheduleGroupsProtocol {
         }
     }
     
+    #warning("Возможно можно использовать переменную scheduleOfGroup вместо этой функции")
     #warning("Новая функция, которая просто получает и возвращает расписание группы")
     func getScheduleGroupForWidget(group: String) async -> [FormatedSchedules] {
         do {
@@ -106,5 +118,95 @@ protocol NetworkViewModelForScheduleGroupsProtocol {
             return (dayName, filteredLessons)
         }
         scheduleGroupByDays = filteredArray
+    }
+    
+    
+    
+    // фильтрация по неделе и по подгруппе
+    func filterGroupSchedule2(currentWeek: WeeksInPicker, subGroup: SubGroupInPicker) {
+        let schedule = scheduleOfGroup                  // берется копия нефильтрованного массива всего расписания
+        
+        filteredScheduleOfGroup = schedule.map { each in
+            let data = each.lesson.filter { lesson in
+                let weekMatches = lesson.weekNumber.contains(currentWeek.rawValue)
+                
+                let subgroupMatches =
+                subGroup.inNumber == 0 ? true :                     // Все подгруппы
+                subGroup.inNumber == 1 ? (lesson.numSubgroup == 0 || lesson.numSubgroup == 1) : // 1 подгруппа
+                subGroup.inNumber == 2 ? (lesson.numSubgroup == 0 || lesson.numSubgroup == 2) : // 2 подгруппа
+                false                                               // Запасной вариант
+                
+                return weekMatches && subgroupMatches
+            }
+            return FormatedSchedules(day: each.day, lesson: data)
+        }
+        
+//        filteredScheduleOfGroupOnDay = schedule.filter { lesson in
+////            lesson.weekNumber.contains(currentWeek.rawValue)
+//            let weekMatches = lesson.weekNumber.contains(currentWeek.rawValue)
+//            
+//            let subgroupMatches =
+//            subGroup.inNumber == 0 ? true :                     // Все подгруппы
+//            subGroup.inNumber == 1 ? (lesson.numSubgroup == 0 || lesson.numSubgroup == 1) : // 1 подгруппа
+//            subGroup.inNumber == 2 ? (lesson.numSubgroup == 0 || lesson.numSubgroup == 2) : // 2 подгруппа
+//            false                                               // Запасной вариант
+//            
+//            return weekMatches && subgroupMatches
+//        }
+        
+//        print("Элементы нефильтрованного: \(filteredScheduleOfGroup.count)")
+//        print("Элементы фильтрованного: \(filteredScheduleOfGroupOnDay.count)")
+    }
+    
+    // выбирает день (не изменяя массив берется элемент и записывается в переменную)
+    func chooseDay(day: DaysInPicker) {
+        filteredScheduleOfGroupOnDay = filteredScheduleOfGroup
+            .first(where: { $0.day == day.inString })?
+            .lesson ?? []
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    func finalFilter(day: DaysInPicker, currentWeek: WeeksInPicker, subGroup: SubGroupInPicker) {
+        let data = scheduleOfGroup
+        let filterByDay = data
+            .first(where: { $0.day == day.inString })?
+            .lesson ?? []
+        
+        filteredScheduleOfGroupOnDay = filterByDay.filter { lesson in
+            let weekMatches = lesson.weekNumber.contains(currentWeek.rawValue)
+            
+            let subgroupMatches =
+            subGroup.inNumber == 0 ? true :                     // Все подгруппы
+            subGroup.inNumber == 1 ? (lesson.numSubgroup == 0 || lesson.numSubgroup == 1) : // 1 подгруппа
+            subGroup.inNumber == 2 ? (lesson.numSubgroup == 0 || lesson.numSubgroup == 2) : // 2 подгруппа
+            false                                               // Запасной вариант
+            
+            return weekMatches && subgroupMatches
+        }
+    
+        
+        
+        
+        
+        
+        
+        
+        print("Было \(filterByDay.count)")
+        print("Стало \(filteredScheduleOfGroupOnDay.count)")
     }
 }
