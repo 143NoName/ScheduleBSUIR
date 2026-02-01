@@ -104,7 +104,7 @@ struct TabBarView: View {
                 await weekViewModel.getCurrentWeek()                            // получение текущей недели
                 await groupListViewModel.getArrayOfGroupNum()                   // получение списка групп
                 await employeeListViewModel.getArrayOfEmployees()               // получение списка преподавателей
-                    
+            
                 do {
                     try saveForWidgetService.saveDataForWidgetToAppStorage(groupScheduleViewModel.arrayOfScheduleGroup.schedules)
                 } catch {

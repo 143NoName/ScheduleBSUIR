@@ -21,14 +21,10 @@ struct EachGroupResponse: Codable {
 
 struct StudentGroupDto: Codable {
     let name: String
-//    let facultyId: Int
     let facultyAbbrev: String
     let facultyName: String
-//    let specialityDepartmentEducationFormId: Int
     let specialityName: String
     let specialityAbbrev: String?
-//    let cours: Int
-//    let id: Int
-//    let calendarId: String
+//    let cours: Int?
     let educationDegree: Int
 }

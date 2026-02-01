@@ -106,36 +106,3 @@ class NetworkService: NetworkServiceProtocol {
         }
     }
 }
-
-
-// универсальный сервис получения данных
-//class Network {
-//    
-//    let decoder = JSONDecoder()
-//    
-//    func getArray<ArrayOf: Decodable>(_ who: GroupOrEmployee) async throws -> [ArrayOf] {
-//        let data = try await AF.request(who.urlForArray)
-//            .validate()
-//            .serializingData()
-//            .value
-//        do {
-//            print(who.urlForArray)
-//            let response = try decoder.decode([ArrayOf].self, from: data)
-//            return response
-//        } catch {
-//            throw error
-//        }
-//    }
-//    
-//    func getEacSchedule<ScheduleOf: Decodable>(_ who: GroupOrEmployee, component: String) async throws -> ScheduleOf {
-//        let data = try await AF.request(who.urlForSchedule + component)
-//            .validate()
-//            .serializingData()
-//            .value
-//        do {
-//            return try decoder.decode(ScheduleOf.self, from: data)
-//        } catch {
-//            throw error
-//        }
-//    }
-//}
