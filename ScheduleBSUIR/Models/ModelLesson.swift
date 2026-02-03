@@ -28,8 +28,26 @@ struct Schedules: Codable, Sendable {
     }
     
     // получение более удобного формата расписания
-    var lessonsByDay: [(day: String, lessons: [Lesson])] {
-        [
+//    var lessonsByDay: [(day: String, lessons: [Lesson])] {
+//        [
+//            ("Понедельник", monday ?? []),
+//            ("Вторник", tuesday ?? []),
+//            ("Среда", wednesday ?? []),
+//            ("Четверг", thursday ?? []),
+//            ("Пятница", friday ?? []),
+//            ("Суббота", saturday ?? []),
+//            ("Воскресенье", sunday ?? [])
+//        ]
+//    }
+    
+    // преобразование из Schedules в FormatedSchedules
+//    func getFormatedSchedules() -> [FormatedSchedules] {
+//        lessonsByDay.map { day, lessons in
+//            FormatedSchedules(day: day, lesson: lessons)
+//        }
+//    }
+    func getFormatedSchedules () -> [FormatedSchedules] {
+        let first = [
             ("Понедельник", monday ?? []),
             ("Вторник", tuesday ?? []),
             ("Среда", wednesday ?? []),
@@ -38,11 +56,7 @@ struct Schedules: Codable, Sendable {
             ("Суббота", saturday ?? []),
             ("Воскресенье", sunday ?? [])
         ]
-    }
-    
-    // преобразование из Schedules в FormatedSchedules
-    func getFormatedSchedules() -> [FormatedSchedules] {
-        lessonsByDay.map { day, lessons in
+        return first.map { day, lessons in
             FormatedSchedules(day: day, lesson: lessons)
         }
     }

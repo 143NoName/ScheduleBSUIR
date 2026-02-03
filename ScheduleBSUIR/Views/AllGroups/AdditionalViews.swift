@@ -95,14 +95,14 @@ struct ViewSelection: View {
     
     @Binding var demonstrate: Demonstrate
     
-    var explanation: some View {
+    var explanation: String {
         switch demonstrate {
         case .byDays:
-            Text("Все расписание будет отображено по дня, который можно будет переключать")
+            "Все расписание будет отображено по дням недели, которые можно будет переключать"
         case .list:
-            Text("Все расписание будет отображено большим листом")
+            "Все расписание будет отображено списком дней с расписание только на это день"
         case .allInOneWeek:
-            Text("Все расписание будет отображено в одной неделе")
+            "Все расписание будет отображено по дням в одной неделе. Будут отображены все уроки, которые есть в этот день недели"
         }
     }
     
@@ -124,7 +124,8 @@ struct ViewSelection: View {
                 .pickerStyle(.segmented)
                 .padding()
                 
-                explanation
+                Text(explanation)
+                    .padding(.horizontal)
                 
                 .toolbar {
                     ToolbarItem(placement: .topBarLeading) {

@@ -124,14 +124,13 @@ private struct MaxViewSelector: View {
                 groupScheduleViewModel.chooseDay(day: newValue)
             }
 
-                        
             // при изменении подгруппы фильтрация расписания
             .onChange(of: subGroup) {
-                groupScheduleViewModel.filterGroupSchedule2(currentWeek: weekNumber, subGroup: subGroup, day: weekDay)
+                groupScheduleViewModel.filterGroupSchedule(currentWeek: weekNumber, subGroup: subGroup, day: weekDay)
             }
             // при изменении недели фильтрация расписания
             .onChange(of: weekNumber) {
-                groupScheduleViewModel.filterGroupSchedule2(currentWeek: weekNumber, subGroup: subGroup, day: weekDay)
+                groupScheduleViewModel.filterGroupSchedule(currentWeek: weekNumber, subGroup: subGroup, day: weekDay)
             }
         }
     }

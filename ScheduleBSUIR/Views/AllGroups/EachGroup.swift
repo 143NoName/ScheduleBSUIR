@@ -28,7 +28,8 @@ struct EachGroup: View {
     @State var isShowMore: Bool = false
     @State var isShowViews: Bool = false
     
-    @State var demonstrate: Demonstrate = .byDays
+    #warning("Вынести в AppStorage")
+    @State var demonstrate: Demonstrate = .allInOneWeek
     
     let groupName: String
     
@@ -43,6 +44,26 @@ struct EachGroup: View {
             }
         }
     }
+    
+    var secondPageName: String {
+        if !groupScheduleViewModel.isLoadingArrayOfScheduleGroup {
+            "Загрузка..."
+        } else {
+            if groupScheduleViewModel.errorOfScheduleGroup.isEmpty {
+                if demonstrate == .byDays {
+                    "Расписание по дням"
+                } else if demonstrate == .allInOneWeek {
+                    "Все расписание в неделе"
+                } else if demonstrate == .list {
+                    "Расписание списоком"
+                } else {
+                    ""
+                }
+            } else {
+                ""
+            }
+        }
+    }
 
     var body: some View {
         ZStack(alignment: .bottom) {
@@ -51,75 +72,47 @@ struct EachGroup: View {
                 Color.gray
                     .opacity(0.15)
                     .ignoresSafeArea(edges: .all)
-            }
-            
-//            List {
-//                if !groupScheduleViewModel.isLoadingArrayOfScheduleGroup {
-//                    Section(header:
-//                        Text("Загрузка...")
-//                            .foregroundStyle(colorScheme == .dark ? .white : .black)
-//                    ) {
-//                        ForEach(0..<5, id: \.self) { _ in
-//                            EachGroupLessonLoading()
-//                        }
-//                    }
-//                } else {
-//                    if !groupScheduleViewModel.errorOfScheduleGroup.isEmpty {
-//                        IfHaveErrorSchedule(error: groupScheduleViewModel.errorOfScheduleGroup)
-//                    } else {
-//                        Section(header:
-//                                    Text("Расписание")
-//                                        .foregroundStyle(colorScheme == .dark ? .white : .black),
-//                                footer:
-//                                    Color.clear
-//                                        .frame(height: 300)
-//                        ) {
-////                            ForEach(groupScheduleViewModel.scheduleGroupByDays.enumerated(), id: \.offset) { index, day in
-////                                if funcs.comparisonDay(weekDay, lessonDay: day.dayName) {
-////                                    if day.lessons.isEmpty {
-////                                        IfDayLessonIsEmpty()
-////                                    } else {
-////                                        ForEach(day.lessons.enumerated(), id: \.offset) { index, lesson in
-////                                            EachGroupLesson(lesson: lesson)
-////                                        }
-////                                    }
-////                                }
-////                            }
-//    
-//                        }
-//                    }
-//                }
-//            }
-//            .scrollContentBackground(.hidden)
-            
-            
-            if !groupScheduleViewModel.isLoadingArrayOfScheduleGroup {                                          // процесс загрузки
-                List {
-                    Section(header: Text("День недели")) {
-                        ForEach(0...10, id: \.self) { _ in
-                            EachGroupLessonLoading()
+            } else {
+                if !groupScheduleViewModel.isLoadingArrayOfScheduleGroup {                                          // процесс загрузки
+                    List {
+                        Section(header: Text("День недели")) {
+                            ForEach(0...10, id: \.self) { _ in
+                                EachGroupLessonLoading()
+                            }
                         }
                     }
-                }
-            } else {                                                                                            // ответ
-                if !groupScheduleViewModel.errorOfScheduleGroup.isEmpty {                                       // ошибка загрузки
-                    IfHaveErrorSchedule(error: groupScheduleViewModel.errorOfScheduleGroup)
-                } else {                                                                                        // данные пришли
-                    if demonstrate == .byDays {                                                                 // ВИД: "По дням"
-                        ViewByDays()
-                    } else if demonstrate == .list {                                                            // ВИД: "Список"
-                        ViewList()
-                    } else if demonstrate == .allInOneWeek {                                                    // ВИД: "Все в одной неделе"
-                        ViewAllInOneWeek()
+                } else {                                                                                            // ответ
+                    if !groupScheduleViewModel.errorOfScheduleGroup.isEmpty {                                       // ошибка загрузки
+                        List {
+                            IfHaveErrorSchedule(error: groupScheduleViewModel.errorOfScheduleGroup)
+                        }
+                        .scrollContentBackground(.hidden)
+                    } else {                                                                                        // данные пришли
+                        List {
+                            if demonstrate == .byDays {                                                             // ВИД: "По дням"
+                                Section(header: Text("День недели")) {
+                                    ViewByDays()
+                                }
+                            } else if demonstrate == .list {                                                        // ВИД: "Список"
+                                ViewList()
+                            } else if demonstrate == .allInOneWeek {                                                // ВИД: "Все в одной неделе"
+                                ViewAllInOneWeek()
+                            }
+                        }
+                        .scrollContentBackground(.hidden)
                     }
                 }
             }
             
-            // подключать только когда нужна фильтрация по дню, неделе и дню недели
-            SelectorViewForGroup(subGroup: $subGroup, weekNumber: $weekNumber, weekDay: $weekDay)
+            if demonstrate == .allInOneWeek {
+                EmptyView()
+            } else {
+                SelectorViewForGroup(subGroup: $subGroup, weekNumber: $weekNumber, weekDay: $weekDay)
+            }
         }
         
         .navigationTitle(pageName)
+        .navigationSubtitle(secondPageName)
 
 //        .navigationBarBackButtonHidden(true)
 //        .toolbar {
@@ -135,10 +128,13 @@ struct EachGroup: View {
 //        }
         
         .refreshable {
-            groupScheduleViewModel.scheduleForEachGroupInNull()                                         // очистка данных
-            await groupScheduleViewModel.getScheduleGroup(group: groupName)                             // получение новых данных
-            groupScheduleViewModel.filterGroupSchedule(currentWeek: weekNumber, subGroup: subGroup)     // фильтрация полученных данных
-            funcs.findToday(selectedWeekNumber: &weekNumber, weekDay: &weekDay)                         // для отображения сегодняшей даты
+            Task {
+                groupScheduleViewModel.scheduleForEachGroupInNull()                                         // очистка данных
+                await groupScheduleViewModel.getScheduleGroup(group: groupName)                             // получение новых данных
+                groupScheduleViewModel.filterGroupSchedule(currentWeek: weekNumber, subGroup: subGroup, day: .monday)
+                #warning("Пока что только понедельник")
+                funcs.findToday(selectedWeekNumber: &weekNumber, weekDay: &weekDay)                         // для отображения сегодняшей даты
+            }
         }
 
         .toolbar {
@@ -162,19 +158,20 @@ struct EachGroup: View {
         
         .sheet(isPresented: $isShowMore) {
             MoreInfoAboutGroup(group: groupScheduleViewModel.arrayOfScheduleGroup, currentWeek: weekViewModel.currentWeek)
-                .presentationDetents([.height(700)])
+                .presentationDetents([.fraction(0.9)])
                 .presentationDragIndicator(.visible)
         }
         
         .sheet(isPresented: $isShowViews) {
             ViewSelection(demonstrate: $demonstrate)
-                .presentationDetents([.height(300)])
+                .presentationDetents([.fraction(0.3)])
                 .presentationDragIndicator(.visible)
         }
         
         .task {
             await groupScheduleViewModel.getScheduleGroup(group: groupName)                             // получение расписания группы
-            groupScheduleViewModel.filterGroupSchedule(currentWeek: weekNumber, subGroup: subGroup)     // фильтрация по неделе и по подгруппе
+            groupScheduleViewModel.filterGroupSchedule(currentWeek: weekNumber, subGroup: subGroup, day: .monday)
+            #warning("Пока что только понедельник")
             funcs.findToday(selectedWeekNumber: &weekNumber, weekDay: &weekDay)                         // нахождение сегодняшнего дня (недели и дня недели)
         }
         
@@ -198,12 +195,9 @@ struct EachGroup: View {
 private struct ViewByDays: View {
     @Environment(NetworkViewModelForScheduleGroups.self) var groupScheduleViewModel
     var body: some View {
-        List {
-            ForEach(groupScheduleViewModel.filteredScheduleOfGroupOnDay) { lesson in
-                EachGroupLesson(lesson: lesson)
-            }
+        ForEach(groupScheduleViewModel.filteredScheduleOfGroupOnDay) { lesson in
+            EachGroupLesson(lesson: lesson)
         }
-        .scrollContentBackground(.hidden)
     }
 }
 
@@ -211,20 +205,17 @@ private struct ViewByDays: View {
 private struct ViewList: View {
     @Environment(NetworkViewModelForScheduleGroups.self) var groupScheduleViewModel
     var body: some View {
-        List {
-            ForEach(groupScheduleViewModel.filteredScheduleOfGroup.enumerated(), id: \.offset) { _, day in
-                Section(header: Text(day.day)) {
-                    if day.lesson.isEmpty {
-                        Text("Нет занятий")
-                    } else {
-                        ForEach(day.lesson) { lesson in
-                            EachGroupLesson(lesson: lesson)
-                        }
+        ForEach(groupScheduleViewModel.filteredScheduleOfGroup) { day in
+            Section(header: Text(day.day)) {
+                if day.lesson.isEmpty {
+                    Text("Нет занятий")
+                } else {
+                    ForEach(day.lesson) { lesson in
+                        EachGroupLesson(lesson: lesson)
                     }
                 }
             }
         }
-        .scrollContentBackground(.hidden)
     }
 }
 
@@ -233,21 +224,17 @@ private struct ViewList: View {
 private struct ViewAllInOneWeek: View {
     @Environment(NetworkViewModelForScheduleGroups.self) var groupScheduleViewModel
     var body: some View {
-        List {
-            ForEach(groupScheduleViewModel.filteredScheduleOfGroup.enumerated(), id: \.offset) { _, day in
-
-                Section(header: Text(day.day)) {
-                    if day.lesson.isEmpty {
-                        Text("Нет занятий")
-                    } else {
-                        ForEach(day.lesson) { lesson in
-                            EachGroupLesson(lesson: lesson)
-                        }
+        ForEach(groupScheduleViewModel.scheduleOfGroup) { day in
+            Section(header: Text(day.day)) {
+                if day.lesson.isEmpty {
+                    Text("Нет занятий")
+                } else {
+                    ForEach(day.lesson) { lesson in
+                        EachGroupLesson(lesson: lesson)
+                        #warning("Изменить UI для каждого урока")
                     }
-                    
                 }
             }
         }
-        .scrollContentBackground(.hidden)
     }
 }

@@ -122,6 +122,7 @@ struct EachGroupLesson: View {
                         .resizable()
                         .frame(width: 35, height: 35)
                         .clipShape(RoundedRectangle(cornerRadius: 15))
+                    #warning("Как бы отобразить загрузку")
                 default:
                     Image("PlainPhoto")
                         .resizable()
