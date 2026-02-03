@@ -139,6 +139,9 @@ struct ViewSelection: View {
                 .navigationTitle("Вид представления расписания")
                 .navigationBarTitleDisplayMode(.inline)
             }
+            .onChange(of: demonstrate) {
+                dismiss()
+            }
         }
     }
 }

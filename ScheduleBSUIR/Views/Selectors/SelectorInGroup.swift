@@ -56,13 +56,13 @@ struct SelectorViewForGroup: View {
     }
 }
 
-#Preview {
-    @Previewable @State var subGroup: SubGroupInPicker = .all
-    @Previewable @State var weekNumber: WeeksInPicker = .first
-    @Previewable @State var weekDay: DaysInPicker = .monday
-    
-    SelectorViewForGroup(subGroup: $subGroup, weekNumber: $weekNumber, weekDay: $weekDay)
-}
+//#Preview {
+//    @Previewable @State var subGroup: SubGroupInPicker = .all
+//    @Previewable @State var weekNumber: WeeksInPicker = .first
+//    @Previewable @State var weekDay: DaysInPicker = .monday
+//    
+//    SelectorViewForGroup(subGroup: $subGroup, weekNumber: $weekNumber, weekDay: $weekDay)
+//}
 
 
 private struct MaxViewSelector: View {
@@ -127,11 +127,11 @@ private struct MaxViewSelector: View {
                         
             // при изменении подгруппы фильтрация расписания
             .onChange(of: subGroup) {
-                groupScheduleViewModel.filterGroupSchedule2(currentWeek: weekNumber, subGroup: subGroup)
+                groupScheduleViewModel.filterGroupSchedule2(currentWeek: weekNumber, subGroup: subGroup, day: weekDay)
             }
             // при изменении недели фильтрация расписания
             .onChange(of: weekNumber) {
-                groupScheduleViewModel.filterGroupSchedule2(currentWeek: weekNumber, subGroup: subGroup)
+                groupScheduleViewModel.filterGroupSchedule2(currentWeek: weekNumber, subGroup: subGroup, day: weekDay)
             }
         }
     }

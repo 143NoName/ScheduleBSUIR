@@ -31,7 +31,7 @@ struct Schedules: Codable, Sendable {
     var lessonsByDay: [(day: String, lessons: [Lesson])] {
         [
             ("Понедельник", monday ?? []),
-            ("Вторик", tuesday ?? []),
+            ("Вторник", tuesday ?? []),
             ("Среда", wednesday ?? []),
             ("Четверг", thursday ?? []),
             ("Пятница", friday ?? []),

@@ -199,18 +199,8 @@ private struct ViewByDays: View {
     @Environment(NetworkViewModelForScheduleGroups.self) var groupScheduleViewModel
     var body: some View {
         List {
-            ForEach(groupScheduleViewModel.filteredScheduleOfGroup.enumerated(), id: \.offset) { _, day in
-
-                Section(header: Text(day.day)) {
-                    if day.lesson.isEmpty {
-                        Text("Нет занятий")
-                    } else {
-                        ForEach(day.lesson) { lesson in
-                            EachGroupLesson(lesson: lesson)
-                        }
-                    }
-                    
-                }
+            ForEach(groupScheduleViewModel.filteredScheduleOfGroupOnDay) { lesson in
+                EachGroupLesson(lesson: lesson)
             }
         }
         .scrollContentBackground(.hidden)
@@ -223,7 +213,6 @@ private struct ViewList: View {
     var body: some View {
         List {
             ForEach(groupScheduleViewModel.filteredScheduleOfGroup.enumerated(), id: \.offset) { _, day in
-
                 Section(header: Text(day.day)) {
                     if day.lesson.isEmpty {
                         Text("Нет занятий")
@@ -232,7 +221,6 @@ private struct ViewList: View {
                             EachGroupLesson(lesson: lesson)
                         }
                     }
-                    
                 }
             }
         }
