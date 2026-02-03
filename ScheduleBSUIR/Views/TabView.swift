@@ -24,13 +24,21 @@ extension EnvironmentValues {
         get { self[SaveForWidgetServiceKey.self] }
         set { self[SaveForWidgetServiceKey.self] = newValue }
     }
+    
+//    var appStorageSaveService: AppStorageSave {
+//        get { self[AppStorageSaveKey.self] }
+//        set { self[AppStorageSaveKey.self] = newValue }
+//    }
+//    var isPortraitOniPhone: Bool {
+//        get { self[IsPortraitOniPhone.self] }
+//        set { self[IsPortraitOniPhone.self] = newValue }
+//    }
 }
 
 struct TabBarView: View {
     
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(\.verticalSizeClass) var verticalSizeClass
-    @Environment(\.colorScheme) var colorScheme
     
     #warning("Сделать DI")
     @State private var weekViewModel = NetworkViewModelForWeek()                              // получение текущей недели
@@ -65,7 +73,7 @@ struct TabBarView: View {
 //    }
     
     var body: some View {
-//        ZStack {
+//        ZStack { // для начального окна
             TabView(selection: $selectedTab) {
                 Tab("Все группы", systemImage: "person.3", value: 0) {
                     GroupsTab()
@@ -122,7 +130,7 @@ struct TabBarView: View {
 //                    }
 //                }
 //            }
-    
+            
 //        }
         
         .environment(weekViewModel)

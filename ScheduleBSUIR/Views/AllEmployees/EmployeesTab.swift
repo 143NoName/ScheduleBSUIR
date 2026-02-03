@@ -33,16 +33,12 @@ struct EmployeesTab: View {
     
     var body: some View {
         NavigationStack {
-//            ZStack {
-//                Group {
-//                    if colorScheme == .light {
-//                        Color.gray.opacity(0.55)
-//                    } else {
-//                        Color.black // или другой цвет для темной темы
-//                    }
-//                }
-//                .ignoresSafeArea()
-//                
+            ZStack {
+                if colorScheme == .light {
+                    Color.gray
+                        .opacity(0.15)
+                        .ignoresSafeArea(edges: .all)
+                }
                 CostomList(items: searchable,
                            isLoading: employeeListViewModel.isLoadingScheduleForEmployees,
                            loadingView: ViewEachGroupIsLoading(),
@@ -66,13 +62,12 @@ struct EmployeesTab: View {
             .navigationDestination(for: String.self) { employeeName in
                 EachEmployee(employeeName: employeeName)
             }
-//        }
+        }
     }
 }
 
 #Preview {
     EmployeesTab()
-        .environment(NetworkViewModelForListEmployees())
 }
 
 private struct EmployeesEach: View {
@@ -117,7 +112,7 @@ private struct EmployeesEach: View {
                    
                     Marquee {
                         Text(departmentsSrting)
-                               .font(.system(size: 14))
+                            .font(.system(size: 14, weight: .light))
                     }
                     .marqueeWhenNotFit(true)
                     .marqueeDuration(7)

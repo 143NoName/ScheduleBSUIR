@@ -9,9 +9,6 @@ import SwiftUI
 
 @main
 struct ScheduleBSUIRApp: App {
-    
-    @Environment(\.colorScheme) var colorScheme
-    
     var body: some Scene {
         WindowGroup {
             TabBarView()

@@ -118,7 +118,7 @@ struct ViewSelection: View {
                 
                 Picker("", selection: $demonstrate) {
                     Text("По дням").tag(Demonstrate.byDays)
-                    Text("Списком").tag(Demonstrate.list)
+                    Text("Спискоком").tag(Demonstrate.list)
                     Text("Неделей").tag(Demonstrate.weekly) // немного не так
                 }
                 .pickerStyle(.segmented)

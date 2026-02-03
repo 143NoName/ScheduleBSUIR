@@ -63,7 +63,6 @@ struct CostomList<Content: View, LoadingContent: View, Items: Identifiable>: Vie
                     }
                 }
             }
-            .scrollContentBackground(.hidden)
         }
     }
 }

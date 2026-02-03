@@ -9,6 +9,7 @@ import SwiftUI
 import WidgetKit
 
 struct SelectorViewForPersonalAccount: View {
+//    @Environment(AppStorageSave.self) var appStorageSaveKey
     
     @AppStorage("whoUser", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var whoUser: WhoUser = .none
     @AppStorage("subGroup", store: UserDefaults(suiteName: "group.foAppAndWidget.ScheduleBSUIR")) var subGroup: SubGroupInPicker = .all
@@ -18,6 +19,7 @@ struct SelectorViewForPersonalAccount: View {
     @State var showAll: Bool = true
         
     var body: some View {
+//        @Bindable var appStorageSaveKey = appStorageSaveKey
         NavigationStack {
             VStack {
                 ButtonShowMaxOrMin(showAll: $showAll)

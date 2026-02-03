@@ -34,13 +34,13 @@ struct GroupsTab: View {
     
     #warning("Теперь знаю как можно сделать универсальное view (в универсальное view нужно передать view для каждого урока и передать в инит нужный viewModel)")
     var body: some View {
-        ZStack {
-            if colorScheme == .light {
-                Color.gray
-                    .opacity(0.35)
-                    .ignoresSafeArea(edges: .all)
-            }
-            NavigationStack {
+        NavigationStack {
+            ZStack {
+                if colorScheme == .light {
+                    Color.gray
+                        .opacity(0.15)
+                        .ignoresSafeArea(edges: .all)
+                }
                 CostomList(items: searchable,
                            isLoading: groupListViewModel.isLoadingArrayOfGroupsNum,
                            loadingView: ViewEachGroupIsLoading(),
@@ -54,7 +54,7 @@ struct GroupsTab: View {
                 .navigationTitle(pageName)
                 
                 .if(groupListViewModel.isLoadingArrayOfGroupsNum) { view in
-                    view.searchable(text: $searchText, placement: .navigationBarDrawer, prompt: "Поиск группы")
+                        view.searchable(text: $searchText, placement: .navigationBarDrawer, prompt: "Поиск группы")
                 }
                 
                 .refreshable {

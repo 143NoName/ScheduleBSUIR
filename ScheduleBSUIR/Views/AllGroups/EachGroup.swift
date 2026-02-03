@@ -51,7 +51,7 @@ struct EachGroup: View {
             if groupScheduleViewModel.errorOfScheduleGroup.isEmpty {
                 if demonstrate == .byDays {
                     "Расписание по дням"
-                } else if demonstrate == .weekly {
+                } else if demonstrate == .byDays {
                     "Все расписание в неделе"
                 } else if demonstrate == .list {
                     "Расписание списком"
@@ -80,7 +80,6 @@ struct EachGroup: View {
                             }
                         }
                     }
-                    .scrollContentBackground(.hidden)
                 } else {                                                                                            // ответ
                     if !groupScheduleViewModel.errorOfScheduleGroup.isEmpty {                                       // ошибка загрузки
                         List {
