@@ -172,7 +172,7 @@ struct EachGroup: View {
         .task {
             await groupScheduleViewModel.getScheduleGroup(group: groupName)                                         // получение расписания группы
             groupScheduleViewModel.filterGroupSchedule(currentWeek: weekNumber, subGroup: subGroup, day: weekDay)   // фильтрация расписания
-            funcs.findToday(selectedWeekNumber: &weekNumber, weekDay: &weekDay)                                     // нахождение сегодняшнего дня (недели и дня недели)
+            funcs.findToday(selectedWeekNumber: &weekNumber, weekDay: &weekDay)                                     // нахождение сегодняшнего дня (недели и дня недели)            
         }
         
         .onDisappear {
