@@ -71,35 +71,34 @@ struct EachGroup: View {
                 Color.gray
                     .opacity(0.15)
                     .ignoresSafeArea(edges: .all)
-            } else {
-                if !groupScheduleViewModel.isLoadingArrayOfScheduleGroup {                                          // процесс загрузки
+            }
+            
+            if !groupScheduleViewModel.isLoadingArrayOfScheduleGroup {                                          // процесс загрузки
+                List {
+                    Section(header: Text("День недели")) {
+                        ForEach(0...10, id: \.self) { _ in
+                            EachGroupLessonLoading()
+                        }
+                    }
+                }
+            } else {                                                                                            // ответ
+                if !groupScheduleViewModel.errorOfScheduleGroup.isEmpty {                                       // ошибка загрузки
                     List {
-                        Section(header: Text("День недели")) {
-                            ForEach(0...10, id: \.self) { _ in
-                                EachGroupLessonLoading()
+                        IfHaveError(error: groupScheduleViewModel.errorOfScheduleGroup)
+                    }
+                } else {                                                                                        // данные пришли
+                    List {
+                        if demonstrate == .byDays {                                                             // ВИД: "По дням"
+                            Section(header: Text(weekDay.inString)) {
+                                ViewByDays()
                             }
+                        } else if demonstrate == .list {                                                        // ВИД: "Список"
+                            ViewList()
+                        } else if demonstrate == .weekly {                                                // ВИД: "Все в одной неделе"
+                            ViewAllInOneWeek()
                         }
                     }
-                } else {                                                                                            // ответ
-                    if !groupScheduleViewModel.errorOfScheduleGroup.isEmpty {                                       // ошибка загрузки
-                        List {
-                            IfHaveError(error: groupScheduleViewModel.errorOfScheduleGroup)
-                        }
-                        .scrollContentBackground(.hidden)
-                    } else {                                                                                        // данные пришли
-                        List {
-                            if demonstrate == .byDays {                                                             // ВИД: "По дням"
-                                Section(header: Text(weekDay.inString)) {
-                                    ViewByDays()
-                                }
-                            } else if demonstrate == .list {                                                        // ВИД: "Список"
-                                ViewList()
-                            } else if demonstrate == .weekly {                                                // ВИД: "Все в одной неделе"
-                                ViewAllInOneWeek()
-                            }
-                        }
-                        .scrollContentBackground(.hidden)
-                    }
+                    .scrollContentBackground(.hidden)
                 }
             }
             
