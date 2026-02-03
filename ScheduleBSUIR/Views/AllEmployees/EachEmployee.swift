@@ -209,7 +209,6 @@ struct MoreInfoAboutEmployee: View {
                         Text("Текущая неделя: \(currentWeek)")
                         Text("Текущий период: \(employee.currentPeriod ?? "Не известно")")
                     }
-//                    Text("\(employee.)")
                 }
                 .scrollContentBackground(.hidden)
                 

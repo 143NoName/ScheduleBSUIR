@@ -79,7 +79,6 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Additions/Enums/Enums.swift,
-				AppStorageSave.swift,
 				Models/ModelForEachEmployee.swift,
 				Models/ModelForEachGroup.swift,
 				Models/ModelLesson.swift,
