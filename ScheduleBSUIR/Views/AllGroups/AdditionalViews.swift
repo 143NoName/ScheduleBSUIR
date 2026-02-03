@@ -93,7 +93,7 @@ struct ViewSelection: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.colorScheme) var colorScheme
     
-    @AppStorage("demonstrate") var demonstrate: Demonstrate = .byDays
+    @Binding var demonstrate: Demonstrate
     
     var explanation: String {
         switch demonstrate {
@@ -101,7 +101,7 @@ struct ViewSelection: View {
             "Все расписание будет отображено по дням недели, которые можно будет переключать"
         case .list:
             "Все расписание будет отображено списком дней с расписание только на это день"
-        case .weekly:
+        case .allInOneWeek:
             "Все расписание будет отображено по дням в одной неделе. Будут отображены все уроки, которые есть в этот день недели"
         }
     }
@@ -118,8 +118,8 @@ struct ViewSelection: View {
                 
                 Picker("", selection: $demonstrate) {
                     Text("По дням").tag(Demonstrate.byDays)
-                    Text("Спискоком").tag(Demonstrate.list)
-                    Text("Неделей").tag(Demonstrate.weekly) // немного не так
+                    Text("Списком").tag(Demonstrate.list)
+                    Text("Все уроки").tag(Demonstrate.allInOneWeek) // немного не так
                 }
                 .pickerStyle(.segmented)
                 .padding()
