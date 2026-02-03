@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-
 protocol GetScheduleForWidgetProtocol {
     func getDataFromAppStorage() throws -> [FormatedSchedules]?
 }

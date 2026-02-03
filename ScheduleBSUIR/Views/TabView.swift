@@ -139,8 +139,6 @@ struct TabBarView: View {
         .environment(groupScheduleViewModel)                                  // расписание группы
         .environment(employeeScheduleViewModel)                               // расписание преподавателя
         .environment(\.saveForWidgetService, saveForWidgetService)
-//        .environment(appStorageSave)
-        #warning("Сделать @Observable")
     }
 }
 

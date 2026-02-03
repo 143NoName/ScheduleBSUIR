@@ -55,7 +55,7 @@ struct EachEmployee: View {
                     }
                 } else {
                     if !employeeScheduleViewModel.errorOfEachEmployee.isEmpty {
-                        IfHaveErrorSchedule(error: employeeScheduleViewModel.errorOfEachEmployee)
+                        IfHaveError(error: employeeScheduleViewModel.errorOfEachEmployee)
                     } else {
                         Section(header:
                                     Text("Расписание")

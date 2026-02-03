@@ -50,16 +50,20 @@ struct GroupsTab: View {
                         ViewEachGroup(group: each)
                     }
                 })
+                
                 .navigationTitle(pageName)
+                
                 .if(groupListViewModel.isLoadingArrayOfGroupsNum) { view in
                         view.searchable(text: $searchText, placement: .navigationBarDrawer, prompt: "Поиск группы")
                 }
+                
                 .refreshable {
                     Task {
                         groupListViewModel.groupArrayInNull()                // очистка списка групп
                         await groupListViewModel.getArrayOfGroupNum()        // получение списка групп
                     }
                 }
+                
                 .navigationDestination(for: String.self) { groupName in
                     EachGroup(groupName: groupName)
                 }
@@ -80,7 +84,7 @@ private struct ViewEachGroup: View {
     var body: some View {
         VStack(alignment: .leading) {
             Text(group.name)
-                .font(.system(size: 16, weight: .medium))
+                .fontWeight(.medium)
             HStack(spacing: 10) {
                 if let facultyAbbrev = group.facultyAbbrev {
                     Text(facultyAbbrev)

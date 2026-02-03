@@ -173,8 +173,8 @@ enum GroupOrEmployee {
 
 
 // перечисление видов отображения расписания
-enum Demonstrate {
-    case list
-    case allInOneWeek
-    case byDays
+enum Demonstrate: String, CaseIterable, Codable {
+    case list = "Листом"
+    case weekly = "Неделей"
+    case byDays = "По дням"
 }

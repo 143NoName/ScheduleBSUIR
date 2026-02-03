@@ -99,7 +99,7 @@ private struct EmployeesEach: View {
             VStack(alignment: .leading) {
                 Marquee {
                     Text("\(employee.fullName)")
-                        .font(.system(size: 16, weight: .medium))
+                        .fontWeight(.medium)
                 }
                 .marqueeWhenNotFit(true)
                 .marqueeDuration(5)
@@ -112,7 +112,7 @@ private struct EmployeesEach: View {
                    
                     Marquee {
                         Text(departmentsSrting)
-                               .font(.system(size: 14))
+                            .font(.system(size: 14, weight: .light))
                     }
                     .marqueeWhenNotFit(true)
                     .marqueeDuration(7)
