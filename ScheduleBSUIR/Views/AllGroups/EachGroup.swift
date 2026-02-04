@@ -46,7 +46,7 @@ struct EachGroup: View {
     
     var secondPageName: String {
         if !groupScheduleViewModel.isLoadingArrayOfScheduleGroup {
-            "Загрузка..."
+            ""
         } else {
             if groupScheduleViewModel.errorOfScheduleGroup.isEmpty {
                 if demonstrate == .byDays {
@@ -66,43 +66,38 @@ struct EachGroup: View {
 
     var body: some View {
         ZStack(alignment: .bottom) {
+            Color("ListBackgroundColor")
+                .ignoresSafeArea()
             
-            if colorScheme == .light {
-                Color.gray
-                    .opacity(0.15)
-                    .ignoresSafeArea(edges: .all)
-            }
-            
-            if !groupScheduleViewModel.isLoadingArrayOfScheduleGroup {                                          // процесс загрузки
+            Group {
                 List {
-                    Section(header: Text("День недели")) {
-                        ForEach(0...10, id: \.self) { _ in
-                            EachGroupLessonLoading()
-                        }
-                    }
-                }
-            } else {                                                                                            // ответ
-                if !groupScheduleViewModel.errorOfScheduleGroup.isEmpty {                                       // ошибка загрузки
-                    List {
-                        IfHaveError(error: groupScheduleViewModel.errorOfScheduleGroup)
-                    }
-                } else {                                                                                        // данные пришли
-                    List {
-                        if demonstrate == .byDays {                                                             // ВИД: "По дням"
-                            Section(header: Text(weekDay.inString)) {
-                                ViewByDays()
+                    if !groupScheduleViewModel.isLoadingArrayOfScheduleGroup {
+                        EachGroupLessonLoading()
+                            .listRowBackground(Color("ListItselfColor"))     // процесс загрузки
+                    } else {                                                                                           // ответ
+                        if !groupScheduleViewModel.errorOfScheduleGroup.isEmpty {                                       // ошибка загрузки
+                            IfHaveError(error: groupScheduleViewModel.errorOfScheduleGroup)
+                                .listRowBackground(Color("ListItselfColor"))
+                        } else {                                                                                        // данные пришли
+                            if demonstrate == .byDays {                                                             // ВИД: "По дням"
+                                Section(header: Text(weekDay.inString)) {
+                                    ViewByDays()
+                                        .listRowBackground(Color("ListItselfColor"))
+                                }
+                            } else if demonstrate == .list {                                                        // ВИД: "Список"
+                                ViewList()
+                                    .listRowBackground(Color("ListItselfColor"))
+                            } else if demonstrate == .weekly {                                                      // ВИД: "Все в одной неделе"
+                                ViewAllInOneWeek()
+                                    .listRowBackground(Color("ListItselfColor"))
                             }
-                        } else if demonstrate == .list {                                                        // ВИД: "Список"
-                            ViewList()
-                        } else if demonstrate == .weekly {                                                // ВИД: "Все в одной неделе"
-                            ViewAllInOneWeek()
                         }
                     }
-                    .scrollContentBackground(.hidden)
                 }
+                .scrollContentBackground(.hidden)
             }
             
-            // показывать окно фильтрации или неь
+            // показывать окно фильтрации или нет
             if demonstrate == .weekly {
                 EmptyView()
             } else {

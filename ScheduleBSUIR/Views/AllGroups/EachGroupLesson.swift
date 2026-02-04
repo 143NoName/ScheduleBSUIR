@@ -7,42 +7,43 @@
 
 import SwiftUI
 
-
 struct EachGroupLessonLoading: View {
     var body: some View {
-        HStack {
-            VStack {
+        ForEach(0...10, id: \.self) { _ in
+            HStack {
+                VStack {
+                    RoundedRectangle(cornerRadius: 10)
+                        .fill(Color.gray.opacity(0.5))
+                        .frame(width: 60, height: 14)
+                    RoundedRectangle(cornerRadius: 10)
+                        .fill(Color.gray.opacity(0.5))
+                        .frame(width: 60, height: 14)
+                }
+                
                 RoundedRectangle(cornerRadius: 10)
                     .fill(Color.gray.opacity(0.5))
-                    .frame(width: 60, height: 14)
+                    .frame(width: 7, height: 40)
+                
+                VStack(alignment: .leading) {
+                    RoundedRectangle(cornerRadius: 10)
+                        .fill(Color.gray.opacity(0.5))
+                        .frame(width: 90, height: 14)
+                    RoundedRectangle(cornerRadius: 10)
+                        .fill(Color.gray.opacity(0.5))
+                        .frame(width: 60, height: 14)
+                }
+                
+                Spacer()
+            
                 RoundedRectangle(cornerRadius: 10)
                     .fill(Color.gray.opacity(0.5))
-                    .frame(width: 60, height: 14)
+                    .frame(width: 20, height: 20)
+                
+                RoundedRectangle(cornerRadius: 15)
+                    .fill(Color.gray.opacity(0.5))
+                    .frame(width: 35, height: 35)
+                    .padding(.leading)
             }
-            
-            RoundedRectangle(cornerRadius: 10)
-                .fill(Color.gray.opacity(0.5))
-                .frame(width: 7, height: 40)
-            
-            VStack(alignment: .leading) {
-                RoundedRectangle(cornerRadius: 10)
-                    .fill(Color.gray.opacity(0.5))
-                    .frame(width: 90, height: 14)
-                RoundedRectangle(cornerRadius: 10)
-                    .fill(Color.gray.opacity(0.5))
-                    .frame(width: 60, height: 14)
-            }
-            
-            Spacer()
-            
-            RoundedRectangle(cornerRadius: 10)
-                .fill(Color.gray.opacity(0.5))
-                .frame(width: 20, height: 20)
-            
-            RoundedRectangle(cornerRadius: 15)
-                .fill(Color.gray.opacity(0.5))
-                .frame(width: 35, height: 35)
-                .padding(.leading)
         }
     }
 }
@@ -124,7 +125,7 @@ struct EachGroupLesson: View {
                         .clipShape(RoundedRectangle(cornerRadius: 15))
                     #warning("Как бы отобразить загрузку")
                 default:
-                    Image("PlainPhoto")
+                    Image(systemName: "person.circle")
                         .resizable()
                         .frame(width: 35, height: 35)
                         .clipShape(RoundedRectangle(cornerRadius: 15))
