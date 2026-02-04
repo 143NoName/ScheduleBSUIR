@@ -52,9 +52,9 @@ struct EmployeesTab: View {
                     await employeeListViewModel.getArrayOfEmployees()
                 }
             }
-        }
-        .navigationDestination(for: String.self) { employeeName in
-            EachEmployee(employeeName: employeeName)
+            .navigationDestination(for: String.self) { employeeName in
+                EachEmployee(employeeName: employeeName)
+            }
         }
     }
 }

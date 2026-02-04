@@ -39,6 +39,8 @@ struct EachEmployee: View {
     var body: some View {
         ZStack(alignment: .bottom) {
             Color("ListBackgroundColor")
+                .ignoresSafeArea()
+            
             List {
                 if !employeeScheduleViewModel.isLoadingScheduleForEachEmployee {
                     Section(header:
