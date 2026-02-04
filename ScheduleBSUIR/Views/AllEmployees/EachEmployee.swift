@@ -38,11 +38,9 @@ struct EachEmployee: View {
     
     var body: some View {
         ZStack(alignment: .bottom) {
-            if colorScheme == .light {
-                Color.gray
-                    .opacity(0.15)
-                    .ignoresSafeArea(edges: .all)
-            }
+            Color("ListBackgroundColor")
+                .ignoresSafeArea()
+            
             List {
                 if !employeeScheduleViewModel.isLoadingScheduleForEachEmployee {
                     Section(header:
@@ -144,12 +142,9 @@ struct MoreInfoAboutEmployee: View {
     
     var body: some View {
         ZStack {
-            if colorScheme == .light {
-                Color.gray
-                    .opacity(0.15)
-                    .ignoresSafeArea(edges: .all)
-            }
-
+            Color("ListBackgroundColor")
+                .ignoresSafeArea()
+            
             NavigationStack {
                 List {
                     Section(header: Text("Информация о преподавателе:")) {

@@ -47,7 +47,7 @@ struct EachGroup: View {
     
     var secondPageName: String {
         if !groupScheduleViewModel.isLoadingArrayOfScheduleGroup {
-            "Загрузка..."
+            ""
         } else {
             if groupScheduleViewModel.errorOfScheduleGroup.isEmpty {
                 if demonstrate == .byDays {
@@ -67,7 +67,10 @@ struct EachGroup: View {
 
     var body: some View {
         ZStack(alignment: .bottom) {
+            Color("ListBackgroundColor")
+                .ignoresSafeArea()
             
+<<<<<<< HEAD
             if colorScheme == .light {
                 Color.gray
                     .opacity(0.15)
@@ -89,22 +92,46 @@ struct EachGroup: View {
                         .scrollContentBackground(.hidden)
                     } else {                                                                                        // данные пришли
                         List {
+=======
+            Group {
+                List {
+                    if !groupScheduleViewModel.isLoadingArrayOfScheduleGroup {
+                        EachGroupLessonLoading()
+                            .listRowBackground(Color("ListItselfColor"))     // процесс загрузки
+                    } else {                                                                                           // ответ
+                        if !groupScheduleViewModel.errorOfScheduleGroup.isEmpty {                                       // ошибка загрузки
+                            IfHaveError(error: groupScheduleViewModel.errorOfScheduleGroup)
+                                .listRowBackground(Color("ListItselfColor"))
+                        } else {                                                                                        // данные пришли
+>>>>>>> save5f6b381
                             if demonstrate == .byDays {                                                             // ВИД: "По дням"
                                 Section(header: Text("День недели")) {
                                     ViewByDays()
+                                        .listRowBackground(Color("ListItselfColor"))
                                 }
                             } else if demonstrate == .list {                                                        // ВИД: "Список"
                                 ViewList()
+<<<<<<< HEAD
                             } else if demonstrate == .allInOneWeek {                                                // ВИД: "Все в одной неделе"
+=======
+                                    .listRowBackground(Color("ListItselfColor"))
+                            } else if demonstrate == .weekly {                                                      // ВИД: "Все в одной неделе"
+>>>>>>> save5f6b381
                                 ViewAllInOneWeek()
+                                    .listRowBackground(Color("ListItselfColor"))
                             }
                         }
-                        .scrollContentBackground(.hidden)
                     }
                 }
+                .scrollContentBackground(.hidden)
             }
             
+<<<<<<< HEAD
             if demonstrate == .allInOneWeek {
+=======
+            // показывать окно фильтрации или нет
+            if demonstrate == .weekly {
+>>>>>>> save5f6b381
                 EmptyView()
             } else {
                 SelectorViewForGroup(subGroup: $subGroup, weekNumber: $weekNumber, weekDay: $weekDay)

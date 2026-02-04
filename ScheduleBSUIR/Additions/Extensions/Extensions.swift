@@ -30,7 +30,7 @@ extension View {
 }
 
 struct CostomList<Content: View, LoadingContent: View, Items: Identifiable>: View {
-    
+        
     @Environment(\.colorScheme) var colorScheme
     
     let items: [Items]                  // элементы (данных)
@@ -43,16 +43,15 @@ struct CostomList<Content: View, LoadingContent: View, Items: Identifiable>: Vie
     
     var body: some View {
         ZStack {
-            if colorScheme == .light {
-                Color.gray
-                    .opacity(0.15)
-                    .ignoresSafeArea(edges: .all)
-            }
+            Color("ListBackgroundColor")
+                .ignoresSafeArea()
+            
             List {
                 if isLoading {
                     if errorStr.isEmpty {
                         ForEach(items) { each in
                             content(each)
+                                .listRowBackground(Color("ListItselfColor"))
                         }
                     } else {
                         ErrorView(errorInfo: errorStr)
@@ -63,6 +62,7 @@ struct CostomList<Content: View, LoadingContent: View, Items: Identifiable>: Vie
                     }
                 }
             }
+            .scrollContentBackground(.hidden)
         }
     }
 }

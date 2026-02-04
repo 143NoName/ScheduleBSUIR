@@ -33,30 +33,23 @@ struct EmployeesTab: View {
     
     var body: some View {
         NavigationStack {
-            ZStack {
-                if colorScheme == .light {
-                    Color.gray
-                        .opacity(0.15)
-                        .ignoresSafeArea(edges: .all)
+            CostomList(items: searchable,
+                        isLoading: employeeListViewModel.isLoadingScheduleForEmployees,
+                        loadingView: ViewEachGroupIsLoading(),
+                        errorStr: employeeListViewModel.errorOfEmployeesArray,
+                        content: { each in
+                NavigationLink(value: each.urlId) {
+                    EmployeesEach(employee: each)
                 }
-                CostomList(items: searchable,
-                           isLoading: employeeListViewModel.isLoadingScheduleForEmployees,
-                           loadingView: ViewEachGroupIsLoading(),
-                           errorStr: employeeListViewModel.errorOfEmployeesArray,
-                           content: { each in
-                    NavigationLink(value: each.urlId) {
-                        EmployeesEach(employee: each)
-                    }
-                })
-                .navigationTitle(loadedArrayOfEmployees)
-                .if(employeeListViewModel.isLoadingScheduleForEmployees) { view in
-                    view.searchable(text: $searchText, placement: .navigationBarDrawer, prompt: "Поиск преподавателя")
-                }
-                .refreshable {
-                    Task {
-                        employeeListViewModel.employeesArrayInNull()
-                        await employeeListViewModel.getArrayOfEmployees()
-                    }
+            })
+            .navigationTitle(loadedArrayOfEmployees)
+            .if(employeeListViewModel.isLoadingScheduleForEmployees) { view in
+                view.searchable(text: $searchText, placement: .navigationBarDrawer, prompt: "Поиск преподавателя")
+            }
+            .refreshable {
+                Task {
+                    employeeListViewModel.employeesArrayInNull()
+                    await employeeListViewModel.getArrayOfEmployees()
                 }
             }
             .navigationDestination(for: String.self) { employeeName in
